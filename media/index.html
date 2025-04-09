@@ -1,0 +1,50 @@
+<!-- media/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Color Theme Generator</title>
+    <link rel="stylesheet" href="${stylesUri}">
+</head>
+<body>
+    <h1>Custom Color Theme Generator</h1>
+    <p>Select your colors and intensity to create a custom theme.</p>
+    
+    <div class="container">
+        <div class="color-picker-container">
+            <label for="color1">Primary Color:</label>
+            <input type="color" id="color1" value="${color1}" />
+            <div class="color-preview" id="preview1" style="background-color: ${color1};"></div>
+        </div>
+        
+        <div class="color-picker-container">
+            <label for="color2">Secondary Color:</label>
+            <input type="color" id="color2" value="${color2}" />
+            <div class="color-preview" id="preview2" style="background-color: ${color2};"></div>
+        </div>
+        
+        <div class="color-picker-container">
+            <label for="color3">Accent Color 1:</label>
+            <input type="color" id="color3" value="${color3}" />
+            <div class="color-preview" id="preview3" style="background-color: ${color3};"></div>
+        </div>
+        
+        <div class="color-picker-container">
+            <label for="color4">Accent Color 2:</label>
+            <input type="color" id="color4" value="${color4}" />
+            <div class="color-preview" id="preview4" style="background-color: ${color4};"></div>
+        </div>
+        
+        <div class="slider-container">
+            <label for="intensity">Color Intensity:</label>
+            <input type="range" id="intensity" min="1" max="100" value="${intensity}" />
+            <div class="slider-value" id="intensity-value">${intensity}</div>
+        </div>
+        
+        <button id="apply-button">Apply Theme</button>
+    </div>
+
+    <script src="${scriptUri}"></script>
+</body>
+</html>

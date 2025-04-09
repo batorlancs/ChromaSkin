@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "border-collie-43.helloWorld",
-        "title": "Hello World"
+        "command": "customColorTheme.openPicker",
+        "title": "Custom Color Theme: Open Theme Generator"
       }
     ]
   },

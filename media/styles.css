@@ -1,0 +1,56 @@
+/* media/styles.css */
+body {
+    font-family: var(--vscode-font-family);
+    padding: 20px;
+    color: var(--vscode-editor-foreground);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.color-picker-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+label {
+    width: 150px;
+}
+
+.color-preview {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+button {
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.slider-value {
+    width: 30px;
+    text-align: center;
+}
