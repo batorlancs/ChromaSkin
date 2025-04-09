@@ -1,169 +1,116 @@
 // src/extension.ts
-import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as Handlebars from 'handlebars';
+import * as vscode from "vscode";
+import * as path from "path";
+import * as fs from "fs";
+import * as Handlebars from "handlebars";
+import { VSCodeThemeGenerator } from "./generator";
 
 interface ColorThemeConfig {
-    color1: string;
-    color2: string;
-    color3: string;
-    color4: string;
-    intensity: number;
+	color1: string;
+	color2: string;
+	color3: string;
+	color4: string;
+	intensity: number;
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Custom Color Theme extension is now active!');
+	console.log("Custom Color Theme extension is now active!");
 
-    let disposable = vscode.commands.registerCommand(
-        'customColorTheme.openPicker',
-        () => {
-            const panel = vscode.window.createWebviewPanel(
-                'colorThemePicker',
-                'Custom Color Theme Generator',
-                vscode.ViewColumn.One,
-                {
-                    enableScripts: true,
-                    localResourceRoots: [
-                        vscode.Uri.file(
-                            path.join(context.extensionPath, 'media')
-                        ),
-                    ],
-                }
-            );
+	let disposable = vscode.commands.registerCommand("customColorTheme.openPicker", () => {
+		const panel = vscode.window.createWebviewPanel("colorThemePicker", "Custom Color Theme Generator", vscode.ViewColumn.One, {
+			enableScripts: true,
+			localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "media"))],
+		});
 
-            // Initial color theme configuration
-            const themeConfig: ColorThemeConfig = {
-                color1: '#ff0000', // Red
-                color2: '#00ff00', // Green
-                color3: '#0000ff', // Blue
-                color4: '#ffff00', // Yellow
-                intensity: 50,
-            };
+		// Initial color theme configuration
+		const themeConfig: ColorThemeConfig = {
+			color1: "#e4703f", // Red
+			color2: "#2b2b2b", // Green
+			color3: "#252525", // Blue
+			color4: "#b8b8b8", // Yellow
+			intensity: 50,
+		};
 
-            // Set the webview's HTML content
-            panel.webview.html = getWebviewContent(
-                context,
-                panel.webview,
-                themeConfig
-            );
+		// Set the webview's HTML content
+		panel.webview.html = getWebviewContent(context, panel.webview, themeConfig);
 
-            // Handle messages from the webview
-            panel.webview.onDidReceiveMessage(
-                (message) => {
-                    switch (message.command) {
-                        case 'applyTheme':
-                            applyColorTheme(message.themeConfig);
-                            vscode.window.showInformationMessage(
-                                'Custom color theme applied!'
-                            );
-                            return;
-                    }
-                },
-                undefined,
-                context.subscriptions
-            );
-        }
-    );
+		// Handle messages from the webview
+		panel.webview.onDidReceiveMessage(
+			(message) => {
+				switch (message.command) {
+					case "applyTheme":
+						applyColorTheme(message.themeConfig);
+						vscode.window.showInformationMessage("Custom color theme applied!");
+						return;
+				}
+			},
+			undefined,
+			context.subscriptions
+		);
+	});
 
-    context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable);
 }
 
+/**
+ * This function applies the color theme to the VSCode settings.
+ * It updates the color customizations in the user's settings.
+ *
+ * This is called when the user clicks the "Apply" button in the webview.
+ *
+ * @param themeConfig ColorThemeConfig
+ * @returns void
+ */
 function applyColorTheme(themeConfig: ColorThemeConfig) {
-    // Get the current config
-    const config = vscode.workspace.getConfiguration('workbench');
+	// Get the current config
+	const config = vscode.workspace.getConfiguration("workbench");
 
-    // Factor to adjust colors based on intensity (0-1)
-    const intensityFactor = themeConfig.intensity / 100;
+	const generator = new VSCodeThemeGenerator();
+	generator.setColors(themeConfig.color1, themeConfig.color2, themeConfig.color3, themeConfig.color4, "#555555", 100);
 
-    // Apply the custom theme to the workbench colors
-    const colorCustomizations = {
-        colorCustomizations: {
-            'editor.background': adjustColorIntensity(
-                themeConfig.color1,
-                intensityFactor
-            ),
-            'activityBar.background': adjustColorIntensity(
-                themeConfig.color2,
-                intensityFactor
-            ),
-            'sideBar.background': adjustColorIntensity(
-                themeConfig.color3,
-                intensityFactor
-            ),
-            'statusBar.background': adjustColorIntensity(
-                themeConfig.color4,
-                intensityFactor
-            ),
-        },
-    };
+	const colorCustomizations = {
+		colorCustomizations: generator.generateTheme(),
+	};
 
-    // Update the settings
-    config.update(
-        'colorCustomizations',
-        colorCustomizations.colorCustomizations,
-        vscode.ConfigurationTarget.Global
-    );
+	// Update the settings
+	config.update("colorCustomizations", colorCustomizations.colorCustomizations, vscode.ConfigurationTarget.Global);
 }
 
-// Helper function to adjust color based on intensity
-function adjustColorIntensity(hexColor: string, intensity: number): string {
-    // Parse the hex color
-    const r = parseInt(hexColor.slice(1, 3), 16);
-    const g = parseInt(hexColor.slice(3, 5), 16);
-    const b = parseInt(hexColor.slice(5, 7), 16);
+/**
+ * Get the HTML content for the webview
+ * @param context vscode.ExtensionContext
+ * @param webview vscode.Webview
+ * @param themeConfig ColorThemeConfig
+ * @returns the HTML content as a string
+ */
+function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ColorThemeConfig): string {
+	// Get paths to our external files
+	const stylesPath = vscode.Uri.file(path.join(context.extensionPath, "media", "styles.css"));
+	const scriptPath = vscode.Uri.file(path.join(context.extensionPath, "media", "script.js"));
 
-    // Adjust the color based on intensity
-    const adjustedR = Math.min(255, Math.floor(r * intensity));
-    const adjustedG = Math.min(255, Math.floor(g * intensity));
-    const adjustedB = Math.min(255, Math.floor(b * intensity));
+	// Convert the URIs to a string form that can be used in the webview
+	const stylesUri = webview.asWebviewUri(stylesPath);
+	const scriptUri = webview.asWebviewUri(scriptPath);
 
-    // Convert back to hex
-    const adjustedHex =
-        '#' +
-        adjustedR.toString(16).padStart(2, '0') +
-        adjustedG.toString(16).padStart(2, '0') +
-        adjustedB.toString(16).padStart(2, '0');
+	// Read Handlebars template
+	const templatePath = path.join(context.extensionPath, "media", "index.hbs");
+	const templateSource = fs.readFileSync(templatePath, "utf8");
 
-    return adjustedHex;
-}
+	// Compile the template
+	const template = Handlebars.compile(templateSource);
 
-function getWebviewContent(
-    context: vscode.ExtensionContext,
-    webview: vscode.Webview,
-    themeConfig: ColorThemeConfig
-): string {
-    // Get paths to our external files
-    const stylesPath = vscode.Uri.file(
-        path.join(context.extensionPath, 'media', 'styles.css')
-    );
-    const scriptPath = vscode.Uri.file(
-        path.join(context.extensionPath, 'media', 'script.js')
-    );
+	// Render the template with data
+	const htmlContent = template({
+		stylesUri: stylesUri.toString(),
+		scriptUri: scriptUri.toString(),
+		color1: themeConfig.color1,
+		color2: themeConfig.color2,
+		color3: themeConfig.color3,
+		color4: themeConfig.color4,
+		intensity: themeConfig.intensity,
+	});
 
-    // Convert the URIs to a string form that can be used in the webview
-    const stylesUri = webview.asWebviewUri(stylesPath);
-    const scriptUri = webview.asWebviewUri(scriptPath);
-
-    // Read Handlebars template
-    const templatePath = path.join(context.extensionPath, 'media', 'index.hbs');
-    const templateSource = fs.readFileSync(templatePath, 'utf8');
-
-    // Compile the template
-    const template = Handlebars.compile(templateSource);
-
-    // Render the template with data
-    const htmlContent = template({
-        stylesUri: stylesUri.toString(),
-        scriptUri: scriptUri.toString(),
-        color1: themeConfig.color1,
-        color2: themeConfig.color2,
-        color3: themeConfig.color3,
-        color4: themeConfig.color4,
-        intensity: themeConfig.intensity,
-    });
-
-    return htmlContent;
+	return htmlContent;
 }
 
 export function deactivate() {}

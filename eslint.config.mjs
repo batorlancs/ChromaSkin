@@ -14,7 +14,7 @@ export default [{
         sourceType: "module",
     },
 
-    // rules: {
+    rules: {
     //     "@typescript-eslint/naming-convention": ["warn", {
     //         selector: "import",
     //         format: ["camelCase", "PascalCase"],
@@ -24,5 +24,5 @@ export default [{
     //     eqeqeq: "warn",
     //     "no-throw-literal": "warn",
     //     semi: "warn",
-    // },
+    },
 }];
