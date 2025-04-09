@@ -10,6 +10,7 @@ interface ColorThemeConfig {
 	color2: string;
 	color3: string;
 	color4: string;
+	color5: string;
 	intensity: number;
 }
 
@@ -24,11 +25,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Initial color theme configuration
 		const themeConfig: ColorThemeConfig = {
-			color1: "#e4703f", // Red
-			color2: "#2b2b2b", // Green
-			color3: "#252525", // Blue
-			color4: "#b8b8b8", // Yellow
-			intensity: 50,
+			color1: "#e4703f",
+			color2: "#2b2b2b",
+			color3: "#252525",
+			color4: "#b8b8b8",
+			color5: "#555555",
+			intensity: 100,
 		};
 
 		// Set the webview's HTML content
@@ -66,7 +68,14 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 	const config = vscode.workspace.getConfiguration("workbench");
 
 	const generator = new VSCodeThemeGenerator();
-	generator.setColors(themeConfig.color1, themeConfig.color2, themeConfig.color3, themeConfig.color4, "#555555", 100);
+	generator.setColors(
+		themeConfig.color1,
+		themeConfig.color2,
+		themeConfig.color3,
+		themeConfig.color4,
+		themeConfig.color5,
+		themeConfig.intensity
+	);
 
 	const colorCustomizations = {
 		colorCustomizations: generator.generateTheme(),
@@ -107,6 +116,7 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 		color2: themeConfig.color2,
 		color3: themeConfig.color3,
 		color4: themeConfig.color4,
+        color5: themeConfig.color5,
 		intensity: themeConfig.intensity,
 	});
 

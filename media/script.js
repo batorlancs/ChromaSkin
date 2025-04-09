@@ -31,6 +31,7 @@
             color2: document.getElementById('color2').value,
             color3: document.getElementById('color3').value,
             color4: document.getElementById('color4').value,
+            color5: document.getElementById('color5').value,
             intensity: parseInt(document.getElementById('intensity').value)
         };
         
