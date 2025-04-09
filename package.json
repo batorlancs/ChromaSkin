@@ -39,6 +39,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "border-collie-43": "file:"
+    "border-collie-43": "file:",
+    "handlebars": "^4.7.8"
   }
 }

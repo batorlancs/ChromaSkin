@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as Handlebars from 'handlebars';
 
 interface ColorThemeConfig {
   color1: string;
@@ -108,19 +109,23 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
   const stylesUri = webview.asWebviewUri(stylesPath);
   const scriptUri = webview.asWebviewUri(scriptPath);
   
-  // Read HTML template
-  const htmlPath = path.join(context.extensionPath, 'media', 'index.html');
-  let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+  // Read Handlebars template
+  const templatePath = path.join(context.extensionPath, 'media', 'index.hbs');
+  const templateSource = fs.readFileSync(templatePath, 'utf8');
   
-  // Replace placeholders with actual values
-  htmlContent = htmlContent
-    .replace(/\${stylesUri}/g, stylesUri.toString())
-    .replace(/\${scriptUri}/g, scriptUri.toString())
-    .replace(/\${color1}/g, themeConfig.color1)
-    .replace(/\${color2}/g, themeConfig.color2)
-    .replace(/\${color3}/g, themeConfig.color3)
-    .replace(/\${color4}/g, themeConfig.color4)
-    .replace(/\${intensity}/g, themeConfig.intensity.toString());
+  // Compile the template
+  const template = Handlebars.compile(templateSource);
+  
+  // Render the template with data
+  const htmlContent = template({
+    stylesUri: stylesUri.toString(),
+    scriptUri: scriptUri.toString(),
+    color1: themeConfig.color1,
+    color2: themeConfig.color2,
+    color3: themeConfig.color3,
+    color4: themeConfig.color4,
+    intensity: themeConfig.intensity
+  });
   
   return htmlContent;
 }
