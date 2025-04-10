@@ -15,10 +15,10 @@ interface ColorThemeConfig {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log("Custom Color Theme extension is now active!");
+	console.log("ChromaSkin extension is now active!");
 
-	let disposable = vscode.commands.registerCommand("customColorTheme.openPicker", () => {
-		const panel = vscode.window.createWebviewPanel("colorThemePicker", "Custom Color Theme Generator", vscode.ViewColumn.One, {
+	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
+		const panel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
 			enableScripts: true,
 			localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "media"))],
 		});
@@ -42,11 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
 				switch (message.command) {
 					case "applyTheme":
 						applyColorTheme(message.themeConfig);
-						vscode.window.showInformationMessage("ChromaSkin: custom color theme applied!");
+						vscode.window.showInformationMessage("ChromaSkin: Custom Color Theme Applied!");
 						return;
 					case "resetTheme":
 						resetColorTheme();
-						vscode.window.showInformationMessage("ChromaSkin: theme reset!");
+						vscode.window.showInformationMessage("ChromaSkin: Theme Reset!");
 						return;
 				}
 			},

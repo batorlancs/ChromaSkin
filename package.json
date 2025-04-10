@@ -1,7 +1,7 @@
 {
-  "name": "border-collie-43",
-  "displayName": "border-collie",
-  "description": "no desc",
+  "name": "chromaskin-by-bator",
+  "displayName": "ChromaSkin",
+  "description": "Create a custom VS Code theme by selecting colors and adjusting intensity settings.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.99.0"
@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "customColorTheme.openPicker",
-        "title": "Custom Color Theme: Open Theme Generator"
+        "command": "chromaskin.openPicker",
+        "title": "ChromaSkin: Open Theme Generator"
       }
     ]
   },
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "border-collie-43": "file:",
+    "chromaskin-by-bator": "file:",
     "handlebars": "^4.7.8"
   }
 }
