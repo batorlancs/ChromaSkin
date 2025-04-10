@@ -22,6 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
 			enableScripts: true,
 			localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "media"))],
 		});
+		panel.iconPath = {
+			light: vscode.Uri.file(path.join(context.extensionPath, "resources", "chromaskin-lightmode.png")),
+			dark: vscode.Uri.file(path.join(context.extensionPath, "resources", "chromaskin-darkmode.png")),
+		};
 
 		// Initial color theme configuration
 		const themeConfig: ColorThemeConfig = {
