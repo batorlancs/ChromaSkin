@@ -4,15 +4,7 @@
     const vscode = acquireVsCodeApi();
     
     // Initialize the UI
-    function initializeUI() {
-        // Update color previews when color inputs change
-        const colorInputs = document.querySelectorAll('input[type="color"]');
-        colorInputs.forEach((input, index) => {
-            input.addEventListener('input', () => {
-                document.getElementById('preview' + (index + 1)).style.backgroundColor = input.value;
-            });
-        });
-        
+    function initializeUI() {        
         // Update intensity value display
         const intensitySlider = document.getElementById('intensity');
         const intensityValue = document.getElementById('intensity-value');
@@ -22,6 +14,7 @@
         
         // Apply theme button click handler
         document.getElementById('apply-button').addEventListener('click', applyTheme);
+        document.getElementById('reset-button').addEventListener('click', resetTheme);
     }
     
     // Apply theme function
@@ -39,6 +32,13 @@
         vscode.postMessage({
             command: 'applyTheme',
             themeConfig: themeConfig
+        });
+    }
+
+    // Reset theme function
+    function resetTheme() {
+        vscode.postMessage({
+            command: 'resetTheme',
         });
     }
     

@@ -391,6 +391,8 @@ class VSCodeThemeGenerator {
             // Status Bar colors
             "statusBar.background": this.sidebarColor,
             "statusBar.foreground": this.hexToRgba(this.textColor, 0.5),
+            "statusBar.debuggingBackground": this.hexToRgba(this.textColor, 0.3),
+            "statusBar.debuggingForeground": this.textColor,
             "statusBarItem.hoverBackground": this.adjustColor(this.sidebarColor, 0, 0, 5),
             "statusBar.noFolderBackground": this.sidebarColor,
             "statusBar.border": this.borderColor,

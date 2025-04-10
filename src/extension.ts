@@ -42,7 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
 				switch (message.command) {
 					case "applyTheme":
 						applyColorTheme(message.themeConfig);
-						vscode.window.showInformationMessage("Custom color theme applied!");
+						vscode.window.showInformationMessage("ChromaSkin: custom color theme applied!");
+						return;
+					case "resetTheme":
+						resetColorTheme();
+						vscode.window.showInformationMessage("ChromaSkin: theme reset!");
 						return;
 				}
 			},
@@ -84,6 +88,19 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 	// Update the settings
 	config.update("colorCustomizations", colorCustomizations.colorCustomizations, vscode.ConfigurationTarget.Global);
 }
+
+/**
+ * This function resets the color theme to the default values.
+ * It updates the color customizations in the user's settings.
+ *
+ * This is called when the user clicks the "Reset" button in the webview.
+ * @returns void
+ */
+function resetColorTheme() {
+	const config = vscode.workspace.getConfiguration("workbench");
+	config.update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
+}
+
 
 /**
  * Get the HTML content for the webview
