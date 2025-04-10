@@ -1,71 +1,52 @@
-# border-collie-43 README
+# ChromaSkin
 
-This is the README for your extension "border-collie-43". After writing up a brief description, we recommend including the following sections.
+ChromaSkin lets you mix and match your favorite syntax highlighting with custom editor chrome colors. Keep the code highlighting you love while personalizing VS Code's overall look and feel.
 
-## Features
+## ✨ Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+ChromaSkin separates VS Code's chrome (UI elements like activity bar, sidebar, panels) from syntax highlighting, giving you unprecedented customization:
 
-For example if there is an image subfolder under your extension project workspace:
+- 🎨 Use any syntax highlighting theme you love
+- 🎯 Customize only the editor chrome/UI colors
+- 🖼️ Keep your preferred token colors untouched
 
-\!\[feature X\]\(images/feature-x.png\)
+Here's how it looks in action:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![ChromaSkin Example](resources/example.png)
 
-## Requirements
+## 🚀 Getting Started
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+1. Install ChromaSkin from the VS Code Marketplace
+2. Open Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`)
+3. Type "ChromaSkin" to see available commands
 
-## Extension Settings
+## 🎨 Recommended Syntax Themes
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+ChromaSkin works great with popular VS Code themes like:
 
-For example:
+- [One Dark Pro](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme)
+- [Dracula Official](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
+- [GitHub Theme](https://marketplace.visualstudio.com/items?itemName=GitHub.github-vscode-theme)
+- [Night Owl](https://marketplace.visualstudio.com/items?itemName=sdras.night-owl)
+- [Monokai Pro](https://marketplace.visualstudio.com/items?itemName=monokai.theme-monokai-pro-vscode)
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
+## 📝 Release Notes
 
 ### 1.0.0
 
-Initial release of ...
+- Initial release of ChromaSkin
+- Support for independent chrome/syntax theming
+- Light and dark mode support
+- Custom accent color options
 
-### 1.0.1
+## 🤝 Contributing
 
-Fixed issue #.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-### 1.1.0
+## 📄 License
 
-Added features X, Y, and Z.
+This extension is licensed under the [MIT License](LICENSE).
 
 ---
 
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**Enjoy your personalized VS Code experience with ChromaSkin! 🎉**
