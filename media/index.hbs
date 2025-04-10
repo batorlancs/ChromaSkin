@@ -1,56 +1,78 @@
 <!-- media/index.hbs -->
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Color Theme Generator</title>
-    <link rel="stylesheet" href="{{stylesUri}}">
-</head>
-<body>
-    <h1>Custom Color Theme Generator</h1>
-    <p>Select your colors and intensity to create a custom theme.</p>
-    
-    <div class="container">
-        <div class="color-picker-container">
-            <label for="color1">Primary Color:</label>
-            <input type="color" id="color1" value="{{color1}}" />
-            <div class="color-preview" id="preview1" style="background-color: {{color1}};"></div>
-        </div>
-        
-        <div class="color-picker-container">
-            <label for="color2">Background Color:</label>
-            <input type="color" id="color2" value="{{color2}}" />
-            <div class="color-preview" id="preview2" style="background-color: {{color2}};"></div>
-        </div>
-        
-        <div class="color-picker-container">
-            <label for="color3">Sidebar Color:</label>
-            <input type="color" id="color3" value="{{color3}}" />
-            <div class="color-preview" id="preview3" style="background-color: {{color3}};"></div>
-        </div>
-        
-        <div class="color-picker-container">
-            <label for="color4">Text Color:</label>
-            <input type="color" id="color4" value="{{color4}}" />
-            <div class="color-preview" id="preview4" style="background-color: {{color4}};"></div>
-        </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>ChromaSkin: Generate</title>
+		<link rel="stylesheet" href="{{stylesUri}}" />
+	</head>
+	<body>
+		<div class="container">
+            <div class="header">
+                <h2>ChromaSkin</h2>
+                <p>Create a custom VS Code theme by selecting colors and adjusting intensity settings.</p>
+            </div>
 
-         <div class="color-picker-container">
-            <label for="color5">Border Color:</label>
-            <input type="color" id="color5" value="{{color5}}" />
-            <div class="color-preview" id="preview4" style="background-color: {{color5}};"></div>
-        </div>
-        
-        <div class="slider-container">
-            <label for="intensity">Border Opacity:</label>
-            <input type="range" id="intensity" min="1" max="100" value="{{intensity}}" />
-            <div class="slider-value" id="intensity-value">{{intensity}}</div>
-        </div>
-        
-        <button id="apply-button">Apply Theme</button>
-    </div>
+            <div class="section-header">
+                <hr>
+                <h3>Basic Settings</h3>
+            </div>
 
-    <script src="{{scriptUri}}"></script>
-</body>
+			<div class="color-picker-container">
+				<input type="color" id="color1" value="{{color1}}" />
+				<label for="color1">Primary Color</label>
+				<div class="color-preview" id="preview1" style="background-color: {{color1}};"></div>
+			</div>
+
+			<div class="color-picker-container">
+				<input type="color" id="color2" value="{{color2}}" />
+				<label for="color2">Background Color</label>
+				<div class="color-preview" id="preview2" style="background-color: {{color2}};"></div>
+			</div>
+
+			<div class="color-picker-container">
+				<input type="color" id="color3" value="{{color3}}" />
+				<label for="color3">Accent Color</label>
+				<div class="color-preview" id="preview3" style="background-color: {{color3}};"></div>
+			</div>
+
+			<div class="color-picker-container">
+				<input type="color" id="color4" value="{{color4}}" />
+				<label for="color4">Foreground Color</label>
+				<div class="color-preview" id="preview4" style="background-color: {{color4}};"></div>
+			</div>
+
+			<div class="color-picker-container">
+				<input type="color" id="color5" value="{{color5}}" />
+				<label for="color5">Border Color</label>
+				<div class="color-preview" id="preview5" style="background-color: {{color5}};"></div>
+			</div>
+
+
+            <div class="section-header">
+                <hr>
+                <h3>Advanced Settings</h3>
+            </div>
+
+            <div class="slider-container">
+				<input type="range" id="intensity" min="1" max="100" value="{{intensity}}" />
+				<label for="intensity">Popever Border Strength</label>
+				<div class="slider-value" id="intensity-value">{{intensity}}</div>
+			</div>
+
+			{{!-- <div class="slider-container">
+				<input type="range" id="popover-intensity" min="1" max="100" value="{{popover-intensity}}" />
+				<label for="popover-intensity">Popover Border Strength</label>
+				<div class="slider-value" id="popover-intensity-value">{{popover-intensity}}</div>
+			</div> --}}
+
+			<div class="footer">
+                <button id="apply-button" class="apply-button">Apply Theme</button>
+                <button id="clear-button" class="clear-button">Reset</button>
+            </div>
+		</div>
+
+		<script src="{{scriptUri}}"></script>
+	</body>
 </html>
