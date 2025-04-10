@@ -20,6 +20,9 @@ class VSCodeThemeGenerator {
 	public borderColor: string;
 	public borderOpacity: number;
 	private derivedColors: DerivedColors;
+      private defaultColors = {
+            transparent: "#00000000",
+      }
 
 	constructor() {
 		// Default base colors
@@ -48,7 +51,7 @@ class VSCodeThemeGenerator {
 		this.derivedColors.buttonHoverBackground = this.adjustColor(this.primaryColor, 0, -50, 0); // Even darker for hover
 
 		// Selection colors
-		this.derivedColors.selectionBackground = this.hexToRgba(this.primaryColor, 0.2); // Selection with transparency
+		this.derivedColors.selectionBackground = this.hexToRgba(this.primaryColor, 0.15); // Selection with transparency
 
 		// Border colors based on opacity
 		this.derivedColors.borderColor = `#${this.hexToRgb(this.borderColor)
@@ -241,7 +244,7 @@ class VSCodeThemeGenerator {
             "button.background": this.derivedColors.buttonBackground,
             "button.foreground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
             "button.hoverBackground": this.derivedColors.buttonHoverBackground,
-            "button.border": this.primaryColor,
+            "button.border": this.defaultColors.transparent,
             "button.secondaryBackground": "#636363",
             "button.secondaryForeground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
             "button.secondaryHoverBackground": "#555555",
