@@ -14,6 +14,10 @@ interface ColorThemeConfig {
 	intensity: number;
 }
 
+/**
+ * This method is called when the extension is activated.
+ * @param context vscode.ExtensionContext
+ */
 export function activate(context: vscode.ExtensionContext) {
 	console.log("ChromaSkin extension is now active!");
 
@@ -29,11 +33,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Initial color theme configuration
 		const themeConfig: ColorThemeConfig = {
-			color1: "#e4703f",
+			color1: "#c089f0",
 			color2: "#2b2b2b",
 			color3: "#252525",
 			color4: "#b8b8b8",
-			color5: "#555555",
+			color5: "#454545",
 			intensity: 100,
 		};
 
@@ -74,6 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
 function applyColorTheme(themeConfig: ColorThemeConfig) {
 	// Get the current config
 	const config = vscode.workspace.getConfiguration("workbench");
+    const editorConfig = vscode.workspace.getConfiguration("editor");
 
 	const generator = new VSCodeThemeGenerator();
 	generator.setColors(
@@ -87,10 +92,21 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 
 	const colorCustomizations = {
 		colorCustomizations: generator.generateTheme(),
+		tokenColorCustomizations: {
+			textMateRules: [
+				{
+					scope: ["comment", "comment.block", "comment.line", "comment.block.documentation", "punctuation.definition.comment"],
+					settings: {
+						foreground: "#FFFFFF30",
+					},
+				},
+			],
+		},
 	};
 
-	// Update the settings
+	// Update both color and token customizations
 	config.update("colorCustomizations", colorCustomizations.colorCustomizations, vscode.ConfigurationTarget.Global);
+	editorConfig.update("tokenColorCustomizations", colorCustomizations.tokenColorCustomizations, vscode.ConfigurationTarget.Global);
 }
 
 /**
@@ -102,9 +118,10 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
  */
 function resetColorTheme() {
 	const config = vscode.workspace.getConfiguration("workbench");
+    const editorConfig = vscode.workspace.getConfiguration("editor");
 	config.update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
+	editorConfig.update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
 }
-
 
 /**
  * Get the HTML content for the webview
@@ -137,7 +154,7 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 		color2: themeConfig.color2,
 		color3: themeConfig.color3,
 		color4: themeConfig.color4,
-        color5: themeConfig.color5,
+		color5: themeConfig.color5,
 		intensity: themeConfig.intensity,
 	});
 
