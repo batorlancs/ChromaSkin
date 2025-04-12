@@ -197,10 +197,10 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 		"editorStickyScrollHover.background": adjustColor(colors.background, 0, 0, 3),
 		"editor.lineHighlightBorder": `${colors.foreground}00`,
 		"editor.lineHighlightBackground": hexToHexAlpha(colors.foreground, 0.04),
-		"editorIndentGuide.activeBackground1": hexToHexAlpha(colors.foreground, 0.28),
-		"editorIndentGuide.background1": hexToHexAlpha(colors.foreground, 0.12),
+		"editorIndentGuide.activeBackground1": hexToHexAlpha(colors.foreground, 0.22),
+		"editorIndentGuide.background1": hexToHexAlpha(colors.foreground, 0.10),
 		// Overview ruler
-		"editorOverviewRuler.border": colors.background,
+		"editorOverviewRuler.border": hexToHexAlpha(colors.foreground, 0.075),
 		"editorOverviewRuler.background": colors.background,
 		"editorOverviewRuler.activeBorder": colors.border,
 		"editorOverviewRuler.activeBackground": hexToHexAlpha(colors.foreground, 0.04),
