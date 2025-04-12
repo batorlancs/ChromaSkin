@@ -243,11 +243,11 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 		// Status Bar colors
 		"statusBar.background": colors.statusBar.background,
 		"statusBar.foreground": colors.statusBar.foreground,
-		"statusBar.debuggingBackground": colors.defaults.transparent,
+		"statusBar.debuggingBackground": colors.statusBar.debuggingBackground,
 		"statusBar.debuggingForeground": colors.statusBar.debuggingForeground,
 		"statusBar.debuggingBorder": colors.statusBar.debuggingBorder,
 		"statusBarItem.hoverBackground": colors.statusBar.itemHoverBackground,
-		"statusBar.noFolderBackground": colors.statusBar.background,
+		"statusBar.noFolderBackground": colors.statusBar.noFolderBackground,
 		"statusBar.border": colors.statusBar.border,
 		"statusBarItem.remoteBackground": colors.statusBar.itemRemoteBackground,
 		"statusBarItem.remoteForeground": colors.statusBar.itemRemoteForeground,

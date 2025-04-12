@@ -15,6 +15,7 @@ interface ColorThemeConfig {
 	popoverColor: string;
 	coloredCursor: boolean;
 	intensity: number;
+	autoAdvancedColors: boolean;
 }
 
 /**
@@ -45,6 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
 			popoverColor: "#252525",
 			coloredCursor: true,
 			intensity: 30,
+			autoAdvancedColors: true,
 		};
 
 		// Set the webview's HTML content
@@ -98,6 +100,7 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 		popover: themeConfig.popoverColor,
 		coloredCursor: themeConfig.coloredCursor,
 		borderOpacity: themeConfig.intensity,
+		autoAdvancedColors: themeConfig.autoAdvancedColors,
 	});
 
 	const colorCustomizations = {
@@ -169,6 +172,7 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 		popoverColor: themeConfig.popoverColor,
 		coloredCursor: themeConfig.coloredCursor,
 		intensity: themeConfig.intensity,
+		autoAdvancedColors: themeConfig.autoAdvancedColors,
 	});
 
 	return htmlContent;

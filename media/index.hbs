@@ -44,14 +44,21 @@
 
             <div class="section-header"><hr><h3>Advanced Settings</h3></div>
 
-            <div class="color-picker-container">
-                <input type="color" id="activityBarColor" value="{{activityBarColor}}" />
-                <label for="activityBarColor">Activity Bar Color</label>
+            <div class="checkbox-container">
+                <input type="checkbox" id="autoAdvancedColors" {{#if autoAdvancedColors}}checked{{/if}} />
+                <label for="autoAdvancedColors">Automatic Advanced Colors</label>
             </div>
 
-            <div class="color-picker-container">
-                <input type="color" id="popoverColor" value="{{popoverColor}}" />
-                <label for="popoverColor">Popover Color</label>
+            <div id="advanced-colors-container" class="advanced-colors-container">
+                <div class="color-picker-container">
+                    <input type="color" id="activityBarColor" value="{{activityBarColor}}" />
+                    <label for="activityBarColor">Activity Bar Color</label>
+                </div>
+
+                <div class="color-picker-container">
+                    <input type="color" id="popoverColor" value="{{popoverColor}}" />
+                    <label for="popoverColor">Popover Color</label>
+                </div>
             </div>
 
             <div class="checkbox-container">

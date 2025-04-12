@@ -28,7 +28,7 @@ body {
 .container {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 4px;
 	margin-top: 10px;
 	background-color: color-mix(in srgb, var(--vscode-foreground) 5%, transparent);
 	padding: 30px;
@@ -200,4 +200,19 @@ input[type="checkbox"]:hover {
 input[type="checkbox"]:checked {
 	background-color: var(--vscode-button-background);
 	border-color: var(--vscode-button-background);
+}
+
+.advanced-colors-container {
+	border-left: 2px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+	margin-left: 8px;
+	padding-left: 16px;
+	margin-top: 8px;
+	opacity: 0.5;
+	pointer-events: none;
+	transition: all 0.2s ease;
+}
+
+.advanced-colors-container.enabled {
+	opacity: 1;
+	pointer-events: all;
 }

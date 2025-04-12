@@ -12,6 +12,23 @@
 			intensityValue.textContent = intensitySlider.value;
 		});
 
+		// Advanced colors toggle
+		const autoAdvancedColors = document.getElementById("autoAdvancedColors");
+		const advancedColorsContainer = document.getElementById("advanced-colors-container");
+
+		autoAdvancedColors.addEventListener("change", () => {
+			advancedColorsContainer.classList.toggle("enabled", !autoAdvancedColors.checked);
+			if (autoAdvancedColors.checked) {
+				// When automatic is enabled, set colors based on accent color
+				const accentColor = document.getElementById("color3").value;
+				document.getElementById("activityBarColor").value = accentColor;
+				document.getElementById("popoverColor").value = accentColor;
+			}
+		});
+
+		// Initial state
+		advancedColorsContainer.classList.toggle("enabled", !autoAdvancedColors.checked);
+
 		// Apply theme button click handler
 		document.getElementById("apply-button").addEventListener("click", applyTheme);
 		document.getElementById("reset-button").addEventListener("click", resetTheme);
@@ -19,16 +36,20 @@
 
 	// Apply theme function
 	function applyTheme() {
+		const autoAdvancedColors = document.getElementById("autoAdvancedColors").checked;
+		const accentColor = document.getElementById("color3").value;
+
 		const themeConfig = {
 			color1: document.getElementById("color1").value,
 			color2: document.getElementById("color2").value,
-			color3: document.getElementById("color3").value,
+			color3: accentColor,
 			color4: document.getElementById("color4").value,
 			color5: document.getElementById("color5").value,
-			activityBarColor: document.getElementById("activityBarColor").value,
-			popoverColor: document.getElementById("popoverColor").value,
+			activityBarColor: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
+			popoverColor: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
 			coloredCursor: document.getElementById("coloredCursor").checked,
 			intensity: parseInt(document.getElementById("intensity").value),
+			autoAdvancedColors: autoAdvancedColors,
 		};
 
 		// Send message to extension
