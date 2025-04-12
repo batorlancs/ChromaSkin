@@ -1,5 +1,5 @@
 import { ThemeConfig } from "./types";
-import { adjustColor, blendColors, hexToHexAlpha, isDarkMode, whiteOrBlackText } from "./utils";
+import { adjustColor, blendColors, getLightestColor, hexToHexAlpha, isDarkMode, whiteOrBlackText } from "./utils";
 
 export function getColors(provided: ThemeConfig) {
 	// const derived = {
@@ -102,17 +102,18 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Button
-	const buttonBackground = adjustColor(primary, 0, -25, 0);
+	const buttonBackground = adjustColor(primary, 0, -5, -5);
 	const buttonForeground = whiteOrBlackText(buttonBackground);
+    const secondaryBackground = adjustColor(getLightestColor([accent, background]), 0, 0, 10)
 	const button = {
 		background: buttonBackground,
 		foreground: buttonForeground,
 		hoverBackground: adjustColor(buttonBackground, 0, 0, -5),
 		border: defaults.transparent,
 		separator: whiteOrBlackText(buttonBackground, 0.4),
-		secondaryBackground: hexToHexAlpha(foreground, 0.2),
-		secondaryForeground: buttonForeground,
-		secondaryHoverBackground: hexToHexAlpha(foreground, 0.3),
+		secondaryBackground: secondaryBackground,
+		secondaryForeground: whiteOrBlackText(secondaryBackground, 0.75),
+		secondaryHoverBackground: adjustColor(secondaryBackground, 0, 0, 5),
 	};
 
 	// Badge
@@ -189,7 +190,6 @@ export function getColors(provided: ThemeConfig) {
 		background: statusBarBackground,
 		foreground: hexToHexAlpha(foreground, 0.5),
 		border: border,
-		// debuggingBackground: blendColors(statusBarBackground, primary, 0.1),
 		debuggingBackground: adjustColor(statusBarBackground, 0, 0, 10),
 		debuggingForeground: hexToHexAlpha(foreground, 0.75),
 		debuggingBorder: border,

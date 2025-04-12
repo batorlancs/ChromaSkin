@@ -196,4 +196,42 @@ export function blendColors(color1: string, color2: string, ratio: number): stri
 	};
 	
 	return "#" + blended.map(toHex).join("");
-  }
+}
+
+
+/**
+ * Finds the lightest color from a list of hex colors
+ * @param colors - Array of hex color strings
+ * @returns The lightest color from the array
+ */
+export function getLightestColor(colors: string[]): string {
+	if (colors.length === 0) {
+		throw new Error("Cannot find lightest color from an empty array");
+	}
+	
+	// Function to calculate the perceived brightness of a color
+	// Using the formula: (0.299*R + 0.587*G + 0.114*B)
+	const getColorBrightness = (hexColor: string): number => {
+		// Convert hex to RGB
+		const r = parseInt(hexColor.substring(1, 3), 16);
+		const g = parseInt(hexColor.substring(3, 5), 16);
+		const b = parseInt(hexColor.substring(5, 7), 16);
+		
+		// Calculate perceived brightness
+		return 0.299 * r + 0.587 * g + 0.114 * b;
+	};
+	
+	// Find the color with the highest brightness value
+	let lightestColor = colors[0];
+	let highestBrightness = getColorBrightness(lightestColor);
+	
+	for (let i = 1; i < colors.length; i++) {
+		const currentBrightness = getColorBrightness(colors[i]);
+		if (currentBrightness > highestBrightness) {
+			highestBrightness = currentBrightness;
+			lightestColor = colors[i];
+		}
+	}
+	
+	return lightestColor;
+}
