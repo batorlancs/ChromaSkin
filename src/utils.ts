@@ -53,14 +53,25 @@ export function adjustColor(hex: string, hChange: number, sChange: number, lChan
 }
 
 /**
+ * Checks if a hex color is dark
+ * @param hex - The hex color to check
+ * @returns True if the hex color is dark, false otherwise
+ */
+export function isDarkMode(hex: string): boolean {
+	const hsl = hexToHsl(ensureHexPrefix(hex));
+	return hsl[2] < 50;
+}
+
+
+/**
  * Returns a black or white text color based on the lightness of the hex color
  * @param hex - The hex color to check
- * @param soften - The amount to soften the color
+ * @param alpha - The alpha value to add
  * @returns The text color
  */
-export function whiteOrBlackText(hex: string, soften: number = 0): string {
+export function whiteOrBlackText(hex: string, alpha: number = 1): string {
 	const hsl = hexToHsl(ensureHexPrefix(hex));
-	return hsl[2] > 50 ? adjustColor("#000000", 0, 0, soften) : adjustColor("#ffffff", 0, 0, -soften);
+	return hsl[2] > 50 ? hexToHexAlpha("#000000", alpha) : hexToHexAlpha("#ffffff", alpha);
 }
 
 /**
@@ -146,3 +157,43 @@ export function hslToHex(hsl: number[]): string {
 
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
+
+
+/**
+ * Blends two colors
+ * @param color1 - The first color
+ * @param color2 - The second color
+ * @param ratio - The ratio of the blend
+ * @returns The blended color
+ */
+export function blendColors(color1: string, color2: string, ratio: number): string {
+	// Ensure ratio is between 0 and 1
+	ratio = Math.max(0, Math.min(1, ratio));
+	
+	// Convert hex to RGB
+	const parseHex = (hex: string) => {
+	  const r = parseInt(hex.substring(1, 3), 16);
+	  const g = parseInt(hex.substring(3, 5), 16);
+	  const b = parseInt(hex.substring(5, 7), 16);
+	  return [r, g, b];
+	};
+	
+	// If either color has alpha, we need to handle that separately
+	// For simplicity, we'll just assume no alpha in this example
+	
+	const rgb1 = parseHex(color1);
+	const rgb2 = parseHex(color2);
+	
+	// Blend RGB values
+	const blended = rgb1.map((channel, i) => {
+	  return Math.round(channel * (1 - ratio) + rgb2[i] * ratio);
+	});
+	
+	// Convert back to hex
+	const toHex = (val: number) => {
+	  const hex = val.toString(16);
+	  return hex.length === 1 ? "0" + hex : hex;
+	};
+	
+	return "#" + blended.map(toHex).join("");
+  }

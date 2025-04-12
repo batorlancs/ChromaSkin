@@ -20,16 +20,6 @@ interface ColorThemeConfig {
  */
 export function activate(context: vscode.ExtensionContext) {
 	console.log("ChromaSkin extension is now active!");
-	const colors = generateWorkbenchTheme({
-		primary: "#c089f0",
-		background: "#2b2b2b",
-		accent: "#252525",
-		text: "#b8b8b8",
-		border: "#454545",
-		borderOpacity: 100,
-	});
-
-	console.log(colors);
 
 	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
 		const panel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
@@ -48,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 			color3: "#252525",
 			color4: "#b8b8b8",
 			color5: "#454545",
-			intensity: 100,
+			intensity: 40,
 		};
 
 		// Set the webview's HTML content
@@ -96,9 +86,10 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 		primary: themeConfig.color1,
 		background: themeConfig.color2,
 		accent: themeConfig.color3,
-		text: themeConfig.color4,
+		foreground: themeConfig.color4,
 		border: themeConfig.color5,
 		borderOpacity: themeConfig.intensity,
+		inverseActivityBar: true,
 	});
 
 	const colorCustomizations = {
