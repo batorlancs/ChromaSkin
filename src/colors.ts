@@ -2,18 +2,7 @@ import { ThemeConfig } from "./types";
 import { adjustColor, blendColors, getLightestColor, hexToHexAlpha, isDarkMode, whiteOrBlackText } from "./utils";
 
 export function getColors(provided: ThemeConfig) {
-	// const derived = {
-	// 	buttonBackground: adjustColor(provided.primary, 0, -30, 0),
-	// 	buttonHoverBackground: adjustColor(provided.primary, 0, -50, 0),
-	// 	selectionBackground: hexToHexAlpha(provided.primary, 0.15),
-	// 	borderColor: provided.border,
-	// 	activeBorder: provided.border,
-	// 	inactiveBorder: provided.border,
-	// 	popoverBackground: adjustColor(provided.background, 0, 0, 10),
-	// };
-
 	const isDark = isDarkMode(provided.background);
-
 	const { primary, background, accent, foreground, border, borderOpacity } = provided;
 
 	const darkOtherColors = {

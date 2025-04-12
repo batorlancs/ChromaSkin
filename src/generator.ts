@@ -311,6 +311,10 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 		"extensionBadge.remoteBackground": colors.primary,
 		"extensionBadge.remoteForeground": whiteOrBlackText(colors.primary),
 		"extensionIcon.starForeground": colors.defaults.other.yellow.default,
+		"extensionIcon.verifiedForeground": colors.primary,
+		"extensionIcon.preReleaseForeground": colors.primary,
+		"extensionIcon.sponsorForeground": colors.primary,
+		"extensionIcon.privateForeground": colors.primary,
 
 		// Quick picker colors
 		"pickerGroup.border": hexToHexAlpha(colors.foreground, 0.15),
