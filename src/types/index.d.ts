@@ -8,7 +8,9 @@ export interface ThemeConfig {
 	foreground: string;
 	border: string;
 	borderOpacity: number;
-    inverseActivityBar: boolean;
+	activityBar: string;
+	popover: string;
+	coloredCursor: boolean;
 }
 
 export * from "./colors";

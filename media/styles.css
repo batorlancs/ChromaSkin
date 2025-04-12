@@ -14,7 +14,7 @@ body {
 	font-size: 1.5em;
 	font-weight: 300;
 	margin: 0px;
-    /* color: var(--vscode-foreground); */
+	/* color: var(--vscode-foreground); */
 }
 
 .header p {
@@ -22,7 +22,7 @@ body {
 	opacity: 0.5;
 	margin: 0px;
 	margin-top: 5px;
-    /* color: var(--vscode-foreground); */
+	/* color: var(--vscode-foreground); */
 }
 
 .container {
@@ -98,7 +98,7 @@ button {
 	font-size: 1em;
 	font-weight: 500;
 	transition: all 0.2s ease;
-    background-color: var(--vscode-button-background);
+	background-color: var(--vscode-button-background);
 	color: var(--vscode-button-foreground);
 }
 
@@ -108,7 +108,7 @@ button:hover {
 }
 
 .footer {
-    margin-top: 30px;
+	margin-top: 30px;
 }
 
 .slider-container {
@@ -148,8 +148,8 @@ hr {
 
 .section-header {
 	width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .section-header hr {
@@ -171,4 +171,33 @@ hr {
 	border-radius: 4px;
 	color: var(--vscode-foreground);
 	background-color: color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+}
+
+.checkbox-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 2px;
+	gap: 10px;
+}
+
+input[type="checkbox"] {
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	accent-color: var(--vscode-button-background);
+	border: 2px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+	border-radius: 4px;
+	background-color: var(--vscode-editor-background);
+	transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+	background-color: color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
+	transform: scale(1.05);
+}
+
+input[type="checkbox"]:checked {
+	background-color: var(--vscode-button-background);
+	border-color: var(--vscode-button-background);
 }

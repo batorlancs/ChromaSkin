@@ -131,7 +131,7 @@ export function getColors(provided: ThemeConfig) {
 
     // Activity Bar
     const activityBar = {
-        background: provided.inverseActivityBar ? background : accent,
+        background: provided.activityBar,
         inactiveForeground: hexToHexAlpha(foreground, 0.38),
         foreground: hexToHexAlpha(foreground, 0.83),
         badgeForeground: badge.foreground,
@@ -210,14 +210,14 @@ export function getColors(provided: ThemeConfig) {
 
     // Cursor
     const cursor = {
-        foreground: primary,
+        foreground: provided.coloredCursor ? primary : foreground,
     }
 
     // based on borderOpacity get a value between 0 and 50 (50% of the input value)
     const borderOpacityValue = Math.min(50, Math.max(0, borderOpacity * 0.5))
     
 
-    const popoverBackground = adjustColor(accent, 0, 0, 5)
+    const popoverBackground = provided.popover ? provided.popover : adjustColor(accent, 0, 0, 5)
     const popoverForeground = adjustColor(foreground, 0, 0, -10)
     const widget = {
         background: popoverBackground,

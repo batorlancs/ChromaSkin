@@ -44,6 +44,21 @@
 
             <div class="section-header"><hr><h3>Advanced Settings</h3></div>
 
+            <div class="color-picker-container">
+                <input type="color" id="activityBarColor" value="{{activityBarColor}}" />
+                <label for="activityBarColor">Activity Bar Color</label>
+            </div>
+
+            <div class="color-picker-container">
+                <input type="color" id="popoverColor" value="{{popoverColor}}" />
+                <label for="popoverColor">Popover Color</label>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="coloredCursor" {{#if coloredCursor}}checked{{/if}} />
+                <label for="coloredCursor">Colored Cursor</label>
+            </div>
+
             <div class="slider-container">
 				<input type="range" id="intensity" min="1" max="100" value="{{intensity}}" />
 				<label for="intensity">Popever Border Strength</label>

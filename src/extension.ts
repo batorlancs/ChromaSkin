@@ -11,6 +11,9 @@ interface ColorThemeConfig {
 	color3: string;
 	color4: string;
 	color5: string;
+	activityBarColor: string;
+	popoverColor: string;
+	coloredCursor: boolean;
 	intensity: number;
 }
 
@@ -38,7 +41,10 @@ export function activate(context: vscode.ExtensionContext) {
 			color3: "#252525",
 			color4: "#b8b8b8",
 			color5: "#454545",
-			intensity: 40,
+			activityBarColor: "#252525",
+			popoverColor: "#252525",
+			coloredCursor: true,
+			intensity: 30,
 		};
 
 		// Set the webview's HTML content
@@ -88,8 +94,10 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 		accent: themeConfig.color3,
 		foreground: themeConfig.color4,
 		border: themeConfig.color5,
+		activityBar: themeConfig.activityBarColor,
+		popover: themeConfig.popoverColor,
+		coloredCursor: themeConfig.coloredCursor,
 		borderOpacity: themeConfig.intensity,
-		inverseActivityBar: true,
 	});
 
 	const colorCustomizations = {
@@ -157,6 +165,9 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 		color3: themeConfig.color3,
 		color4: themeConfig.color4,
 		color5: themeConfig.color5,
+		activityBarColor: themeConfig.activityBarColor,
+		popoverColor: themeConfig.popoverColor,
+		coloredCursor: themeConfig.coloredCursor,
 		intensity: themeConfig.intensity,
 	});
 

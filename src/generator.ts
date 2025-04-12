@@ -16,7 +16,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 		foreground: colors.foreground,
 		disabledForeground: hexToHexAlpha(colors.foreground, 0.3),
 		"widget.border": hexToHexAlpha(colors.widget.border, 0.6),
-		"widget.shadow": hexToHexAlpha(colors.widget.shadow, 0.75),
+		"widget.shadow": colors.defaults.transparent,
 		"selection.background": hexToHexAlpha(provided.primary, 0.15),
 		descriptionForeground: adjustColor(colors.foreground, 0, 0, -10),
 		errorForeground: colors.defaults.other.red.default,
@@ -314,11 +314,11 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 
 		// Quick picker colors
 		"pickerGroup.border": hexToHexAlpha(colors.foreground, 0.15),
-		"quickInputList.focusBackground": adjustColor(colors.accent, 0, 0, 15),
-		"quickInputList.focusForeground": colors.foreground,
+		"quickInputList.focusBackground": adjustColor(colors.popover.background, 0, 0, 6),
+		"quickInputList.focusForeground": colors.popover.foreground,
 		"quickInput.background": colors.popover.background,
 		"quickInput.foreground": colors.popover.foreground,
-		"quickInputTitle.background": adjustColor(colors.accent, 0, 0, 5),
+		"quickInputTitle.background": adjustColor(colors.popover.background, 0, 0, -5),
 
 		// Editor Widgets
 		"editorHoverWidget.background": colors.widget.background,
