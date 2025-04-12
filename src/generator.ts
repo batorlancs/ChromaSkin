@@ -270,7 +270,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 		"menu.foreground": colors.foreground,
 		"menu.selectionBackground": hexToHexAlpha(colors.foreground, 0.09),
 		"menu.selectionForeground": colors.foreground,
-		"menu.separatorBackground": adjustColor(colors.foreground, 0, 0, -50),
+		"menu.separatorBackground": adjustColor(colors.accent, 0, 0, 10),
 
 		// Command Center
 		"commandCenter.background": colors.accent,

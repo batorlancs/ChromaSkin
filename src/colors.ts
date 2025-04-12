@@ -110,7 +110,7 @@ export function getColors(provided: ThemeConfig) {
 		foreground: buttonForeground,
 		hoverBackground: adjustColor(buttonBackground, 0, 0, -5),
 		border: defaults.transparent,
-		separator: whiteOrBlackText(buttonBackground, 0.4),
+		separator: whiteOrBlackText(buttonBackground, 0.25),
 		secondaryBackground: secondaryBackground,
 		secondaryForeground: whiteOrBlackText(secondaryBackground, 0.75),
 		secondaryHoverBackground: adjustColor(secondaryBackground, 0, 0, 5),
