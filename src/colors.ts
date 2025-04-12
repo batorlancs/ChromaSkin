@@ -102,7 +102,7 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Button
-	const buttonBackground = adjustColor(primary, 0, -5, -5);
+	const buttonBackground = provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.buttonColor;
 	const buttonForeground = whiteOrBlackText(buttonBackground);
     const secondaryBackground = adjustColor(getLightestColor([accent, background]), 0, 0, 10)
 	const button = {

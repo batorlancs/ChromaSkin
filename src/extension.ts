@@ -13,6 +13,7 @@ interface ColorThemeConfig {
 	color5: string;
 	activityBarColor: string;
 	popoverColor: string;
+	buttonColor: string;
 	coloredCursor: boolean;
 	intensity: number;
 	autoAdvancedColors: boolean;
@@ -44,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 			color5: "#454545",
 			activityBarColor: "#252525",
 			popoverColor: "#252525",
+			buttonColor: "#c089f0",
 			coloredCursor: true,
 			intensity: 30,
 			autoAdvancedColors: true,
@@ -101,6 +103,7 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 		coloredCursor: themeConfig.coloredCursor,
 		borderOpacity: themeConfig.intensity,
 		autoAdvancedColors: themeConfig.autoAdvancedColors,
+		buttonColor: themeConfig.buttonColor,
 	});
 
 	const colorCustomizations = {
@@ -170,6 +173,7 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 		color5: themeConfig.color5,
 		activityBarColor: themeConfig.activityBarColor,
 		popoverColor: themeConfig.popoverColor,
+		buttonColor: themeConfig.buttonColor,
 		coloredCursor: themeConfig.coloredCursor,
 		intensity: themeConfig.intensity,
 		autoAdvancedColors: themeConfig.autoAdvancedColors,

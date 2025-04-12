@@ -18,12 +18,13 @@
 
 		autoAdvancedColors.addEventListener("change", () => {
 			advancedColorsContainer.classList.toggle("enabled", !autoAdvancedColors.checked);
-			if (autoAdvancedColors.checked) {
-				// When automatic is enabled, set colors based on accent color
-				const accentColor = document.getElementById("color3").value;
-				document.getElementById("activityBarColor").value = accentColor;
-				document.getElementById("popoverColor").value = accentColor;
-			}
+			// if (autoAdvancedColors.checked) {
+			// 	// When automatic is enabled, set colors based on accent color
+			// 	const accentColor = document.getElementById("color3").value;
+			// 	document.getElementById("activityBarColor").value = accentColor;
+			// 	document.getElementById("popoverColor").value = accentColor;
+			// 	document.getElementById("buttonColor").value = primaryColor;
+			// }
 		});
 
 		// Initial state
@@ -47,6 +48,7 @@
 			color5: document.getElementById("color5").value,
 			activityBarColor: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
 			popoverColor: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
+			buttonColor: autoAdvancedColors ? accentColor : document.getElementById("buttonColor").value,
 			coloredCursor: document.getElementById("coloredCursor").checked,
 			intensity: parseInt(document.getElementById("intensity").value),
 			autoAdvancedColors: autoAdvancedColors,
