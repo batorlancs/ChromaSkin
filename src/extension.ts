@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import * as Handlebars from "handlebars";
-import { VSCodeThemeGenerator } from "./generator";
+import { generateWorkbenchTheme } from "./generator";
 
 interface ColorThemeConfig {
 	color1: string;
@@ -20,6 +20,16 @@ interface ColorThemeConfig {
  */
 export function activate(context: vscode.ExtensionContext) {
 	console.log("ChromaSkin extension is now active!");
+	const colors = generateWorkbenchTheme({
+		primary: "#c089f0",
+		background: "#2b2b2b",
+		accent: "#252525",
+		text: "#b8b8b8",
+		border: "#454545",
+		borderOpacity: 100,
+	});
+
+	console.log(colors);
 
 	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
 		const panel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
@@ -78,20 +88,21 @@ export function activate(context: vscode.ExtensionContext) {
 function applyColorTheme(themeConfig: ColorThemeConfig) {
 	// Get the current config
 	const config = vscode.workspace.getConfiguration("workbench");
-    const editorConfig = vscode.workspace.getConfiguration("editor");
+	const editorConfig = vscode.workspace.getConfiguration("editor");
 
-	const generator = new VSCodeThemeGenerator();
-	generator.setColors(
-		themeConfig.color1,
-		themeConfig.color2,
-		themeConfig.color3,
-		themeConfig.color4,
-		themeConfig.color5,
-		themeConfig.intensity
-	);
+	console.log(themeConfig);
+
+	const colors = generateWorkbenchTheme({
+		primary: themeConfig.color1,
+		background: themeConfig.color2,
+		accent: themeConfig.color3,
+		text: themeConfig.color4,
+		border: themeConfig.color5,
+		borderOpacity: themeConfig.intensity,
+	});
 
 	const colorCustomizations = {
-		colorCustomizations: generator.generateTheme(),
+		colorCustomizations: colors,
 		tokenColorCustomizations: {
 			textMateRules: [
 				{
@@ -118,7 +129,7 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
  */
 function resetColorTheme() {
 	const config = vscode.workspace.getConfiguration("workbench");
-    const editorConfig = vscode.workspace.getConfiguration("editor");
+	const editorConfig = vscode.workspace.getConfiguration("editor");
 	config.update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
 	editorConfig.update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
 }
