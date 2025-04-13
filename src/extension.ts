@@ -3,49 +3,57 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import * as Handlebars from "handlebars";
-import { VSCodeThemeGenerator } from "./generator";
+import { generateWorkbenchTheme } from "./generator";
+import { ThemeConfig } from "./types";
 
-interface ColorThemeConfig {
-	color1: string;
-	color2: string;
-	color3: string;
-	color4: string;
-	color5: string;
-	intensity: number;
-}
+
+let activePanel: vscode.WebviewPanel | undefined;
+let extensionContext: vscode.ExtensionContext | undefined;
+const DEFAULT_THEME_CONFIG: ThemeConfig = {
+	// color pickers
+	primary: "#c089f0",
+	background: "#2b2b2b",
+	accent: "#252525",
+	foreground: "#b8b8b8",
+	border: "#454545",
+	activityBar: "#252525",
+	popover: "#252525",
+	button: "#c089f0",
+	// slider
+	borderOpacity: 30,
+	// checkbox
+	coloredCursor: true,
+	autoAdvancedColors: true,
+	editorHighlighting: true,
+};
 
 /**
  * This method is called when the extension is activated.
  * @param context vscode.ExtensionContext
  */
 export function activate(context: vscode.ExtensionContext) {
-	console.log("ChromaSkin extension is now active!");
+	console.log("ChromaSkin: activated!");
+	extensionContext = context;
 
 	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
-		const panel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
+		activePanel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
 			enableScripts: true,
 			localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "media"))],
 		});
-		panel.iconPath = {
+		activePanel.iconPath = {
 			light: vscode.Uri.file(path.join(context.extensionPath, "resources", "chromaskin-lightmode.png")),
 			dark: vscode.Uri.file(path.join(context.extensionPath, "resources", "chromaskin-darkmode.png")),
 		};
 
 		// Initial color theme configuration
-		const themeConfig: ColorThemeConfig = {
-			color1: "#c089f0",
-			color2: "#2b2b2b",
-			color3: "#252525",
-			color4: "#b8b8b8",
-			color5: "#454545",
-			intensity: 100,
-		};
+		const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || DEFAULT_THEME_CONFIG;
+		const { theme } = generateWorkbenchTheme(themeConfig);
 
 		// Set the webview's HTML content
-		panel.webview.html = getWebviewContent(context, panel.webview, themeConfig);
+		activePanel.webview.html = getWebviewContent(context, activePanel.webview, theme);
 
 		// Handle messages from the webview
-		panel.webview.onDidReceiveMessage(
+		activePanel.webview.onDidReceiveMessage(
 			(message) => {
 				switch (message.command) {
 					case "applyTheme":
@@ -61,6 +69,18 @@ export function activate(context: vscode.ExtensionContext) {
 			undefined,
 			context.subscriptions
 		);
+
+		// Handle visibility changes
+        activePanel.onDidChangeViewState((event) => {
+            if (activePanel?.visible) {
+				const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || DEFAULT_THEME_CONFIG;
+				const { theme } = generateWorkbenchTheme(themeConfig);
+				activePanel.webview.postMessage({
+					command: "set-colors",
+					themeConfig: theme,
+				});
+            }
+        });
 	});
 
 	context.subscriptions.push(disposable);
@@ -75,23 +95,15 @@ export function activate(context: vscode.ExtensionContext) {
  * @param themeConfig ColorThemeConfig
  * @returns void
  */
-function applyColorTheme(themeConfig: ColorThemeConfig) {
+function applyColorTheme(themeConfig: ThemeConfig) {
 	// Get the current config
 	const config = vscode.workspace.getConfiguration("workbench");
-    const editorConfig = vscode.workspace.getConfiguration("editor");
+	const editorConfig = vscode.workspace.getConfiguration("editor");
 
-	const generator = new VSCodeThemeGenerator();
-	generator.setColors(
-		themeConfig.color1,
-		themeConfig.color2,
-		themeConfig.color3,
-		themeConfig.color4,
-		themeConfig.color5,
-		themeConfig.intensity
-	);
+	const { data, theme } = generateWorkbenchTheme(themeConfig);
 
 	const colorCustomizations = {
-		colorCustomizations: generator.generateTheme(),
+		colorCustomizations: data,
 		tokenColorCustomizations: {
 			textMateRules: [
 				{
@@ -107,6 +119,19 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 	// Update both color and token customizations
 	config.update("colorCustomizations", colorCustomizations.colorCustomizations, vscode.ConfigurationTarget.Global);
 	editorConfig.update("tokenColorCustomizations", colorCustomizations.tokenColorCustomizations, vscode.ConfigurationTarget.Global);
+
+	if (themeConfig.autoAdvancedColors && activePanel) {
+		activePanel.webview.postMessage({
+			command: "set-colors",
+			themeConfig: theme,
+		});
+	}
+
+	// Save to global state
+	if (extensionContext) {
+		extensionContext.globalState.update("chromaskin-theme-config", themeConfig);
+		console.log("ChromaSkin: Theme Config Saved!");
+	}
 }
 
 /**
@@ -118,7 +143,7 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
  */
 function resetColorTheme() {
 	const config = vscode.workspace.getConfiguration("workbench");
-    const editorConfig = vscode.workspace.getConfiguration("editor");
+	const editorConfig = vscode.workspace.getConfiguration("editor");
 	config.update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
 	editorConfig.update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
 }
@@ -130,7 +155,7 @@ function resetColorTheme() {
  * @param themeConfig ColorThemeConfig
  * @returns the HTML content as a string
  */
-function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ColorThemeConfig): string {
+function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ThemeConfig): string {
 	// Get paths to our external files
 	const stylesPath = vscode.Uri.file(path.join(context.extensionPath, "media", "styles.css"));
 	const scriptPath = vscode.Uri.file(path.join(context.extensionPath, "media", "script.js"));
@@ -150,12 +175,18 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 	const htmlContent = template({
 		stylesUri: stylesUri.toString(),
 		scriptUri: scriptUri.toString(),
-		color1: themeConfig.color1,
-		color2: themeConfig.color2,
-		color3: themeConfig.color3,
-		color4: themeConfig.color4,
-		color5: themeConfig.color5,
-		intensity: themeConfig.intensity,
+		primary: themeConfig.primary,
+		background: themeConfig.background,
+		accent: themeConfig.accent,
+		foreground: themeConfig.foreground,
+		border: themeConfig.border,
+		activityBar: themeConfig.activityBar,
+		popover: themeConfig.popover,
+		button: themeConfig.button,
+		coloredCursor: themeConfig.coloredCursor,
+		borderOpacity: themeConfig.borderOpacity,
+		autoAdvancedColors: themeConfig.autoAdvancedColors,
+		editorHighlighting: themeConfig.editorHighlighting,
 	});
 
 	return htmlContent;

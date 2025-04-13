@@ -17,37 +17,69 @@
             <div class="section-header"><hr><h3>Basic Settings</h3></div>
 
 			<div class="color-picker-container">
-				<input type="color" id="color1" value="{{color1}}" />
+				<input type="color" id="color1" value="{{primary}}" />
 				<label for="color1">Primary Color</label>
 			</div>
 
 			<div class="color-picker-container">
-				<input type="color" id="color2" value="{{color2}}" />
+				<input type="color" id="color2" value="{{background}}" />
 				<label for="color2">Background Color</label>
 			</div>
 
 			<div class="color-picker-container">
-				<input type="color" id="color3" value="{{color3}}" />
+				<input type="color" id="color3" value="{{accent}}" />
 				<label for="color3">Accent Color</label>
 			</div>
 
 			<div class="color-picker-container">
-				<input type="color" id="color4" value="{{color4}}" />
+				<input type="color" id="color4" value="{{foreground}}" />
 				<label for="color4">Foreground Color</label>
 			</div>
 
 			<div class="color-picker-container">
-				<input type="color" id="color5" value="{{color5}}" />
+				<input type="color" id="color5" value="{{border}}" />
 				<label for="color5">Border Color</label>
 			</div>
 
 
             <div class="section-header"><hr><h3>Advanced Settings</h3></div>
 
+            <div class="checkbox-container">
+                <input type="checkbox" id="autoAdvancedColors" {{#if autoAdvancedColors}}checked{{/if}} />
+                <label for="autoAdvancedColors">Automatic Colors</label>
+            </div>
+
+            <div id="advanced-colors-container" class="advanced-colors-container">
+                <div class="color-picker-container">
+                    <input type="color" id="activityBarColor" value="{{activityBar}}" />
+                    <label for="activityBarColor">Activity Bar Color</label>
+                </div>
+
+                <div class="color-picker-container">
+                    <input type="color" id="popoverColor" value="{{popover}}" />
+                    <label for="popoverColor">Popover Color</label>
+                </div>
+
+                <div class="color-picker-container">
+                    <input type="color" id="buttonColor" value="{{button}}" />
+                    <label for="buttonColor">Button Color</label>
+                </div>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="coloredCursor" {{#if coloredCursor}}checked{{/if}} />
+                <label for="coloredCursor">Colored Cursor</label>
+            </div>
+
+			<div class="checkbox-container">
+				<input type="checkbox" id="editorHighlighting" {{#if editorHighlighting}}checked{{/if}} />
+				<label for="editorHighlighting">Editor Highlighting Overwrite</label>
+			</div>
+
             <div class="slider-container">
-				<input type="range" id="intensity" min="1" max="100" value="{{intensity}}" />
+				<input type="range" id="intensity" min="1" max="100" value="{{borderOpacity}}" />
 				<label for="intensity">Popever Border Strength</label>
-				<div class="slider-value" id="intensity-value">{{intensity}}</div>
+				<div class="slider-value" id="intensity-value">{{borderOpacity}}</div>
 			</div>
 
 			<div class="footer">

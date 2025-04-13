@@ -1,690 +1,575 @@
-interface DerivedColors {
-	buttonBackground: string;
-	buttonHoverBackground: string;
-	selectionBackground: string;
-	borderColor: string;
-	activeBorder: string;
-	inactiveBorder: string;
-	popoverBackground: string;
+import { getColors } from "./colors";
+import { ThemeConfig } from "./types";
+import { adjustColor, hexToHexAlpha, whiteOrBlackText } from "./utils";
+
+interface GenerateWorkbenchThemeResponse {
+	data: Record<string, any>;
+	theme: ThemeConfig;
 }
 
-/**
- * VS Code Theme Generator
- *
- * This class generates a VS Code theme based on the base colors provided.
- */
-class VSCodeThemeGenerator {
-	public primaryColor: string;
-	public backgroundColor: string;
-	public sidebarColor: string;
-	public textColor: string;
-	public borderColor: string;
-	public borderOpacity: number;
-	private derivedColors: DerivedColors;
-	private defaultColors = {
-		transparent: "#00000000",
+// Generate the theme JSON
+export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbenchThemeResponse {
+	const { colors, theme: themeWithAuto } = getColors(provided);
+
+	const EditorHighlighting = {
+		"diffEditor.insertedTextBackground": colors.diffEditor.insertedTextBackground,
+		"diffEditor.removedTextBackground": colors.diffEditor.removedTextBackground,
+		"diffEditor.insertedLineBackground": colors.diffEditor.insertedLineBackground,
+		"diffEditor.removedLineBackground": colors.diffEditor.removedLineBackground,
+		"diffEditor.diagonalFill": colors.diffEditor.diagonalFill,
+		"diffEditor.unchangedRegionBackground": colors.diffEditor.unchangedRegionBackground,
+		"diffEditor.unchangedRegionForeground": colors.diffEditor.unchangedRegionForeground,
+		"diffEditor.unchangedRegionShadow": colors.diffEditor.unchangedRegionShadow,
+		"diffEditor.unchangedCodeBackground": colors.diffEditor.unchangedCodeBackground,
+		"diffEditor.gutter.insertedLineBackground": colors.diffEditor["gutter.insertedLineBackground"],
+		"diffEditor.gutter.removedLineBackground": colors.diffEditor["gutter.removedLineBackground"],
+		"diffEditor.overview.insertedForeground": colors.diffEditor["overview.insertedForeground"],
+		"diffEditor.overview.removedForeground": colors.diffEditor["overview.removedForeground"],
+		"diffEditor.move.border": colors.diffEditor["move.border"],
+		"diffEditor.moveActive.border": colors.diffEditor["moveActive.border"],
+		"diffEditor.multi.headerBackground": colors.diffEditor["multi.headerBackground"],
+		"diffEditor.multi.background": colors.diffEditor["multi.background"],
+		"diffEditor.multi.border": colors.diffEditor["multi.border"],
+
+		"editor.wordHighlightBackground": colors.editor.wordHighlightBackground,
+		"editor.wordHighlightBorder": colors.editor.wordHighlightBorder,
+		"editor.wordHighlightStrongBackground": colors.editor.wordHighlightStrongBackground,
+		"editor.wordHighlightStrongBorder": colors.editor.wordHighlightStrongBorder,
+		"editor.wordHighlightTextBackground": colors.editor.wordHighlightTextBackground,
+		"editor.wordHighlightTextBorder": colors.editor.wordHighlightTextBorder,
+		"editor.findMatchBackground": colors.editor.findMatchBackground,
+		"editor.findMatchForeground": colors.editor.findMatchForeground,
+		"editor.findMatchHighlightBackground": colors.editor.findMatchHighlightBackground,
+		"editor.findMatchHighlightForeground": colors.editor.findMatchHighlightForeground,
+		"editor.findRangeHighlightBackground": colors.editor.findRangeHighlightBackground,
+		"editor.findMatchBorder": colors.editor.findMatchBorder,
+		"editor.findMatchHighlightBorder": colors.editor.findMatchHighlightBorder,
+		"editor.findRangeHighlightBorder": colors.editor.findRangeHighlightBorder,
+		"editor.hoverHighlightBackground": colors.editor.hoverHighlightBackground,
+		"editor.linkActiveForeground": colors.editor.linkActiveForeground,
+		"editor.unicodeHighlightBorder": colors.editor.unicodeHighlightBorder,
+		"editor.unicodeHighlightBackground": colors.editor.unicodeHighlightBackground,
+		"editor.symbolHighlightBackground": colors.editor.symbolHighlightBackground,
+		"editor.symbolHighlightBorder": colors.editor.symbolHighlightBorder,
+		"editor.whitespace": colors.editor.whitespace,
+		"editor.inlayHintBackground": colors.editor.inlayHintBackground,
+		"editor.inlayHintForeground": colors.editor.inlayHintForeground,
+		"editor.inlayHintTypeBackground": colors.editor.inlayHintTypeBackground,
+		"editor.inlayHintTypeForeground": colors.editor.inlayHintTypeForeground,
+		"editor.inlayHintParameterBackground": colors.editor.inlayHintParameterBackground,
+		"editor.inlayHintParameterForeground": colors.editor.inlayHintParameterForeground,
+		"editorRuler.foreground": colors.editor.rulerForeground,
+		"editor.codeLensForeground": colors.editor.codeLensForeground,
+		"editor.linkedEditingBackground": colors.editor.linkedEditingBackground,
+	}
+
+	let data = {
+		// Contrast colors
+		contrastActiveBorder: colors.defaults.transparent,
+		contrastBorder: colors.defaults.transparent,
+
+		// Base colors
+		focusBorder: "#8e8eff00",
+		foreground: colors.foreground,
+		disabledForeground: hexToHexAlpha(colors.foreground, 0.3),
+		"widget.border": hexToHexAlpha(colors.widget.border, 0.6),
+		"widget.shadow": colors.defaults.transparent,
+		"selection.background": hexToHexAlpha(provided.primary, 0.15),
+		descriptionForeground: adjustColor(colors.foreground, 0, 0, -10),
+		errorForeground: colors.defaults.other.red.default,
+		"icon.foreground": colors.foreground,
+		"sash.hoverBorder": colors.border,
+
+		// Window borders
+		"window.activeBorder": colors.border,
+		"window.inactiveBorder": colors.background,
+
+		// Text colors
+		"textBlockQuote.background": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
+		"textBlockQuote.border": colors.border,
+		"textCodeBlock.background": colors.background,
+		"textLink.activeForeground": adjustColor(colors.primary, 0, 0, 10),
+		"textLink.foreground": colors.primary,
+		"textPreformat.foreground": colors.foreground,
+		"textPreformat.background": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
+		"textSeparator.foreground": colors.foreground,
+
+		// Action colors
+		"toolbar.activeBackground": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
+		"toolbar.hoverBackground": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
+		"toolbar.hoverOutline": "#55555500",
+		"editorActionList.background": colors.popover.background,
+		"editorActionList.foreground": colors.popover.foreground,
+		"editorActionList.focusBackground": colors.popover.focusBackground,
+		"editorActionList.focusForeground": colors.popover.focusForeground,
+
+		// Button control
+		"button.background": colors.button.background,
+		"button.foreground": colors.button.foreground,
+		"button.hoverBackground": colors.button.hoverBackground,
+		"button.border": colors.defaults.transparent,
+		"button.separator": colors.button.separator,
+		"button.secondaryBackground": colors.button.secondaryBackground,
+		"button.secondaryForeground": colors.button.secondaryForeground,
+		"button.secondaryHoverBackground": colors.button.secondaryHoverBackground,
+		"checkbox.foreground": colors.primary,
+		"checkbox.background": colors.background,
+		"checkbox.border": colors.border,
+		"radio.activeForeground": colors.primary,
+		"radio.activeBackground": colors.button.background,
+		"radio.activeBorder": colors.border,
+		"radio.inactiveBorder": colors.border,
+		"radio.inactivateHoverBackground": colors.button.hoverBackground,
+
+		// Dropdown control
+		"dropdown.background": colors.background,
+		"dropdown.listBackground": adjustColor(colors.background, 0, 0, 5),
+		"dropdown.border": colors.border,
+		"dropdown.foreground": colors.foreground,
+
+		// Input control
+		"input.background": colors.background,
+		"input.foreground": colors.foreground,
+		"input.border": hexToHexAlpha(colors.border, 0.78),
+		"input.placeholderForeground": adjustColor(colors.foreground, 0, 0, -10),
+		"inputOption.activeBackground": hexToHexAlpha(colors.primary, 0.3),
+		"inputOption.activeBorder": colors.primary,
+		"inputOption.activeForeground": colors.foreground,
+		"inputOption.hoverBackground": hexToHexAlpha(colors.primary, 0.2),
+		"inputValidation.errorBackground": hexToHexAlpha(colors.defaults.other.red.default, 0.1),
+		"inputValidation.errorForeground": colors.defaults.other.red.default,
+		"inputValidation.errorBorder": colors.defaults.other.red.default,
+		"inputValidation.infoBackground": hexToHexAlpha(colors.defaults.other.blue.default, 0.1),
+		"inputValidation.infoForeground": colors.defaults.other.blue.default,
+		"inputValidation.infoBorder": colors.defaults.other.blue.default,
+		"inputValidation.warningBackground": hexToHexAlpha(colors.defaults.other.yellow.default, 0.1),
+		"inputValidation.warningForeground": colors.defaults.other.yellow.default,
+		"inputValidation.warningBorder": colors.defaults.other.yellow.default,
+
+		// Scrollbar control
+		"scrollbar.shadow": `${adjustColor(colors.background, 0, 0, -5)}00`,
+		"scrollbarSlider.background": hexToHexAlpha(colors.foreground, 0.21),
+		"scrollbarSlider.activeBackground": hexToHexAlpha(colors.foreground, 0.31),
+		"scrollbarSlider.hoverBackground": hexToHexAlpha(colors.foreground, 0.26),
+
+		// Badge
+		"badge.background": colors.badge.background,
+		"badge.foreground": colors.badge.foreground,
+
+		// Progress bar
+		"progressBar.background": colors.primary,
+
+		// Lists and trees
+		"list.hoverBackground": hexToHexAlpha(colors.foreground, 0.04),
+		"list.hoverForeground": colors.foreground,
+		"list.activeSelectionBackground": hexToHexAlpha(colors.foreground, 0.07),
+		"list.activeSelectionForeground": colors.foreground,
+		"list.inactiveSelectionBackground": hexToHexAlpha(colors.foreground, 0.04),
+		"list.inactiveSelectionForeground": hexToHexAlpha(colors.foreground, 0.71),
+		"list.focusBackground": hexToHexAlpha(colors.primary, 0.07),
+		"list.focusForeground": colors.foreground,
+		"list.inactiveFocusBackground": hexToHexAlpha(colors.primary, 0.08),
+		"list.focusAndSelectionOutline": colors.defaults.transparent,
+		"list.dropBackground": hexToHexAlpha(adjustColor(colors.primary, 0, -20, -20), 0.28),
+		"list.highlightForeground": adjustColor(colors.foreground, 0, 0, 20),
+		"tree.indentGuidesStroke": colors.defaults.transparent,
+		"tree.inactiveIndentGuidesStroke": colors.defaults.transparent,
+
+		// Activity bar
+		"activityBar.background": colors.activityBar.background,
+		"activityBar.inactiveForeground": colors.activityBar.inactiveForeground,
+		"activityBar.foreground": colors.activityBar.foreground,
+		"activityBar.activeBorder": colors.activityBar.activeBorder,
+		"activityBar.border": colors.activityBar.border,
+		"activityBar.activeBackground": colors.activityBar.activeBackground,
+		"activityBarBadge.foreground": colors.activityBar.badgeForeground,
+		"activityBarBadge.background": colors.primary,
+
+		// Profiles
+		"profileBadge.background": colors.profileBadge.background,
+		"profileBadge.foreground": colors.profileBadge.foreground,
+		"profiles.sashBorder": colors.border,
+
+		// Side Bar
+		"sideBar.background": colors.sideBar.background,
+		"sideBar.border": colors.sideBar.border,
+		"sideBar.foreground": colors.sideBar.foreground,
+		"sideBarTitle.foreground": colors.sideBarTitle.foreground,
+		"sideBarTitle.border": colors.sideBarTitle.border,
+		"sideBarTitle.background": colors.sideBarTitle.background,
+		"sideBarSectionHeader.background": colors.sideBar.background,
+		"sideBarSectionHeader.foreground": colors.sideBar.foreground,
+		"sideBarSectionHeader.border": colors.sideBarSectionHeader.border,
+		"sideBarStickyScroll.border": colors.sideBarStickyScroll.border,
+		"sideBarStickyScroll.background": colors.sideBarStickyScroll.background,
+		"sideBarStickyScroll.shadow": colors.sideBarStickyScroll.shadow,
+
+		// Minimap
+		"minimap.foregroundOpacity": hexToHexAlpha(colors.background, 0.5),
+		"minimap.background": colors.background,
+
+		// Editor Groups and Tabs
+		"editorGroup.border": colors.border,
+		"editorGroup.emptyBackground": colors.background,
+		"editorGroupHeader.tabsBackground": colors.sideBar.background,
+		"editorGroupHeader.tabsBorder": colors.sideBar.background,
+		"editorGroupHeader.noTabsBackground": colors.sideBar.background,
+		"editorGroupHeader.border": colors.border,
+		"editorGroup.dropBackground": hexToHexAlpha(colors.primary, 0.07),
+
+		"tab.border": colors.border,
+		"tab.hoverBorder": "default",
+		"tab.activeBackground": colors.background,
+		"tab.inactiveBackground": colors.defaults.transparent,
+		"tab.activeForeground": colors.foreground,
+		"tab.inactiveForeground": colors.foreground,
+		"tab.activeBorder": colors.background,
+		"tab.hoverBackground": colors.defaults.transparent,
+		"tab.hoverForeground": colors.foreground,
+		"tab.activeBorderTop": colors.foreground,
+		"tab.unfocusedActiveBorder": colors.background,
+		"tab.unfocusedActiveBorderTop": hexToHexAlpha(colors.foreground, 0.4),
+		"tab.unfocusedActiveBackground": colors.background,
+		"tab.unfocusedActiveForeground": colors.foreground,
+		"tab.unfocusedHoverBackground": colors.sideBar.background,
+		"tab.unfocusedHoverForeground": colors.foreground,
+		"tab.unfocusedInactiveBackground": colors.sideBar.background,
+		"tab.unfocusedInactiveForeground": colors.foreground,
+		"tab.unfocusedHoverBorder": "default",
+		"tab.dragAndDropBorder": hexToHexAlpha(colors.foreground, 0.52),
+
+		// Editor colors
+		"editor.background": colors.editor.background,
+		"editor.foreground": colors.editor.foreground,
+		"editor.selectionBackground": colors.editor.selectionBackground,
+		"editor.selectionHighlightBackground": colors.editor.selectionHighlightBackground,
+		"editor.selectionForeground": colors.editor.selectionForeground,
+		"editor.selectionHighlightBorder": colors.editor.selectionHighlightBorder,
+		"editor.inactiveSelectionBackground": colors.editor.inactiveSelectionBackground,
+		"editor.lineHighlightBorder": colors.editor.lineHighlightBorder,
+		"editor.lineHighlightBackground": colors.editor.lineHighlightBackground,
+		"editorLineNumber.foreground": colors.editor.lineNumber.foreground,
+		"editorLineNumber.activeForeground": colors.editor.lineNumber.activeForeground,
+		"editorGutter.background": colors.editor.gutter.background,
+		"editorBracketMatch.background": colors.editor.bracketMatch.background,
+		"editorBracketMatch.border": colors.editor.bracketMatch.border,
+		"editorStickyScroll.border": colors.editor.stickyScroll.border,
+		"editorStickyScroll.shadow": colors.editor.stickyScroll.shadow,
+		"editorStickyScroll.background": colors.editor.stickyScroll.background,
+		"editorStickyScrollHover.background": colors.editor.stickyScrollHover.background,
+		"editorIndentGuide.activeBackground1": colors.editor.indentGuide.activeBackground1,
+		"editorIndentGuide.background1": colors.editor.indentGuide.background1,
+		"editor.rangeHighlightBackground": colors.editor.rangeHighlightBackground,
+		"editor.rangeHighlightBorder": colors.editor.rangeHighlightBorder,
+
+		// Overview ruler
+		"editorOverviewRuler.border": hexToHexAlpha(colors.foreground, 0.075),
+		"editorOverviewRuler.background": colors.background,
+		"editorOverviewRuler.activeBorder": colors.border,
+		"editorOverviewRuler.activeBackground": hexToHexAlpha(colors.foreground, 0.04),
+		"editorOverviewRuler.findMatchBorder": colors.primary,
+		"editorOverviewRuler.findMatchBackground": hexToHexAlpha(colors.primary, 0.33),
+		"editorOverviewRuler.findMatchForeground": hexToHexAlpha(colors.primary, 0.5),
+		"editorOverviewRuler.rangeHighlightForeground": hexToHexAlpha(colors.primary, 0.4),
+		"editorOverviewRuler.selectionHighlightForeground": hexToHexAlpha(colors.primary, 0.3),
+		"editorOverviewRuler.wordHighlightForeground": hexToHexAlpha(colors.foreground, 0.3),
+		"editorOverviewRuler.wordHighlightStrongForeground": hexToHexAlpha(colors.foreground, 0.5),
+		"editorOverviewRuler.wordHighlightTextForeground": hexToHexAlpha(colors.foreground, 0.4),
+		"editorOverviewRuler.modifiedForeground": "#e2c08d",
+		"editorOverviewRuler.addedForeground": "#73c991",
+		"editorOverviewRuler.deletedForeground": "#ff6b6b",
+		"editorOverviewRuler.errorForeground": "#ff5555",
+		"editorOverviewRuler.warningForeground": "#ff9100",
+		"editorOverviewRuler.infoForeground": "#75beff",
+		"editorOverviewRuler.bracketMatchForeground": hexToHexAlpha(colors.foreground, 0.3),
+		"editorOverviewRuler.inlineChatInserted": "#73c99180",
+		"editorOverviewRuler.inlineChatRemoved": "#ff6b6b80",
+
+		// Inline Edit
+		// "editorInlineEdit.gutterIndicator.primaryBorder": colors.inlineEdit.gutterIndicator.primaryBorder,
+		// "editorInlineEdit.gutterIndicator.primaryForeground": colors.inlineEdit.gutterIndicator.primaryForeground,
+		// "editorInlineEdit.gutterIndicator.primaryBackground": colors.inlineEdit.gutterIndicator.primaryBackground,
+		// "editorInlineEdit.gutterIndicator.secondaryBorder": colors.inlineEdit.gutterIndicator.secondaryBorder,
+		// "editorInlineEdit.gutterIndicator.secondaryForeground": colors.inlineEdit.gutterIndicator.secondaryForeground,
+		// "editorInlineEdit.gutterIndicator.secondaryBackground": colors.inlineEdit.gutterIndicator.secondaryBackground,
+		// "editorInlineEdit.gutterIndicator.successfulBorder": colors.inlineEdit.gutterIndicator.successfulBorder,
+		// "editorInlineEdit.gutterIndicator.successfulForeground": colors.inlineEdit.gutterIndicator.successfulForeground,
+		// "editorInlineEdit.gutterIndicator.successfulBackground": colors.inlineEdit.gutterIndicator.successfulBackground,
+		// "editorInlineEdit.gutterIndicator.background": colors.inlineEdit.gutterIndicator.background,
+		// "editorInlineEdit.originalBackground": colors.inlineEdit.originalBackground,
+		// "editorInlineEdit.modifiedBackground": colors.inlineEdit.modifiedBackground,
+		// "editorInlineEdit.originalChangedLineBackground": colors.inlineEdit.originalChangedLineBackground,
+		// "editorInlineEdit.originalChangedTextBackground": colors.inlineEdit.originalChangedTextBackground,
+		// "editorInlineEdit.modifiedChangedLineBackground": colors.inlineEdit.modifiedChangedLineBackground,
+		// "editorInlineEdit.modifiedChangedTextBackground": colors.inlineEdit.modifiedChangedTextBackground,
+		// "editorInlineEdit.originalBorder": colors.inlineEdit.originalBorder,
+		// "editorInlineEdit.modifiedBorder": colors.inlineEdit.modifiedBorder,
+		// "editorInlineEdit.tabWillAcceptModifiedBorder": colors.inlineEdit.tabWillAcceptModifiedBorder,
+		// "editorInlineEdit.tabWillAcceptOriginalBorder": colors.inlineEdit.tabWillAcceptOriginalBorder,
+
+		// Diff editor
+		"diffEditor.border": colors.border,
+		
+
+		// Editor widget
+		"editorWidget.background": adjustColor(colors.background, 0, 0, 5),
+		"editorWidget.foreground": colors.foreground,
+		"editorWidget.border": colors.border,
+
+		// Panel colors
+		"panelTitle.inactiveForeground": colors.panel.title.inactiveForeground,
+		"panelTitle.activeBorder": colors.panel.title.activeBorder,
+		"panelTitle.activeForeground": colors.panel.title.activeForeground,
+		"panel.background": colors.panel.background,
+		"panel.border": colors.panel.border,
+		"panelSection.border": colors.panel.section.border,
+		"panelSection.dropBackground": colors.panel.section.dropBackground,
+		"panelStickyScroll.border": colors.panel.stickyScroll.border,
+
+		// Status Bar colors
+		"statusBar.background": colors.statusBar.background,
+		"statusBar.foreground": colors.statusBar.foreground,
+		"statusBar.debuggingBackground": colors.statusBar.debuggingBackground,
+		"statusBar.debuggingForeground": colors.statusBar.debuggingForeground,
+		"statusBar.debuggingBorder": colors.statusBar.debuggingBorder,
+		"statusBarItem.hoverBackground": colors.statusBar.itemHoverBackground,
+		"statusBar.noFolderBackground": colors.statusBar.noFolderBackground,
+		"statusBar.border": colors.statusBar.border,
+		"statusBarItem.remoteBackground": colors.statusBar.itemRemoteBackground,
+		"statusBarItem.remoteForeground": colors.statusBar.itemRemoteForeground,
+		"statusBarItem.remoteHoverBackground": colors.statusBar.itemRemoteHoverBackground,
+		"statusBarItem.remoteHoverForeground": colors.statusBar.itemRemoteHoverForeground,
+
+		// Title Bar colors
+		"titleBar.activeBackground": colors.accent,
+		"titleBar.inactiveBackground": colors.accent,
+		"titleBar.border": colors.border,
+		"titleBar.activeForeground": colors.foreground,
+		"titleBar.inactiveForeground": adjustColor(colors.foreground, 0, 0, -30),
+
+		// Menu Bar colors
+		"menubar.selectionForeground": colors.foreground,
+		"menubar.selectionBackground": hexToHexAlpha(colors.foreground, 0.09),
+		"menubar.selectionHoverBackground": adjustColor(colors.accent, 0, 0, 15),
+		"menubar.selectionBorder": colors.defaults.transparent,
+		"menu.background": adjustColor(colors.accent, 0, 0, 3),
+		"menu.border": colors.border,
+		"menu.foreground": colors.foreground,
+		"menu.selectionBackground": hexToHexAlpha(colors.foreground, 0.09),
+		"menu.selectionForeground": colors.foreground,
+		"menu.selectionBorder": colors.defaults.transparent,
+		"menu.separatorBackground": adjustColor(colors.accent, 0, 0, 10),
+
+		// Command Center
+		"commandCenter.background": colors.accent,
+		"commandCenter.border": hexToHexAlpha(colors.foreground, 0.1),
+		"commandCenter.activeBackground": colors.accent,
+		"commandCenter.inactiveBorder": hexToHexAlpha(colors.foreground, 0.1),
+		"commandCenter.foreground": colors.foreground,
+		"commandCenter.activeForeground": colors.foreground,
+		"commandCenter.inactiveForeground": hexToHexAlpha(colors.foreground, 0.5),
+		"commandCenter.activeBorder": hexToHexAlpha(colors.foreground, 0.25),
+		"commandCenter.debuggingBackground": colors.defaults.transparent,
+
+		// Notification colors
+		"notificationCenter.border": colors.border,
+		"notificationCenterHeader.foreground": colors.foreground,
+		"notificationCenterHeader.background": colors.accent,
+		"notifications.background": colors.accent,
+		"notifications.border": colors.border,
+		"notifications.foreground": colors.foreground,
+		"notificationToast.border": colors.border,
+		"notificationLink.foreground": colors.primary,
+		"notificationsErrorIcon.foreground": colors.defaults.other.red.default,
+		"notificationsWarningIcon.foreground": colors.defaults.other.yellow.default,
+		"notificationsInfoIcon.foreground": colors.defaults.other.blue.default,
+
+		// Banner colors
+		"banner.background": adjustColor(colors.accent, 0, 0, 15),
+		"banner.foreground": colors.foreground,
+
+		// Extensions colors
+		"extensionButton.prominentForeground": whiteOrBlackText(colors.button.background),
+		"extensionButton.prominentBackground": colors.button.background,
+		"extensionButton.prominentHoverBackground": colors.button.hoverBackground,
+		"extensionButton.background": colors.button.background,
+		"extensionButton.foreground": whiteOrBlackText(colors.button.background),
+		"extensionButton.hoverBackground": colors.button.hoverBackground,
+		"extensionButton.separator": whiteOrBlackText(colors.button.background, 0.4),
+		"extensionBadge.remoteBackground": colors.primary,
+		"extensionBadge.remoteForeground": whiteOrBlackText(colors.primary),
+		"extensionIcon.starForeground": colors.defaults.other.yellow.default,
+		"extensionIcon.verifiedForeground": colors.primary,
+		"extensionIcon.preReleaseForeground": colors.primary,
+		"extensionIcon.sponsorForeground": colors.primary,
+		"extensionIcon.privateForeground": colors.primary,
+
+		// Quick picker colors
+		"pickerGroup.border": hexToHexAlpha(colors.foreground, 0.15),
+		"quickInputList.focusBackground": adjustColor(colors.popover.background, 0, 0, 6),
+		"quickInputList.focusForeground": colors.popover.foreground,
+		"quickInput.background": colors.popover.background,
+		"quickInput.foreground": colors.popover.foreground,
+		"quickInputTitle.background": adjustColor(colors.popover.background, 0, 0, -5),
+
+		// Editor Widgets
+		"editorHoverWidget.background": colors.widget.background,
+		"editorHoverWidget.border": colors.widget.border,
+		"editorHoverWidget.foreground": colors.widget.foreground,
+		"editorSuggestWidget.background": colors.widget.background,
+		"editorSuggestWidget.selectedBackground": hexToHexAlpha(colors.foreground, 0.06),
+		"editorSuggestWidget.border": hexToHexAlpha(colors.widget.border, 0.5),
+
+		// Integrated Terminal colors
+		"terminal.background": colors.accent,
+		"terminal.border": `${colors.foreground}00`,
+		"terminal.foreground": colors.foreground,
+		"terminal.selectionBackground": hexToHexAlpha(colors.foreground, 0.25),
+		"terminalCursor.background": colors.background,
+		"terminalCursor.foreground": colors.foreground,
+
+		// Breadcrumbs colors
+		"breadcrumb.background": colors.background,
+		"breadcrumb.border": colors.background,
+		"breadcrumb.foreground": hexToHexAlpha(colors.foreground, 0.5),
+		"breadcrumb.focusForeground": hexToHexAlpha(colors.foreground, 0.85),
+		"breadcrumb.activeSelectionForeground": colors.foreground,
+
+		// Other
+		"sideBySideEditor.horizontalBorder": colors.border,
+		"sideBySideEditor.verticalBorder": colors.border,
+
+		// Git
+		"gitDecoration.ignoredResourceForeground": colors.git.ignoredResourceForeground,
+		"gitDecoration.modifiedResourceForeground": colors.git.modifiedResourceForeground,
+		"gitDecoration.deletedResourceForeground": colors.git.deletedResourceForeground,
+		"gitDecoration.untrackedResourceForeground": colors.git.untrackedResourceForeground,
+		"gitDecoration.conflictingResourceForeground": colors.git.conflictingResourceForeground,
+		"gitDecoration.submoduleResourceForeground": colors.git.submoduleResourceForeground,
+		"gitDecoration.stageModifiedResourceForeground": colors.git.stageModifiedResourceForeground,
+		"gitDecoration.stageDeletedResourceForeground": colors.git.stageDeletedResourceForeground,
+		"gitDecoration.addedResourceForeground": colors.git.addedResourceForeground,
+
+		// Additional editor colors
+		"editorCursor.foreground": colors.cursor.foreground,
+		"editorWarning.foreground": "#ff9100",
+		"editorError.foreground": colors.defaults.other.red.default,
+		"editorInfo.foreground": colors.defaults.other.blue.default,
+		"editorHint.foreground": hexToHexAlpha(colors.defaults.other.blue.default, 0.6),
+
+		// Peek view colors
+		"peekView.border": colors.border,
+		"peekViewEditor.background": adjustColor(colors.background, 0, 0, -5),
+		"peekViewResult.background": adjustColor(colors.background, 0, 0, -8),
+		"peekViewTitle.background": adjustColor(colors.background, 0, 0, -3),
+
+		// Debug colors
+		"debugToolBar.background": colors.accent,
+		"debugToolBar.border": colors.border,
+		"debugIcon.breakpointForeground": colors.defaults.other.red.default,
+		"debugIcon.breakpointDisabledForeground": hexToHexAlpha(colors.defaults.other.red.default, 0.8),
+		"debugIcon.breakpointUnverifiedForeground": colors.defaults.other.yellow.default,
+		"debugIcon.breakpointCurrentStackframeForeground": colors.defaults.other.yellow.default,
+		"debugIcon.breakpointStackframeForeground": colors.defaults.other.yellow.default,
+		"debugIcon.startForeground": colors.defaults.other.green.default,
+		"debugIcon.pauseForeground": colors.defaults.other.yellow.default,
+		"debugIcon.stopForeground": colors.defaults.other.red.default,
+		"debugIcon.disconnectForeground": colors.defaults.other.red.default,
+		"debugIcon.restartForeground": colors.defaults.other.green.default,
+		"debugIcon.stepOverForeground": colors.defaults.other.blue.default,
+		"debugIcon.stepIntoForeground": colors.defaults.other.blue.default,
+		"debugIcon.stepOutForeground": colors.defaults.other.blue.default,
+		"debugIcon.continueForeground": colors.defaults.other.green.default,
+		"debugIcon.stepBackForeground": colors.defaults.other.blue.default,
+		"debugConsole.infoForeground": colors.defaults.other.blue.default,
+		"debugConsole.warningForeground": colors.defaults.other.yellow.default,
+		"debugConsole.errorForeground": colors.defaults.other.red.default,
+		"debugConsole.sourceForeground": hexToHexAlpha(colors.foreground, 0.9),
+		"debugConsoleInputIcon.foreground": colors.primary,
+
+		// Settings
+		"settings.headerForeground": colors.foreground,
+		"settings.modifiedItemIndicator": colors.primary,
+		"settings.checkboxBackground": colors.background,
+		"settings.checkboxForeground": colors.foreground,
+		"settings.checkboxBorder": colors.border,
+		"settings.textInputBackground": colors.background,
+		"settings.textInputForeground": colors.foreground,
+		"settings.textInputBorder": colors.border,
+		"settings.numberInputBackground": colors.background,
+		"settings.numberInputForeground": colors.foreground,
+		"settings.numberInputBorder": colors.border,
+		"settings.dropdownBackground": colors.background,
+		"settings.dropdownForeground": colors.foreground,
+		"settings.dropdownBorder": colors.border,
+		"settings.dropdownListBorder": colors.border,
+		"settings.rowHoverBackground": hexToHexAlpha(colors.foreground, 0.05),
+		"settings.focusedRowBackground": hexToHexAlpha(colors.primary, 0.1),
+		"settings.focusedRowBorder": hexToHexAlpha(colors.primary, 0.4),
+		"settings.headerBorder": colors.border,
+		"settings.sashBorder": colors.border,
+		"settings.settingsHeaderHoverForeground": colors.foreground,
+
+		// Breadcrumbs
+		"breadcrumbPicker.background": colors.accent,
+
+		// Symbol Icons
+		"symbolIcon.classForeground": colors.defaults.other.orange.default,
+		"symbolIcon.functionForeground": colors.defaults.other.blue.default,
+		"symbolIcon.variableForeground": colors.defaults.other.red.default,
+		"symbolIcon.propertyForeground": colors.defaults.other.green.default,
+
+		// Testing
+		"testing.iconFailed": colors.defaults.other.red.default,
+		"testing.iconPassed": colors.defaults.other.green.default,
+		"testing.iconSkipped": colors.defaults.other.blue.default,
+		"testing.peekBorder": colors.border,
+
+		// Notebook
+		"notebook.cellBorderColor": colors.border,
+		"notebook.selectedCellBackground": hexToHexAlpha(colors.foreground, 0.1),
+		"notebook.focusedCellBorder": colors.primary,
+
+		// Charts
+		"charts.foreground": colors.foreground,
+		"charts.lines": hexToHexAlpha(colors.foreground, 0.5),
+		"charts.red": colors.defaults.other.red.default,
+		"charts.blue": colors.defaults.other.blue.default,
+		"charts.yellow": colors.defaults.other.yellow.default,
+		"charts.green": colors.defaults.other.green.default,
+		"charts.purple": colors.defaults.other.purple.default,
+		"charts.orange": colors.defaults.other.orange.default,
+
+		// Ports
+		"ports.iconRunningProcessForeground": colors.defaults.other.green.default,
+
+		// Comments
+		"editorGutter.commentRangeForeground": hexToHexAlpha(colors.foreground, 0.3),
+
+		// Merge conflicts
+		"merge.currentHeaderBackground": hexToHexAlpha(colors.defaults.other.green.default, 0.3),
+		"merge.incomingHeaderBackground": hexToHexAlpha(colors.defaults.other.blue.default, 0.3),
+		"merge.commonHeaderBackground": hexToHexAlpha(colors.foreground, 0.1),
+
+		// Snippets
+		"editor.snippetTabstopHighlightBackground": hexToHexAlpha(colors.primary, 0.2),
+		"editor.snippetFinalTabstopHighlightBackground": hexToHexAlpha(colors.defaults.other.green.default, 0.2),
+
+		"keybindingLabel.background": adjustColor(colors.popover.background, 0, 0, 5),
+		"keybindingLabel.foreground": hexToHexAlpha(colors.foreground, 0.75),
+		"keybindingLabel.border": adjustColor(colors.popover.background, 0, 0, 10),
+		"keybindingLabel.bottomBorder": adjustColor(colors.popover.background, 0, 0, 10),
 	};
 
-	constructor() {
-		// Default base colors
-		this.primaryColor = "#8e8eff"; // Primary accent color (links, buttons)
-		this.backgroundColor = "#2b2b2b"; // Main editor background
-		this.sidebarColor = "#252525"; // Sidebar background
-		this.textColor = "#FFFFFF"; // Main text color
-		this.borderColor = "#555555"; // Border color throughout the theme
-		this.borderOpacity = 75; // Border opacity (0-100)
-
-		// Derived colors will be calculated
-		this.derivedColors = {
-			buttonBackground: "",
-			buttonHoverBackground: "",
-			selectionBackground: "",
-			borderColor: "",
-			activeBorder: "",
-			inactiveBorder: "",
-			popoverBackground: "",
+	if (provided.editorHighlighting) {
+		data = {
+			...data,
+			...EditorHighlighting,
 		};
 	}
 
-	// Calculate derived colors based on the primary colors
-	calculateDerivedColors() {
-		// Button colors
-		this.derivedColors.buttonBackground = this.adjustColor(this.primaryColor, 0, -30, 0); // Slightly darker primary
-		this.derivedColors.buttonHoverBackground = this.adjustColor(this.primaryColor, 0, -50, 0); // Even darker for hover
-
-		// Selection colors
-		this.derivedColors.selectionBackground = this.hexToRgba(this.primaryColor, 0.15); // Selection with transparency
-
-		// Border colors based on opacity
-		this.derivedColors.borderColor = `#${this.hexToRgb(this.borderColor)
-			.map((c) =>
-				Math.round((c * this.borderOpacity) / 100)
-					.toString(16)
-					.padStart(2, "0")
-			)
-			.join("")}`;
-
-		// Accent colors
-		this.derivedColors.activeBorder = this.borderColor;
-		this.derivedColors.inactiveBorder = this.borderColor;
-		this.derivedColors.popoverBackground = this.adjustColor(this.backgroundColor, 0, 0, 10);
-	}
-
-	// Helper: Ensure hex colors always have # prefix
-	ensureHexPrefix(hex: string): string {
-		if (!hex) return "#000000";
-		return hex.startsWith("#") ? hex : `#${hex}`;
-	}
-
-	// Helper: Convert hex to RGB
-	hexToRgb(hex: string): number[] {
-		const sanitizedHex = this.ensureHexPrefix(hex).replace("#", "");
-		return [
-			parseInt(sanitizedHex.substring(0, 2), 16),
-			parseInt(sanitizedHex.substring(2, 4), 16),
-			parseInt(sanitizedHex.substring(4, 6), 16),
-		];
-	}
-
-	// Helper: Convert hex to RGBA string - replace with hex alpha version
-	hexToRgba(hex: string, alpha: number): string {
-		const rgb = this.hexToRgb(this.ensureHexPrefix(hex));
-		// Convert to hex with alpha instead of rgba string
-		const alphaHex = Math.round(alpha * 255)
-			.toString(16)
-			.padStart(2, "0");
-		return `#${rgb.map((c) => c.toString(16).padStart(2, "0")).join("")}${alphaHex}`;
-	}
-
-	// Helper: Adjust color (HSL adjustment)
-	adjustColor(hex: string, hChange: number, sChange: number, lChange: number): string {
-		const hsl = this.hexToHsl(this.ensureHexPrefix(hex));
-		hsl[0] = Math.max(0, Math.min(360, hsl[0] + hChange));
-		hsl[1] = Math.max(0, Math.min(100, hsl[1] + sChange));
-		hsl[2] = Math.max(0, Math.min(100, hsl[2] + lChange));
-		return this.hslToHex(hsl);
-	}
-
-	whiteOrBlackText(hex: string, soften: number = 0): string {
-		const hsl = this.hexToHsl(this.ensureHexPrefix(hex));
-		return hsl[2] > 50 ? this.adjustColor("#000000", 0, 0, soften) : this.adjustColor("#ffffff", 0, 0, -soften);
-	}
-
-	// Helper: Convert hex to HSL
-	hexToHsl(hex: string): number[] {
-		let r = 0,
-			g = 0,
-			b = 0;
-		const rgb = this.hexToRgb(hex);
-		r = rgb[0] / 255;
-		g = rgb[1] / 255;
-		b = rgb[2] / 255;
-
-		const max = Math.max(r, g, b);
-		const min = Math.min(r, g, b);
-		let h = 0,
-			s = 0,
-			l = (max + min) / 2;
-
-		if (max !== min) {
-			const d = max - min;
-			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-			switch (max) {
-				case r:
-					h = (g - b) / d + (g < b ? 6 : 0);
-					break;
-				case g:
-					h = (b - r) / d + 2;
-					break;
-				case b:
-					h = (r - g) / d + 4;
-					break;
-			}
-
-			h *= 60;
-		}
-
-		return [Math.round(h), Math.round(s * 100), Math.round(l * 100)];
-	}
-
-	// Helper: Convert HSL to hex
-	hslToHex(hsl: number[]): string {
-		const h = hsl[0] / 360;
-		const s = hsl[1] / 100;
-		const l = hsl[2] / 100;
-
-		let r, g, b;
-
-		if (s === 0) {
-			r = g = b = l;
-		} else {
-			const hue2rgb = (p: number, q: number, t: number) => {
-				if (t < 0) t += 1;
-				if (t > 1) t -= 1;
-				if (t < 1 / 6) return p + (q - p) * 6 * t;
-				if (t < 1 / 2) return q;
-				if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-				return p;
-			};
-
-			const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-			const p = 2 * l - q;
-
-			r = hue2rgb(p, q, h + 1 / 3);
-			g = hue2rgb(p, q, h);
-			b = hue2rgb(p, q, h - 1 / 3);
-		}
-
-		const toHex = (x: number) => {
-			// Ensure the value is between 0-255 before converting to hex
-			const val = Math.max(0, Math.min(255, Math.round(x * 255)));
-			const hex = val.toString(16);
-			return hex.length === 1 ? "0" + hex : hex;
-		};
-
-		return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-	}
-
-	// Set user preferences
-	setColors(
-		primaryColor: string,
-		backgroundColor: string,
-		sidebarColor: string,
-		textColor: string,
-		borderColor: string,
-		borderOpacity: number
-	) {
-		if (primaryColor) {
-			this.primaryColor = this.ensureHexPrefix(primaryColor);
-		}
-		if (backgroundColor) this.backgroundColor = this.ensureHexPrefix(backgroundColor);
-		if (sidebarColor) this.sidebarColor = this.ensureHexPrefix(sidebarColor);
-		if (textColor) this.textColor = this.ensureHexPrefix(textColor);
-		if (borderColor) this.borderColor = this.ensureHexPrefix(borderColor);
-		if (borderOpacity !== undefined) this.borderOpacity = Math.max(0, Math.min(100, borderOpacity));
-
-		this.calculateDerivedColors();
-	}
-
-	// Generate the theme JSON
-	generateTheme(themeName: string = "Monokai Pro (Filter Octagon)"): Record<string, any> {
-		// Ensure derived colors are calculated
-		this.calculateDerivedColors();
-
-		return {
-			// Contrast colors
-			contrastActiveBorder: this.defaultColors.transparent,
-			contrastBorder: this.defaultColors.transparent,
-
-			// Base colors
-			focusBorder: "#8e8eff00",
-			foreground: this.textColor,
-			disabledForeground: this.hexToRgba(this.textColor, 0.3),
-			"widget.border": this.hexToRgba(this.derivedColors.borderColor, 0.75),
-			"widget.shadow": this.adjustColor(this.backgroundColor, 0, 0, -5),
-			"selection.background": this.derivedColors.selectionBackground,
-			descriptionForeground: this.adjustColor(this.textColor, 0, 0, -10),
-			errorForeground: "#ff6b6b",
-			"icon.foreground": this.textColor,
-			"sash.hoverBorder": this.derivedColors.borderColor,
-
-			// Window borders
-			"window.activeBorder": this.derivedColors.borderColor,
-			"window.inactiveBorder": this.backgroundColor,
-
-			// Text colors
-			"textBlockQuote.background": this.hexToRgba(this.adjustColor(this.backgroundColor, 0, 0, 10), 0.37),
-			"textBlockQuote.border": this.borderColor,
-			"textCodeBlock.background": this.backgroundColor,
-			"textLink.activeForeground": this.adjustColor(this.primaryColor, 0, 0, 10),
-			"textLink.foreground": this.primaryColor,
-			"textPreformat.foreground": this.textColor,
-			"textPreformat.background": this.hexToRgba(this.adjustColor(this.backgroundColor, 0, 0, 10), 0.37),
-			"textSeparator.foreground": this.textColor,
-
-			// Action colors
-			"toolbar.activeBackground": this.hexToRgba(this.adjustColor(this.backgroundColor, 0, 0, 10), 0.37),
-			"toolbar.hoverBackground": this.hexToRgba(this.adjustColor(this.backgroundColor, 0, 0, 10), 0.37),
-			"toolbar.hoverOutline": "#55555500",
-			"editorActionList.background": this.derivedColors.popoverBackground,
-			"editorActionList.foreground": this.adjustColor(this.textColor, 0, 0, -10),
-			"editorActionList.focusBackground": this.adjustColor(this.derivedColors.popoverBackground, 0, 0, 10),
-			"editorActionList.focusForeground": this.textColor,
-
-			// Button control
-			"button.background": this.derivedColors.buttonBackground,
-			"button.foreground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
-			"button.hoverBackground": this.derivedColors.buttonHoverBackground,
-			"button.border": this.defaultColors.transparent,
-			"button.separator": this.whiteOrBlackText(this.derivedColors.buttonBackground, 50),
-			"button.secondaryBackground": "#636363",
-			"button.secondaryForeground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
-			"button.secondaryHoverBackground": "#555555",
-			"checkbox.foreground": this.primaryColor,
-			"checkbox.background": this.backgroundColor,
-			"checkbox.border": this.derivedColors.borderColor,
-			"radio.activeForeground": this.primaryColor,
-			"radio.activeBackground": this.derivedColors.buttonBackground,
-			"radio.activeBorder": this.borderColor,
-			"radio.inactiveBorder": this.derivedColors.borderColor,
-			"radio.inactivateHoverBackground": this.derivedColors.buttonHoverBackground,
-
-			// Dropdown control
-			"dropdown.background": this.backgroundColor,
-			"dropdown.listBackground": this.adjustColor(this.backgroundColor, 0, 0, 5),
-			"dropdown.border": this.derivedColors.borderColor,
-			"dropdown.foreground": this.textColor,
-
-			// Input control
-			"input.background": this.backgroundColor,
-			"input.foreground": this.textColor,
-			"input.border": this.hexToRgba(this.derivedColors.borderColor, 0.78),
-			"input.placeholderForeground": this.adjustColor(this.textColor, 0, 0, -10),
-			"inputOption.activeBackground": this.hexToRgba(this.primaryColor, 0.3),
-			"inputOption.activeBorder": this.primaryColor,
-			"inputOption.activeForeground": this.textColor,
-			"inputOption.hoverBackground": this.hexToRgba(this.primaryColor, 0.2),
-			"inputValidation.errorBackground": this.hexToRgba("#ff5555", 0.1),
-			"inputValidation.errorForeground": "#ff5555",
-			"inputValidation.errorBorder": "#ff5555",
-			"inputValidation.infoBackground": this.hexToRgba("#75beff", 0.1),
-			"inputValidation.infoForeground": "#75beff",
-			"inputValidation.infoBorder": "#75beff",
-			"inputValidation.warningBackground": this.hexToRgba("#ff9100", 0.1),
-			"inputValidation.warningForeground": "#ff9100",
-			"inputValidation.warningBorder": "#ff9100",
-
-			// Scrollbar control
-			// "scrollbar.shadow": `${this.adjustColor(this.backgroundColor, 0, 0, -5)}00`,
-			"scrollbar.shadow": this.backgroundColor,
-			"scrollbarSlider.background": this.hexToRgba(this.textColor, 0.21),
-			"scrollbarSlider.activeBackground": this.hexToRgba(this.textColor, 0.31),
-			"scrollbarSlider.hoverBackground": this.hexToRgba(this.textColor, 0.26),
-
-			// Badge
-			"badge.background": this.primaryColor,
-			"badge.foreground": this.whiteOrBlackText(this.primaryColor),
-
-			// Progress bar
-			"progressBar.background": this.primaryColor,
-
-			// Lists and trees
-			"list.hoverBackground": this.hexToRgba(this.textColor, 0.04),
-			"list.hoverForeground": this.textColor,
-			"list.activeSelectionBackground": this.hexToRgba(this.textColor, 0.07),
-			"list.activeSelectionForeground": this.textColor,
-			"list.inactiveSelectionBackground": this.hexToRgba(this.textColor, 0.04),
-			"list.inactiveSelectionForeground": this.hexToRgba(this.textColor, 0.71),
-			"list.focusBackground": this.hexToRgba(this.primaryColor, 0.07),
-			"list.focusForeground": this.textColor,
-			"list.inactiveFocusBackground": this.hexToRgba(this.primaryColor, 0.08),
-			"list.focusAndSelectionOutline": `${this.derivedColors.borderColor}00`,
-			"list.dropBackground": this.hexToRgba(this.adjustColor(this.primaryColor, 0, -20, -20), 0.28),
-			"list.highlightForeground": this.adjustColor(this.textColor, 0, 0, 20),
-			"tree.indentGuidesStroke": `${this.textColor}00`,
-			"tree.inactiveIndentGuidesStroke": `${this.textColor}00`,
-
-			// Activity bar
-			"activityBar.background": this.sidebarColor,
-			"activityBar.inactiveForeground": this.hexToRgba(this.textColor, 0.38),
-			"activityBar.foreground": this.hexToRgba(this.textColor, 0.83),
-			"activityBarBadge.foreground": this.whiteOrBlackText(this.primaryColor),
-			"activityBarBadge.background": this.primaryColor,
-			"activityBar.activeBorder": this.hexToRgba(this.textColor, 0.68),
-			"activityBar.border": this.borderColor,
-			"activityBar.activeBackground": this.hexToRgba(this.textColor, 0.04),
-
-			// Profiles
-			"profileBadge.background": this.primaryColor,
-			"profileBadge.foreground": this.whiteOrBlackText(this.primaryColor),
-			"profiles.sashBorder": this.derivedColors.borderColor,
-
-			// Side Bar
-			"sideBar.background": this.sidebarColor,
-			"sideBar.border": this.borderColor,
-			"sideBar.foreground": this.adjustColor(this.textColor, 0, 0, -15),
-			"sideBarTitle.foreground": this.adjustColor(this.textColor, 0, 0, -5),
-			"sideBarTitle.border": "#00000000",
-			"sideBarTitle.background": "#00000000",
-			"sideBarSectionHeader.background": this.sidebarColor,
-			"sideBarSectionHeader.foreground": this.adjustColor(this.textColor, 0, 0, -15),
-			"sideBarSectionHeader.border": this.hexToRgba(this.textColor, 0.06),
-			"sideBarStickyScroll.border": this.borderColor,
-			"sideBarStickyScroll.background": this.sidebarColor,
-			"sideBarStickyScroll.shadow": this.adjustColor(this.backgroundColor, 0, 0, -5),
-
-			// Minimap
-			"minimap.foregroundOpacity": "#00000065",
-			"minimap.background": this.backgroundColor,
-
-			// Editor Groups and Tabs
-			"editorGroup.border": this.borderColor,
-			"editorGroup.emptyBackground": this.backgroundColor,
-			"editorGroupHeader.tabsBackground": this.sidebarColor,
-			"editorGroupHeader.tabsBorder": this.sidebarColor,
-			"editorGroupHeader.noTabsBackground": this.sidebarColor,
-			"editorGroupHeader.border": this.borderColor,
-			"editorGroup.dropBackground": this.hexToRgba(this.primaryColor, 0.07),
-
-			"tab.border": this.borderColor,
-			"tab.hoverBorder": "default",
-			"tab.activeBackground": this.backgroundColor,
-			"tab.inactiveBackground": `${this.sidebarColor}00`,
-			"tab.activeForeground": this.textColor,
-			"tab.inactiveForeground": this.textColor,
-			"tab.activeBorder": this.backgroundColor,
-			"tab.hoverBackground": this.defaultColors.transparent,
-			"tab.hoverForeground": this.textColor,
-			"tab.activeBorderTop": this.textColor,
-			"tab.unfocusedActiveBorder": this.backgroundColor,
-			"tab.unfocusedActiveBorderTop": this.hexToRgba(this.textColor, 0.4),
-			"tab.unfocusedActiveBackground": this.backgroundColor,
-			"tab.unfocusedActiveForeground": this.textColor,
-			"tab.unfocusedHoverBackground": this.sidebarColor,
-			"tab.unfocusedHoverForeground": this.textColor,
-			"tab.unfocusedInactiveBackground": this.sidebarColor,
-			"tab.unfocusedInactiveForeground": this.textColor,
-			"tab.unfocusedHoverBorder": "default",
-			"tab.dragAndDropBorder": this.hexToRgba(this.textColor, 0.52),
-
-			// Editor colors
-			"editorLineNumber.foreground": this.hexToRgba(this.textColor, 0.18),
-			"editorLineNumber.activeForeground": this.hexToRgba(this.textColor, 0.59),
-			"editorGutter.background": this.backgroundColor,
-			"editor.background": this.backgroundColor,
-			"editor.selectionBackground": this.derivedColors.selectionBackground,
-			"editor.selectionHighlightBackground": this.hexToRgba(this.primaryColor, 0.33),
-			"editor.inactiveSelectionBackground": this.hexToRgba(this.adjustColor(this.primaryColor, 0, -20, -20), 0.33),
-			"editorBracketMatch.background": this.hexToRgba(this.textColor, 0.05),
-			"editorBracketMatch.border": this.hexToRgba(this.textColor, 0.16),
-			"editorStickyScroll.border": this.adjustColor(this.backgroundColor, 0, 0, 10),
-			"editorStickyScroll.shadow": this.adjustColor(this.backgroundColor, 0, 0, -5),
-			"editorStickyScroll.background": this.backgroundColor,
-			"editorStickyScrollHover.background": this.adjustColor(this.backgroundColor, 0, 0, 3),
-			"editor.lineHighlightBorder": `${this.textColor}00`,
-			"editor.lineHighlightBackground": this.hexToRgba(this.textColor, 0.04),
-			"editorIndentGuide.activeBackground1": this.hexToRgba(this.textColor, 0.28),
-			"editorIndentGuide.background1": this.hexToRgba(this.textColor, 0.12),
-			// Overview ruler
-			"editorOverviewRuler.border": this.backgroundColor,
-			"editorOverviewRuler.background": this.backgroundColor,
-			"editorOverviewRuler.activeBorder": this.borderColor,
-			"editorOverviewRuler.activeBackground": this.hexToRgba(this.textColor, 0.04),
-			"editorOverviewRuler.findMatchBorder": this.primaryColor,
-			"editorOverviewRuler.findMatchBackground": this.hexToRgba(this.primaryColor, 0.33),
-			"editorOverviewRuler.findMatchForeground": this.hexToRgba(this.primaryColor, 0.5),
-			"editorOverviewRuler.rangeHighlightForeground": this.hexToRgba(this.primaryColor, 0.4),
-			"editorOverviewRuler.selectionHighlightForeground": this.hexToRgba(this.primaryColor, 0.3),
-			"editorOverviewRuler.wordHighlightForeground": this.hexToRgba(this.textColor, 0.3),
-			"editorOverviewRuler.wordHighlightStrongForeground": this.hexToRgba(this.textColor, 0.5),
-			"editorOverviewRuler.wordHighlightTextForeground": this.hexToRgba(this.textColor, 0.4),
-			"editorOverviewRuler.modifiedForeground": "#e2c08d",
-			"editorOverviewRuler.addedForeground": "#73c991",
-			"editorOverviewRuler.deletedForeground": "#ff6b6b",
-			"editorOverviewRuler.errorForeground": "#ff5555",
-			"editorOverviewRuler.warningForeground": "#ff9100",
-			"editorOverviewRuler.infoForeground": "#75beff",
-			"editorOverviewRuler.bracketMatchForeground": this.hexToRgba(this.textColor, 0.3),
-			"editorOverviewRuler.inlineChatInserted": "#73c99180",
-			"editorOverviewRuler.inlineChatRemoved": "#ff6b6b80",
-
-			// Diff editor
-			"diffEditor.border": this.borderColor,
-
-			// Editor widget
-			"editorWidget.background": this.adjustColor(this.backgroundColor, 0, 0, 5),
-			"editorWidget.foreground": this.textColor,
-			"editorWidget.border": this.derivedColors.borderColor,
-
-			// Panel colors
-			"panelTitle.inactiveForeground": this.adjustColor(this.textColor, 0, 0, -30),
-			"panelTitle.activeBorder": this.primaryColor,
-			"panelTitle.activeForeground": this.textColor,
-			"panel.background": this.sidebarColor,
-			"panel.border": this.borderColor,
-			"panelSection.border": this.adjustColor(this.sidebarColor, 0, 0, 15),
-			"panelSection.dropBackground": this.adjustColor(this.sidebarColor, 0, 0, 25),
-			"panelStickyScroll.border": this.borderColor,
-
-			// Status Bar colors
-			"statusBar.background": this.sidebarColor,
-			"statusBar.foreground": this.hexToRgba(this.textColor, 0.5),
-			"statusBar.debuggingBackground": this.defaultColors.transparent,
-			"statusBar.debuggingForeground": this.textColor,
-			"statusBar.debuggingBorder": this.borderColor,
-			"statusBarItem.hoverBackground": this.adjustColor(this.sidebarColor, 0, 0, 5),
-			"statusBar.noFolderBackground": this.sidebarColor,
-			"statusBar.border": this.borderColor,
-			"statusBarItem.remoteBackground": this.adjustColor(this.sidebarColor, 0, 0, 5),
-			"statusBarItem.remoteForeground": this.primaryColor,
-			"statusBarItem.remoteHoverBackground": this.derivedColors.buttonBackground,
-			"statusBarItem.remoteHoverForeground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
-
-			// Title Bar colors
-			"titleBar.activeBackground": this.sidebarColor,
-			"titleBar.inactiveBackground": this.sidebarColor,
-			"titleBar.border": this.borderColor,
-			"titleBar.activeForeground": this.textColor,
-			"titleBar.inactiveForeground": this.adjustColor(this.textColor, 0, 0, -30),
-
-			// Menu Bar colors
-			"menubar.selectionForeground": this.textColor,
-			"menubar.selectionBackground": this.hexToRgba(this.textColor, 0.09),
-			"menubar.selectionHoverBackground": this.adjustColor(this.sidebarColor, 0, 0, 15),
-			"menu.background": this.adjustColor(this.sidebarColor, 0, 0, 3),
-			"menu.border": this.derivedColors.borderColor,
-			"menu.foreground": this.textColor,
-			"menu.selectionBackground": this.hexToRgba(this.textColor, 0.09),
-			"menu.selectionForeground": this.textColor,
-			"menu.separatorBackground": this.adjustColor(this.textColor, 0, 0, -20),
-
-			// Command Center
-			"commandCenter.background": this.sidebarColor,
-			"commandCenter.border": this.hexToRgba(this.borderColor, 0.5),
-			"commandCenter.activeBackground": this.backgroundColor,
-			"commandCenter.inactiveBorder": this.backgroundColor,
-			"commandCenter.foreground": this.textColor,
-			"commandCenter.activeForeground": this.textColor,
-			"commandCenter.inactiveForeground": this.hexToRgba(this.textColor, 0.5),
-			"commandCenter.activeBorder": this.borderColor,
-			"commandCenter.debuggingBackground": this.sidebarColor,
-
-			// Notification colors
-			"notificationCenter.border": this.borderColor,
-			"notificationCenterHeader.foreground": this.textColor,
-			"notificationCenterHeader.background": this.sidebarColor,
-			"notifications.background": this.sidebarColor,
-			"notifications.border": this.borderColor,
-			"notifications.foreground": this.textColor,
-			"notificationToast.border": this.borderColor,
-			"notificationLink.foreground": this.primaryColor,
-			"notificationsErrorIcon.foreground": "#ff5555",
-			"notificationsWarningIcon.foreground": "#ff9100",
-			"notificationsInfoIcon.foreground": "#75beff",
-
-			// Banner colors
-			"banner.background": this.adjustColor(this.sidebarColor, 0, 0, 15),
-			"banner.foreground": this.textColor,
-
-			// Extensions colors
-			"extensionButton.prominentForeground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
-			"extensionButton.prominentBackground": this.derivedColors.buttonBackground,
-			"extensionButton.prominentHoverBackground": this.derivedColors.buttonHoverBackground,
-			"extensionButton.background": this.derivedColors.buttonBackground,
-			"extensionButton.foreground": this.whiteOrBlackText(this.derivedColors.buttonBackground),
-			"extensionButton.hoverBackground": this.derivedColors.buttonHoverBackground,
-			"extensionButton.separator": this.whiteOrBlackText(this.derivedColors.buttonBackground, 50),
-			"extensionBadge.remoteBackground": this.primaryColor,
-			"extensionBadge.remoteForeground": this.whiteOrBlackText(this.primaryColor),
-			"extensionIcon.starForeground": "#FFD700",
-
-			// Quick picker colors
-			"pickerGroup.border": this.hexToRgba(this.textColor, 0.15),
-			"quickInputList.focusBackground": this.adjustColor(this.sidebarColor, 0, 0, 15),
-			"quickInputList.focusForeground": this.textColor,
-			"quickInput.background": this.adjustColor(this.sidebarColor, 0, 0, 8),
-			"quickInput.foreground": this.hexToRgba(this.textColor, 0.47),
-			"quickInputTitle.background": this.adjustColor(this.sidebarColor, 0, 0, 5),
-
-			// Editor Widgets
-			"editorHoverWidget.background": this.adjustColor(this.sidebarColor, 0, 0, 5),
-			"editorHoverWidget.border": this.derivedColors.borderColor,
-			"editorHoverWidget.foreground": this.hexToRgba(this.textColor, 0.77),
-			"editorSuggestWidget.background": this.adjustColor(this.sidebarColor, 0, 0, 8),
-			"editorSuggestWidget.selectedBackground": this.hexToRgba(this.textColor, 0.06),
-			"editorSuggestWidget.border": this.hexToRgba(this.textColor, 0.08),
-
-			// Integrated Terminal colors
-			"terminal.background": this.sidebarColor,
-			"terminal.border": `${this.textColor}00`,
-
-			// Breadcrumbs colors
-			"breadcrumb.background": this.backgroundColor,
-			"breadcrumb.focusForeground": this.hexToRgba(this.textColor, 0.85),
-			"breadcrumb.activeSelectionForeground": this.textColor,
-
-			// Other
-			"sideBySideEditor.horizontalBorder": this.borderColor,
-			"sideBySideEditor.verticalBorder": this.borderColor,
-
-			// Git
-			"gitDecoration.ignoredResourceForeground": this.hexToRgba(this.textColor, 0.16),
-			"gitDecoration.modifiedResourceForeground": "#e2c08d",
-			"gitDecoration.deletedResourceForeground": "#ff6b6b",
-			"gitDecoration.untrackedResourceForeground": "#73c991",
-			"gitDecoration.conflictingResourceForeground": "#ff8800",
-			"gitDecoration.submoduleResourceForeground": "#8db9e2",
-			"gitDecoration.stageModifiedResourceForeground": "#e2c08d99",
-			"gitDecoration.stageDeletedResourceForeground": "#ff6b6b99",
-			"gitDecoration.addedResourceForeground": "#73c991",
-
-			// Additional editor colors
-			"editorCursor.foreground": this.primaryColor,
-			"editorWarning.foreground": "#ff9100",
-			"editorError.foreground": "#ff5555",
-			"editorInfo.foreground": "#75beff",
-			"editorHint.foreground": "#75beff99",
-
-			// // Word highlighting
-			// "editor.wordHighlightBackground": this.backgroundColor,
-			// "editor.wordHighlightStrongBackground": this.hexToRgba(this.textColor, 0.1),
-			// "editor.wordHighlightBorder": this.hexToRgba(this.textColor, 0),
-			// "editor.wordHighlightStrongBorder": this.hexToRgba(this.textColor, 0),
-			// "editor.wordHighlightTextBackground": this.hexToRgba(this.textColor, 0.07),
-			// "editor.wordHighlightTextBorder": this.hexToRgba(this.textColor, 0),
-                  // // Match highlighting
-                  // "editor.findMatchBackground": this.backgroundColor,
-			// "editor.findMatchHighlightBackground": this.hexToRgba(this.primaryColor, 0.25),
-			// "editor.findMatchHighlightBorder": this.hexToRgba(this.primaryColor, 0.2),
-			// "editor.findRangeHighlightBackground": this.hexToRgba(this.textColor, 0.05),
-			// "editor.findRangeHighlightBorder": this.hexToRgba(this.textColor, 0.1),
-
-			// Peek view colors
-			"peekView.border": this.derivedColors.borderColor,
-			"peekViewEditor.background": this.adjustColor(this.backgroundColor, 0, 0, -5),
-			"peekViewResult.background": this.adjustColor(this.backgroundColor, 0, 0, -8),
-			"peekViewTitle.background": this.adjustColor(this.backgroundColor, 0, 0, -3),
-
-			// Debug colors
-			"debugToolBar.background": this.sidebarColor,
-			"debugToolBar.border": this.derivedColors.borderColor,
-			"debugIcon.breakpointForeground": "#ff5555",
-			"debugIcon.breakpointDisabledForeground": "#ff555580",
-			"debugIcon.breakpointUnverifiedForeground": "#ff9100",
-			"debugIcon.breakpointCurrentStackframeForeground": "#ffcc44",
-			"debugIcon.breakpointStackframeForeground": "#ffd700",
-			"debugIcon.startForeground": "#73c991",
-			"debugIcon.pauseForeground": "#ffd700",
-			"debugIcon.stopForeground": "#ff5555",
-			"debugIcon.disconnectForeground": "#ff8080",
-			"debugIcon.restartForeground": "#73c991",
-			"debugIcon.stepOverForeground": "#75beff",
-			"debugIcon.stepIntoForeground": "#75beff",
-			"debugIcon.stepOutForeground": "#75beff",
-			"debugIcon.continueForeground": "#73c991",
-			"debugIcon.stepBackForeground": "#75beff",
-			"debugConsole.infoForeground": "#75beff",
-			"debugConsole.warningForeground": "#ff9100",
-			"debugConsole.errorForeground": "#ff5555",
-			"debugConsole.sourceForeground": this.hexToRgba(this.textColor, 0.9),
-			"debugConsoleInputIcon.foreground": this.primaryColor,
-
-			// // Welcome page
-			// "welcomePage.background": this.backgroundColor,
-			// "welcomePage.tileBackground": this.sidebarColor,
-			// "welcomePage.tileBorder": this.derivedColors.borderColor,
-			// "welcomePage.tileHoverBackground": this.adjustColor(this.sidebarColor, 0, 0, 5),
-
-			// Settings
-			"settings.headerForeground": this.textColor,
-			"settings.modifiedItemIndicator": this.primaryColor,
-			"settings.checkboxBackground": this.backgroundColor,
-			"settings.checkboxForeground": this.textColor,
-			"settings.checkboxBorder": this.derivedColors.borderColor,
-			"settings.textInputBackground": this.backgroundColor,
-			"settings.textInputForeground": this.textColor,
-			"settings.textInputBorder": this.derivedColors.borderColor,
-			"settings.numberInputBackground": this.backgroundColor,
-			"settings.numberInputForeground": this.textColor,
-			"settings.numberInputBorder": this.derivedColors.borderColor,
-			"settings.dropdownBackground": this.backgroundColor,
-			"settings.dropdownForeground": this.textColor,
-			"settings.dropdownBorder": this.derivedColors.borderColor,
-			"settings.dropdownListBorder": this.derivedColors.borderColor,
-			"settings.rowHoverBackground": this.hexToRgba(this.textColor, 0.05),
-			"settings.focusedRowBackground": this.hexToRgba(this.primaryColor, 0.1),
-			"settings.focusedRowBorder": this.hexToRgba(this.primaryColor, 0.4),
-			"settings.headerBorder": this.derivedColors.borderColor,
-			"settings.sashBorder": this.derivedColors.borderColor,
-			"settings.settingsHeaderHoverForeground": this.textColor,
-
-			// Breadcrumbs
-			"breadcrumbPicker.background": this.sidebarColor,
-
-			// Symbol Icons
-			"symbolIcon.classForeground": "#ff9100",
-			"symbolIcon.functionForeground": "#75beff",
-			"symbolIcon.variableForeground": "#ff5555",
-			"symbolIcon.propertyForeground": "#73c991",
-
-			// Testing
-			"testing.iconFailed": "#ff5555",
-			"testing.iconPassed": "#73c991",
-			"testing.iconSkipped": "#75beff",
-			"testing.peekBorder": this.derivedColors.borderColor,
-
-			// Notebook
-			"notebook.cellBorderColor": this.derivedColors.borderColor,
-			"notebook.selectedCellBackground": this.hexToRgba(this.textColor, 0.1),
-			"notebook.focusedCellBorder": this.primaryColor,
-
-			// Charts
-			"charts.foreground": this.textColor,
-			"charts.lines": this.hexToRgba(this.textColor, 0.5),
-			"charts.red": "#ff5555",
-			"charts.blue": "#75beff",
-			"charts.yellow": "#ffd700",
-			"charts.green": "#73c991",
-			"charts.purple": "#b48ead",
-			"charts.orange": "#ff9100",
-
-			// Ports
-			"ports.iconRunningProcessForeground": "#73c991",
-
-			// Comments
-			"editorGutter.commentRangeForeground": this.hexToRgba(this.textColor, 0.3),
-
-			// Merge conflicts
-			"merge.currentHeaderBackground": this.hexToRgba("#73c991", 0.3),
-			"merge.incomingHeaderBackground": this.hexToRgba("#75beff", 0.3),
-			"merge.commonHeaderBackground": this.hexToRgba(this.textColor, 0.1),
-
-			// Snippets
-			"editor.snippetTabstopHighlightBackground": this.hexToRgba(this.primaryColor, 0.2),
-			"editor.snippetFinalTabstopHighlightBackground": this.hexToRgba("#73c991", 0.2),
-		};
-	}
+	return {
+		data,
+		theme: themeWithAuto,
+	};
 }
-
-export { VSCodeThemeGenerator, DerivedColors };
