@@ -52,6 +52,7 @@
 			coloredCursor: document.getElementById("coloredCursor").checked,
 			borderOpacity: parseInt(document.getElementById("intensity").value),
 			autoAdvancedColors: autoAdvancedColors,
+			editorHighlighting: document.getElementById("editorHighlighting").checked,
 		};
 
 		// Send message to extension
@@ -81,6 +82,7 @@
         document.getElementById("intensity").value = themeConfig.borderOpacity;
         document.getElementById("intensity-value").textContent = themeConfig.borderOpacity;
         document.getElementById("autoAdvancedColors").checked = themeConfig.autoAdvancedColors;
+		document.getElementById("editorHighlighting").checked = themeConfig.editorHighlighting;
     }
 
 	window.addEventListener("message", (event) => {

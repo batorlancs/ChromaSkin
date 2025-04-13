@@ -2,17 +2,21 @@
  * Colors that are provided by the user form the html input
  */
 export interface ThemeConfig {
+	// color pickers
 	primary: string;
 	background: string;
 	accent: string;
 	foreground: string;
 	border: string;
-	borderOpacity: number;
 	activityBar: string;
 	popover: string;
-	coloredCursor: boolean;
 	button: string;
+	// slider
+	borderOpacity: number;
+	// checkbox
 	autoAdvancedColors: boolean;
+	coloredCursor: boolean;
+	editorHighlighting: boolean;
 }
 
 export * from "./colors";

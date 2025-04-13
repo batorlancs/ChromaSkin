@@ -11,7 +11,59 @@ interface GenerateWorkbenchThemeResponse {
 export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbenchThemeResponse {
 	const { colors, theme: themeWithAuto } = getColors(provided);
 
-	const data = {
+	const EditorHighlighting = {
+		"diffEditor.insertedTextBackground": colors.diffEditor.insertedTextBackground,
+		"diffEditor.removedTextBackground": colors.diffEditor.removedTextBackground,
+		"diffEditor.insertedLineBackground": colors.diffEditor.insertedLineBackground,
+		"diffEditor.removedLineBackground": colors.diffEditor.removedLineBackground,
+		"diffEditor.diagonalFill": colors.diffEditor.diagonalFill,
+		"diffEditor.unchangedRegionBackground": colors.diffEditor.unchangedRegionBackground,
+		"diffEditor.unchangedRegionForeground": colors.diffEditor.unchangedRegionForeground,
+		"diffEditor.unchangedRegionShadow": colors.diffEditor.unchangedRegionShadow,
+		"diffEditor.unchangedCodeBackground": colors.diffEditor.unchangedCodeBackground,
+		"diffEditor.gutter.insertedLineBackground": colors.diffEditor["gutter.insertedLineBackground"],
+		"diffEditor.gutter.removedLineBackground": colors.diffEditor["gutter.removedLineBackground"],
+		"diffEditor.overview.insertedForeground": colors.diffEditor["overview.insertedForeground"],
+		"diffEditor.overview.removedForeground": colors.diffEditor["overview.removedForeground"],
+		"diffEditor.move.border": colors.diffEditor["move.border"],
+		"diffEditor.moveActive.border": colors.diffEditor["moveActive.border"],
+		"diffEditor.multi.headerBackground": colors.diffEditor["multi.headerBackground"],
+		"diffEditor.multi.background": colors.diffEditor["multi.background"],
+		"diffEditor.multi.border": colors.diffEditor["multi.border"],
+
+		"editor.wordHighlightBackground": colors.editor.wordHighlightBackground,
+		"editor.wordHighlightBorder": colors.editor.wordHighlightBorder,
+		"editor.wordHighlightStrongBackground": colors.editor.wordHighlightStrongBackground,
+		"editor.wordHighlightStrongBorder": colors.editor.wordHighlightStrongBorder,
+		"editor.wordHighlightTextBackground": colors.editor.wordHighlightTextBackground,
+		"editor.wordHighlightTextBorder": colors.editor.wordHighlightTextBorder,
+		"editor.findMatchBackground": colors.editor.findMatchBackground,
+		"editor.findMatchForeground": colors.editor.findMatchForeground,
+		"editor.findMatchHighlightBackground": colors.editor.findMatchHighlightBackground,
+		"editor.findMatchHighlightForeground": colors.editor.findMatchHighlightForeground,
+		"editor.findRangeHighlightBackground": colors.editor.findRangeHighlightBackground,
+		"editor.findMatchBorder": colors.editor.findMatchBorder,
+		"editor.findMatchHighlightBorder": colors.editor.findMatchHighlightBorder,
+		"editor.findRangeHighlightBorder": colors.editor.findRangeHighlightBorder,
+		"editor.hoverHighlightBackground": colors.editor.hoverHighlightBackground,
+		"editor.linkActiveForeground": colors.editor.linkActiveForeground,
+		"editor.unicodeHighlightBorder": colors.editor.unicodeHighlightBorder,
+		"editor.unicodeHighlightBackground": colors.editor.unicodeHighlightBackground,
+		"editor.symbolHighlightBackground": colors.editor.symbolHighlightBackground,
+		"editor.symbolHighlightBorder": colors.editor.symbolHighlightBorder,
+		"editor.whitespace": colors.editor.whitespace,
+		"editor.inlayHintBackground": colors.editor.inlayHintBackground,
+		"editor.inlayHintForeground": colors.editor.inlayHintForeground,
+		"editor.inlayHintTypeBackground": colors.editor.inlayHintTypeBackground,
+		"editor.inlayHintTypeForeground": colors.editor.inlayHintTypeForeground,
+		"editor.inlayHintParameterBackground": colors.editor.inlayHintParameterBackground,
+		"editor.inlayHintParameterForeground": colors.editor.inlayHintParameterForeground,
+		"editorRuler.foreground": colors.editor.rulerForeground,
+		"editor.codeLensForeground": colors.editor.codeLensForeground,
+		"editor.linkedEditingBackground": colors.editor.linkedEditingBackground,
+	}
+
+	let data = {
 		// Contrast colors
 		contrastActiveBorder: colors.defaults.transparent,
 		contrastBorder: colors.defaults.transparent,
@@ -207,36 +259,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"editorStickyScrollHover.background": colors.editor.stickyScrollHover.background,
 		"editorIndentGuide.activeBackground1": colors.editor.indentGuide.activeBackground1,
 		"editorIndentGuide.background1": colors.editor.indentGuide.background1,
-		"editor.wordHighlightBackground": colors.editor.wordHighlightBackground,
-		"editor.wordHighlightBorder": colors.editor.wordHighlightBorder,
-		"editor.wordHighlightStrongBackground": colors.editor.wordHighlightStrongBackground,
-		"editor.wordHighlightStrongBorder": colors.editor.wordHighlightStrongBorder,
-		"editor.wordHighlightTextBackground": colors.editor.wordHighlightTextBackground,
-		"editor.wordHighlightTextBorder": colors.editor.wordHighlightTextBorder,
-		"editor.findMatchBackground": colors.editor.findMatchBackground,
-		"editor.findMatchForeground": colors.editor.findMatchForeground,
-		"editor.findMatchHighlightBackground": colors.editor.findMatchHighlightBackground,
-		"editor.findMatchHighlightForeground": colors.editor.findMatchHighlightForeground,
-		"editor.findRangeHighlightBackground": colors.editor.findRangeHighlightBackground,
-		"editor.findMatchBorder": colors.editor.findMatchBorder,
-		"editor.findMatchHighlightBorder": colors.editor.findMatchHighlightBorder,
-		"editor.findRangeHighlightBorder": colors.editor.findRangeHighlightBorder,
-		"editor.hoverHighlightBackground": colors.editor.hoverHighlightBackground,
-		"editor.linkActiveForeground": colors.editor.linkActiveForeground,
-		"editor.unicodeHighlightBorder": colors.editor.unicodeHighlightBorder,
-		"editor.unicodeHighlightBackground": colors.editor.unicodeHighlightBackground,
-		"editor.symbolHighlightBackground": colors.editor.symbolHighlightBackground,
-		"editor.symbolHighlightBorder": colors.editor.symbolHighlightBorder,
-		"editor.whitespace": colors.editor.whitespace,
-		"editor.inlayHintBackground": colors.editor.inlayHintBackground,
-		"editor.inlayHintForeground": colors.editor.inlayHintForeground,
-		"editor.inlayHintTypeBackground": colors.editor.inlayHintTypeBackground,
-		"editor.inlayHintTypeForeground": colors.editor.inlayHintTypeForeground,
-		"editor.inlayHintParameterBackground": colors.editor.inlayHintParameterBackground,
-		"editor.inlayHintParameterForeground": colors.editor.inlayHintParameterForeground,
-		"editorRuler.foreground": colors.editor.rulerForeground,
-		"editor.codeLensForeground": colors.editor.codeLensForeground,
-		"editor.linkedEditingBackground": colors.editor.linkedEditingBackground,
+		
 
 		// Overview ruler
 		"editorOverviewRuler.border": hexToHexAlpha(colors.foreground, 0.075),
@@ -285,24 +308,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 
 		// Diff editor
 		"diffEditor.border": colors.border,
-		"diffEditor.insertedTextBackground": colors.diffEditor.insertedTextBackground,
-		"diffEditor.removedTextBackground": colors.diffEditor.removedTextBackground,
-		"diffEditor.insertedLineBackground": colors.diffEditor.insertedLineBackground,
-		"diffEditor.removedLineBackground": colors.diffEditor.removedLineBackground,
-		"diffEditor.diagonalFill": colors.diffEditor.diagonalFill,
-		"diffEditor.unchangedRegionBackground": colors.diffEditor.unchangedRegionBackground,
-		"diffEditor.unchangedRegionForeground": colors.diffEditor.unchangedRegionForeground,
-		"diffEditor.unchangedRegionShadow": colors.diffEditor.unchangedRegionShadow,
-		"diffEditor.unchangedCodeBackground": colors.diffEditor.unchangedCodeBackground,
-		"diffEditor.gutter.insertedLineBackground": colors.diffEditor["gutter.insertedLineBackground"],
-		"diffEditor.gutter.removedLineBackground": colors.diffEditor["gutter.removedLineBackground"],
-		"diffEditor.overview.insertedForeground": colors.diffEditor["overview.insertedForeground"],
-		"diffEditor.overview.removedForeground": colors.diffEditor["overview.removedForeground"],
-		"diffEditor.move.border": colors.diffEditor["move.border"],
-		"diffEditor.moveActive.border": colors.diffEditor["moveActive.border"],
-		"diffEditor.multi.headerBackground": colors.diffEditor["multi.headerBackground"],
-		"diffEditor.multi.background": colors.diffEditor["multi.background"],
-		"diffEditor.multi.border": colors.diffEditor["multi.border"],
+		
 
 		// Editor widget
 		"editorWidget.background": adjustColor(colors.background, 0, 0, 5),
@@ -344,23 +350,25 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"menubar.selectionForeground": colors.foreground,
 		"menubar.selectionBackground": hexToHexAlpha(colors.foreground, 0.09),
 		"menubar.selectionHoverBackground": adjustColor(colors.accent, 0, 0, 15),
+		"menubar.selectionBorder": colors.defaults.transparent,
 		"menu.background": adjustColor(colors.accent, 0, 0, 3),
 		"menu.border": colors.border,
 		"menu.foreground": colors.foreground,
 		"menu.selectionBackground": hexToHexAlpha(colors.foreground, 0.09),
 		"menu.selectionForeground": colors.foreground,
+		"menu.selectionBorder": colors.defaults.transparent,
 		"menu.separatorBackground": adjustColor(colors.accent, 0, 0, 10),
 
 		// Command Center
 		"commandCenter.background": colors.accent,
-		"commandCenter.border": hexToHexAlpha(colors.border, 0.5),
-		"commandCenter.activeBackground": colors.background,
-		"commandCenter.inactiveBorder": hexToHexAlpha(colors.border, 0.5),
+		"commandCenter.border": hexToHexAlpha(colors.foreground, 0.1),
+		"commandCenter.activeBackground": colors.accent,
+		"commandCenter.inactiveBorder": hexToHexAlpha(colors.foreground, 0.1),
 		"commandCenter.foreground": colors.foreground,
 		"commandCenter.activeForeground": colors.foreground,
 		"commandCenter.inactiveForeground": hexToHexAlpha(colors.foreground, 0.5),
-		"commandCenter.activeBorder": colors.border,
-		"commandCenter.debuggingBackground": colors.accent,
+		"commandCenter.activeBorder": hexToHexAlpha(colors.foreground, 0.25),
+		"commandCenter.debuggingBackground": colors.defaults.transparent,
 
 		// Notification colors
 		"notificationCenter.border": colors.border,
@@ -421,6 +429,8 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 
 		// Breadcrumbs colors
 		"breadcrumb.background": colors.background,
+		"breadcrumb.border": colors.background,
+		"breadcrumb.foreground": hexToHexAlpha(colors.foreground, 0.5),
 		"breadcrumb.focusForeground": hexToHexAlpha(colors.foreground, 0.85),
 		"breadcrumb.activeSelectionForeground": colors.foreground,
 
@@ -543,7 +553,19 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		// Snippets
 		"editor.snippetTabstopHighlightBackground": hexToHexAlpha(colors.primary, 0.2),
 		"editor.snippetFinalTabstopHighlightBackground": hexToHexAlpha(colors.defaults.other.green.default, 0.2),
+
+		"keybindingLabel.background": adjustColor(colors.popover.background, 0, 0, 5),
+		"keybindingLabel.foreground": hexToHexAlpha(colors.foreground, 0.75),
+		"keybindingLabel.border": adjustColor(colors.popover.background, 0, 0, 10),
+		"keybindingLabel.bottomBorder": adjustColor(colors.popover.background, 0, 0, 10),
 	};
+
+	if (provided.editorHighlighting) {
+		data = {
+			...data,
+			...EditorHighlighting,
+		};
+	}
 
 	return {
 		data,

@@ -10,6 +10,7 @@ import { ThemeConfig } from "./types";
 let activePanel: vscode.WebviewPanel | undefined;
 let extensionContext: vscode.ExtensionContext | undefined;
 const DEFAULT_THEME_CONFIG: ThemeConfig = {
+	// color pickers
 	primary: "#c089f0",
 	background: "#2b2b2b",
 	accent: "#252525",
@@ -18,9 +19,12 @@ const DEFAULT_THEME_CONFIG: ThemeConfig = {
 	activityBar: "#252525",
 	popover: "#252525",
 	button: "#c089f0",
-	coloredCursor: true,
+	// slider
 	borderOpacity: 30,
+	// checkbox
+	coloredCursor: true,
 	autoAdvancedColors: true,
+	editorHighlighting: true,
 };
 
 /**
@@ -43,9 +47,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Initial color theme configuration
 		const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || DEFAULT_THEME_CONFIG;
+		const { theme } = generateWorkbenchTheme(themeConfig);
 
 		// Set the webview's HTML content
-		activePanel.webview.html = getWebviewContent(context, activePanel.webview, themeConfig);
+		activePanel.webview.html = getWebviewContent(context, activePanel.webview, theme);
 
 		// Handle messages from the webview
 		activePanel.webview.onDidReceiveMessage(
@@ -181,6 +186,7 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 		coloredCursor: themeConfig.coloredCursor,
 		borderOpacity: themeConfig.borderOpacity,
 		autoAdvancedColors: themeConfig.autoAdvancedColors,
+		editorHighlighting: themeConfig.editorHighlighting,
 	});
 
 	return htmlContent;
