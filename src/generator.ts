@@ -259,7 +259,8 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"editorStickyScrollHover.background": colors.editor.stickyScrollHover.background,
 		"editorIndentGuide.activeBackground1": colors.editor.indentGuide.activeBackground1,
 		"editorIndentGuide.background1": colors.editor.indentGuide.background1,
-		
+		"editor.rangeHighlightBackground": colors.editor.rangeHighlightBackground,
+		"editor.rangeHighlightBorder": colors.editor.rangeHighlightBorder,
 
 		// Overview ruler
 		"editorOverviewRuler.border": hexToHexAlpha(colors.foreground, 0.075),

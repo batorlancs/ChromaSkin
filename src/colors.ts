@@ -304,6 +304,8 @@ export function getColors(provided: ThemeConfig) {
 		linkedEditingBackground: hexToHexAlpha(primary, 0.1),
 		foldBackground: adjustColor(background, 0, 0, 5),
 		foldPlaceholderForeground: hexToHexAlpha(foreground, 0.5),
+		rangeHighlightBackground: hexToHexAlpha(foreground, 0.08),
+		rangeHighlightBorder: defaults.transparent,
 	};
 
 	const diffEditor = {
