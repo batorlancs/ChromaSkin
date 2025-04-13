@@ -4,22 +4,11 @@ import * as path from "path";
 import * as fs from "fs";
 import * as Handlebars from "handlebars";
 import { generateWorkbenchTheme } from "./generator";
+import { ThemeConfig } from "./types";
 
-interface ColorThemeConfig {
-	color1: string;
-	color2: string;
-	color3: string;
-	color4: string;
-	color5: string;
-	activityBarColor: string;
-	popoverColor: string;
-	buttonColor: string;
-	coloredCursor: boolean;
-	intensity: number;
-	autoAdvancedColors: boolean;
-}
 
 let activePanel: vscode.WebviewPanel | undefined;
+let extensionContext: vscode.ExtensionContext | undefined;
 
 /**
  * This method is called when the extension is activated.
@@ -27,6 +16,7 @@ let activePanel: vscode.WebviewPanel | undefined;
  */
 export function activate(context: vscode.ExtensionContext) {
 	console.log("ChromaSkin extension is now active!");
+	extensionContext = context;
 
 	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
 		activePanel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
@@ -39,17 +29,17 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 
 		// Initial color theme configuration
-		const themeConfig: ColorThemeConfig = {
-			color1: "#c089f0",
-			color2: "#2b2b2b",
-			color3: "#252525",
-			color4: "#b8b8b8",
-			color5: "#454545",
-			activityBarColor: "#252525",
-			popoverColor: "#252525",
-			buttonColor: "#c089f0",
+		const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || {
+			primary: "#c089f0",
+			background: "#2b2b2b",
+			accent: "#252525",
+			foreground: "#b8b8b8",
+			border: "#454545",
+			activityBar: "#252525",
+			popover: "#252525",
+			button: "#c089f0",
 			coloredCursor: true,
-			intensity: 30,
+			borderOpacity: 30,
 			autoAdvancedColors: true,
 		};
 
@@ -87,26 +77,14 @@ export function activate(context: vscode.ExtensionContext) {
  * @param themeConfig ColorThemeConfig
  * @returns void
  */
-function applyColorTheme(themeConfig: ColorThemeConfig) {
+function applyColorTheme(themeConfig: ThemeConfig) {
 	// Get the current config
 	const config = vscode.workspace.getConfiguration("workbench");
 	const editorConfig = vscode.workspace.getConfiguration("editor");
 
 	console.log(themeConfig);
 
-	const { data, theme } = generateWorkbenchTheme({
-		primary: themeConfig.color1,
-		background: themeConfig.color2,
-		accent: themeConfig.color3,
-		foreground: themeConfig.color4,
-		border: themeConfig.color5,
-		activityBar: themeConfig.activityBarColor,
-		popover: themeConfig.popoverColor,
-		coloredCursor: themeConfig.coloredCursor,
-		borderOpacity: themeConfig.intensity,
-		autoAdvancedColors: themeConfig.autoAdvancedColors,
-		buttonColor: themeConfig.buttonColor,
-	});
+	const { data, theme } = generateWorkbenchTheme(themeConfig);
 
 	const colorCustomizations = {
 		colorCustomizations: data,
@@ -132,6 +110,9 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 			themeConfig: theme,
 		});
 	}
+
+	// Save to global state
+	extensionContext?.globalState.update("chromaskin-theme-config", themeConfig);
 }
 
 /**
@@ -155,7 +136,7 @@ function resetColorTheme() {
  * @param themeConfig ColorThemeConfig
  * @returns the HTML content as a string
  */
-function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ColorThemeConfig): string {
+function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ThemeConfig): string {
 	// Get paths to our external files
 	const stylesPath = vscode.Uri.file(path.join(context.extensionPath, "media", "styles.css"));
 	const scriptPath = vscode.Uri.file(path.join(context.extensionPath, "media", "script.js"));
@@ -175,16 +156,16 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 	const htmlContent = template({
 		stylesUri: stylesUri.toString(),
 		scriptUri: scriptUri.toString(),
-		color1: themeConfig.color1,
-		color2: themeConfig.color2,
-		color3: themeConfig.color3,
-		color4: themeConfig.color4,
-		color5: themeConfig.color5,
-		activityBarColor: themeConfig.activityBarColor,
-		popoverColor: themeConfig.popoverColor,
-		buttonColor: themeConfig.buttonColor,
+		primary: themeConfig.primary,
+		background: themeConfig.background,
+		accent: themeConfig.accent,
+		foreground: themeConfig.foreground,
+		border: themeConfig.border,
+		activityBar: themeConfig.activityBar,
+		popover: themeConfig.popover,
+		button: themeConfig.button,
 		coloredCursor: themeConfig.coloredCursor,
-		intensity: themeConfig.intensity,
+		borderOpacity: themeConfig.borderOpacity,
 		autoAdvancedColors: themeConfig.autoAdvancedColors,
 	});
 

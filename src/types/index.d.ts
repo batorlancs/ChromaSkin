@@ -11,7 +11,7 @@ export interface ThemeConfig {
 	activityBar: string;
 	popover: string;
 	coloredCursor: boolean;
-	buttonColor: string;
+	button: string;
 	autoAdvancedColors: boolean;
 }
 

@@ -41,16 +41,16 @@
 		const accentColor = document.getElementById("color3").value;
 
 		const themeConfig = {
-			color1: document.getElementById("color1").value,
-			color2: document.getElementById("color2").value,
-			color3: accentColor,
-			color4: document.getElementById("color4").value,
-			color5: document.getElementById("color5").value,
-			activityBarColor: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
-			popoverColor: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
-			buttonColor: autoAdvancedColors ? accentColor : document.getElementById("buttonColor").value,
+			primary: document.getElementById("color1").value,
+			background: document.getElementById("color2").value,
+			accent: accentColor,
+			foreground: document.getElementById("color4").value,
+			border: document.getElementById("color5").value,
+			activityBar: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
+			popover: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
+			button: autoAdvancedColors ? accentColor : document.getElementById("buttonColor").value,
 			coloredCursor: document.getElementById("coloredCursor").checked,
-			intensity: parseInt(document.getElementById("intensity").value),
+			borderOpacity: parseInt(document.getElementById("intensity").value),
 			autoAdvancedColors: autoAdvancedColors,
 		};
 

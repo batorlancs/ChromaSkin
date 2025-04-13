@@ -9,7 +9,7 @@ export function getColors(provided: ThemeConfig) {
         ...provided,
         activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
         popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
-        button: provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.buttonColor,
+        button: provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.button,
     }
 
 	const darkOtherColors = {
