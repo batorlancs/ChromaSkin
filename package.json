@@ -1,4 +1,5 @@
 {
+  "icon": "resources/chromaskin-darkmode.png",
   "name": "chromaskin-by-bator",
   "displayName": "ChromaSkin",
   "description": "Create a custom VS Code theme by selecting colors and adjusting intensity settings.",
