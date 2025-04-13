@@ -243,7 +243,7 @@ export function getColors(provided: ThemeConfig) {
 		selectionBackground: hexToHexAlpha(foreground, 0.12),
 		selectionHighlightBackground: hexToHexAlpha(foreground, 0.08),
 		inactiveSelectionBackground: hexToHexAlpha(foreground, 0.06),
-		lineHighlightBorder: `${foreground}00`,
+		lineHighlightBorder: defaults.transparent,
 		lineHighlightBackground: hexToHexAlpha(foreground, 0.04),
 		lineNumber: {
 			foreground: hexToHexAlpha(foreground, 0.18),
@@ -254,7 +254,7 @@ export function getColors(provided: ThemeConfig) {
 		},
 		bracketMatch: {
 			background: hexToHexAlpha(foreground, 0.05),
-			border: hexToHexAlpha(foreground, 0.16),
+			border: hexToHexAlpha(foreground, 0.1),
 		},
 		stickyScroll: {
 			border: adjustColor(background, 0, 0, 10),
@@ -268,7 +268,7 @@ export function getColors(provided: ThemeConfig) {
 			activeBackground1: hexToHexAlpha(foreground, 0.22),
 			background1: hexToHexAlpha(foreground, 0.1),
 		},
-		selectionForeground: foreground,
+		selectionForeground: "default",
 		selectionHighlightBorder: hexToHexAlpha(foreground, 0),
 		wordHighlightBackground: hexToHexAlpha(foreground, 0.08),
 		wordHighlightBorder: hexToHexAlpha(foreground, 0),
@@ -277,9 +277,9 @@ export function getColors(provided: ThemeConfig) {
 		wordHighlightTextBackground: hexToHexAlpha(foreground, 0.06),
 		wordHighlightTextBorder: hexToHexAlpha(foreground, 0),
 		findMatchBackground: hexToHexAlpha(foreground, 0.2),
-		findMatchForeground: foreground,
+		findMatchForeground: "default",
 		findMatchHighlightBackground: hexToHexAlpha(foreground, 0.15),
-		findMatchHighlightForeground: foreground,
+		findMatchHighlightForeground: "default",
 		findRangeHighlightBackground: hexToHexAlpha(foreground, 0.05),
 		findMatchBorder: hexToHexAlpha(foreground, 0),
 		findMatchHighlightBorder: hexToHexAlpha(foreground, 0),
@@ -302,6 +302,70 @@ export function getColors(provided: ThemeConfig) {
 		rulerForeground: hexToHexAlpha(foreground, 0.15),
 		codeLensForeground: hexToHexAlpha(foreground, 0.5),
 		linkedEditingBackground: hexToHexAlpha(primary, 0.1),
+		foldBackground: adjustColor(background, 0, 0, 5),
+		foldPlaceholderForeground: hexToHexAlpha(foreground, 0.5),
+	};
+
+	const diffEditor = {
+		// Text changes
+		insertedTextBackground: hexToHexAlpha(defaults.other.green.default, 0.15),
+		removedTextBackground: hexToHexAlpha(defaults.other.red.default, 0.15),
+
+		// Lines
+		insertedLineBackground: hexToHexAlpha(defaults.other.green.default, 0.1),
+		removedLineBackground: hexToHexAlpha(defaults.other.red.default, 0.1),
+
+		// Gutter
+		border: border,
+		diagonalFill: hexToHexAlpha(foreground, 0.05),
+
+		// Unchanged regions
+		unchangedRegionBackground: adjustColor(background, 0, 0, 3),
+		unchangedRegionForeground: "default",
+		unchangedRegionShadow: adjustColor(background, 0, 0, -5),
+		unchangedCodeBackground: background,
+
+		// Gutter colors
+		"gutter.insertedLineBackground": hexToHexAlpha(defaults.other.green.default, 0.1),
+		"gutter.removedLineBackground": hexToHexAlpha(defaults.other.red.default, 0.1),
+
+		// Overview ruler colors
+		"overview.insertedForeground": "default",
+		"overview.removedForeground": "default",
+
+		// Move colors
+		"move.border": hexToHexAlpha(defaults.other.blue.default, 0.5),
+		"moveActive.border": defaults.other.blue.default,
+
+		// Multi diff editor
+		"multi.headerBackground": accent,
+		"multi.background": background,
+		"multi.border": border,
+	};
+
+	const inlineEdit = {
+		gutterIndicator: {
+			primaryBorder: hexToHexAlpha(primary, 0.5),
+			primaryForeground: hexToHexAlpha(primary, 0.8),
+			primaryBackground: hexToHexAlpha(primary, 0.1),
+			secondaryBorder: hexToHexAlpha(defaults.other.purple.default, 0.5),
+			secondaryForeground: hexToHexAlpha(defaults.other.purple.default, 0.8),
+			secondaryBackground: hexToHexAlpha(defaults.other.purple.default, 0.1),
+			successfulBorder: hexToHexAlpha(defaults.other.green.default, 0.5),
+			successfulForeground: hexToHexAlpha(defaults.other.green.default, 0.8),
+			successfulBackground: hexToHexAlpha(defaults.other.green.default, 0.1),
+			background: hexToHexAlpha(foreground, 0.05),
+		},
+		originalBackground: hexToHexAlpha(defaults.other.red.default, 0.08),
+		modifiedBackground: hexToHexAlpha(defaults.other.green.default, 0.08),
+		originalChangedLineBackground: hexToHexAlpha(defaults.other.red.default, 0.12),
+		originalChangedTextBackground: hexToHexAlpha(defaults.other.red.default, 0.15),
+		modifiedChangedLineBackground: hexToHexAlpha(defaults.other.green.default, 0.12),
+		modifiedChangedTextBackground: hexToHexAlpha(defaults.other.green.default, 0.15),
+		originalBorder: hexToHexAlpha(defaults.other.red.default, 0.4),
+		modifiedBorder: hexToHexAlpha(defaults.other.green.default, 0.4),
+		tabWillAcceptModifiedBorder: hexToHexAlpha(defaults.other.green.active, 0.6),
+		tabWillAcceptOriginalBorder: hexToHexAlpha(defaults.other.red.active, 0.6),
 	};
 
 	return {
@@ -325,6 +389,8 @@ export function getColors(provided: ThemeConfig) {
 			widget,
 			git,
 			editor,
+			diffEditor,
+			inlineEdit,
 		},
 	};
 }
