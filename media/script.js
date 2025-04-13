@@ -78,7 +78,9 @@
         document.getElementById("popoverColor").value = themeConfig.popover;
         document.getElementById("buttonColor").value = themeConfig.button;
         document.getElementById("coloredCursor").checked = themeConfig.coloredCursor;
-        document.getElementById("intensity").value = themeConfig.intensity;
+        document.getElementById("intensity").value = themeConfig.borderOpacity;
+        document.getElementById("intensity-value").textContent = themeConfig.borderOpacity;
+        document.getElementById("autoAdvancedColors").checked = themeConfig.autoAdvancedColors;
     }
 
 	window.addEventListener("message", (event) => {
