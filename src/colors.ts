@@ -5,12 +5,12 @@ export function getColors(provided: ThemeConfig) {
 	const isDark = isDarkMode(provided.background);
 	const { primary, background, accent, foreground, border, borderOpacity } = provided;
 
-    const themeWithAuto = {
-        ...provided,
-        activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
-        popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
-        button: provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.button,
-    }
+	const themeWithAuto = {
+		...provided,
+		activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
+		popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
+		button: provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.button,
+	};
 
 	const darkOtherColors = {
 		blue: {
@@ -98,7 +98,7 @@ export function getColors(provided: ThemeConfig) {
 	// Button
 	const buttonBackground = themeWithAuto.button;
 	const buttonForeground = whiteOrBlackText(buttonBackground);
-    const secondaryBackground = adjustColor(getLightestColor([accent, background]), 0, 0, 10)
+	const secondaryBackground = adjustColor(getLightestColor([accent, background]), 0, 0, 10);
 	const button = {
 		background: buttonBackground,
 		foreground: buttonForeground,
@@ -236,26 +236,95 @@ export function getColors(provided: ThemeConfig) {
 		stageDeletedResourceForeground: blendColors(defaults.other.red.default, foreground, gitOpacity),
 	};
 
+	// Editor
+	const editor = {
+		background: background,
+		foreground: foreground,
+		selectionBackground: hexToHexAlpha(foreground, 0.12),
+		selectionHighlightBackground: hexToHexAlpha(foreground, 0.08),
+		inactiveSelectionBackground: hexToHexAlpha(foreground, 0.06),
+		lineHighlightBorder: `${foreground}00`,
+		lineHighlightBackground: hexToHexAlpha(foreground, 0.04),
+		lineNumber: {
+			foreground: hexToHexAlpha(foreground, 0.18),
+			activeForeground: hexToHexAlpha(foreground, 0.59),
+		},
+		gutter: {
+			background: background,
+		},
+		bracketMatch: {
+			background: hexToHexAlpha(foreground, 0.05),
+			border: hexToHexAlpha(foreground, 0.16),
+		},
+		stickyScroll: {
+			border: adjustColor(background, 0, 0, 10),
+			shadow: adjustColor(background, 0, 0, -5),
+			background: background,
+		},
+		stickyScrollHover: {
+			background: adjustColor(background, 0, 0, 3),
+		},
+		indentGuide: {
+			activeBackground1: hexToHexAlpha(foreground, 0.22),
+			background1: hexToHexAlpha(foreground, 0.1),
+		},
+		selectionForeground: foreground,
+		selectionHighlightBorder: hexToHexAlpha(foreground, 0),
+		wordHighlightBackground: hexToHexAlpha(foreground, 0.08),
+		wordHighlightBorder: hexToHexAlpha(foreground, 0),
+		wordHighlightStrongBackground: hexToHexAlpha(foreground, 0.12),
+		wordHighlightStrongBorder: hexToHexAlpha(foreground, 0),
+		wordHighlightTextBackground: hexToHexAlpha(foreground, 0.06),
+		wordHighlightTextBorder: hexToHexAlpha(foreground, 0),
+		findMatchBackground: hexToHexAlpha(foreground, 0.2),
+		findMatchForeground: foreground,
+		findMatchHighlightBackground: hexToHexAlpha(foreground, 0.15),
+		findMatchHighlightForeground: foreground,
+		findRangeHighlightBackground: hexToHexAlpha(foreground, 0.05),
+		findMatchBorder: hexToHexAlpha(foreground, 0),
+		findMatchHighlightBorder: hexToHexAlpha(foreground, 0),
+		findRangeHighlightBorder: hexToHexAlpha(foreground, 0),
+		hoverHighlightBackground: hexToHexAlpha(foreground, 0.08),
+		linkActiveForeground: primary,
+		unicodeHighlightBorder: hexToHexAlpha(defaults.other.yellow.default, 0.5),
+		unicodeHighlightBackground: hexToHexAlpha(defaults.other.yellow.default, 0.2),
+		symbolHighlightBackground: hexToHexAlpha(foreground, 0.1),
+		symbolHighlightBorder: hexToHexAlpha(foreground, 0),
+		whitespace: hexToHexAlpha(foreground, 0.15),
+		indentGuideBackground: hexToHexAlpha(foreground, 0.08),
+		indentGuideActiveBackground: hexToHexAlpha(foreground, 0.25),
+		inlayHintBackground: hexToHexAlpha(foreground, 0.08),
+		inlayHintForeground: hexToHexAlpha(foreground, 0.8),
+		inlayHintTypeBackground: hexToHexAlpha(defaults.other.blue.default, 0.08),
+		inlayHintTypeForeground: hexToHexAlpha(defaults.other.blue.default, 0.8),
+		inlayHintParameterBackground: hexToHexAlpha(defaults.other.orange.default, 0.08),
+		inlayHintParameterForeground: hexToHexAlpha(defaults.other.orange.default, 0.8),
+		rulerForeground: hexToHexAlpha(foreground, 0.15),
+		codeLensForeground: hexToHexAlpha(foreground, 0.5),
+		linkedEditingBackground: hexToHexAlpha(primary, 0.1),
+	};
+
 	return {
-        theme: themeWithAuto,
-        colors: {
-            ...provided,
-            button,
-            defaults,
-            popover,
-            badge,
-            activityBar,
-            activityBarBadge,
-            profileBadge,
-            sideBar,
-            sideBarTitle,
-            sideBarSectionHeader,
-            sideBarStickyScroll,
-            statusBar,
-            panel,
-            cursor,
-            widget,
-            git,
-        }
-    }
+		theme: themeWithAuto,
+		colors: {
+			...provided,
+			button,
+			defaults,
+			popover,
+			badge,
+			activityBar,
+			activityBarBadge,
+			profileBadge,
+			sideBar,
+			sideBarTitle,
+			sideBarSectionHeader,
+			sideBarStickyScroll,
+			statusBar,
+			panel,
+			cursor,
+			widget,
+			git,
+			editor,
+		},
+	};
 }
