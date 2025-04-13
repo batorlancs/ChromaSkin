@@ -9,6 +9,19 @@ import { ThemeConfig } from "./types";
 
 let activePanel: vscode.WebviewPanel | undefined;
 let extensionContext: vscode.ExtensionContext | undefined;
+const DEFAULT_THEME_CONFIG: ThemeConfig = {
+	primary: "#c089f0",
+	background: "#2b2b2b",
+	accent: "#252525",
+	foreground: "#b8b8b8",
+	border: "#454545",
+	activityBar: "#252525",
+	popover: "#252525",
+	button: "#c089f0",
+	coloredCursor: true,
+	borderOpacity: 30,
+	autoAdvancedColors: true,
+};
 
 /**
  * This method is called when the extension is activated.
@@ -29,19 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 
 		// Initial color theme configuration
-		const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || {
-			primary: "#c089f0",
-			background: "#2b2b2b",
-			accent: "#252525",
-			foreground: "#b8b8b8",
-			border: "#454545",
-			activityBar: "#252525",
-			popover: "#252525",
-			button: "#c089f0",
-			coloredCursor: true,
-			borderOpacity: 30,
-			autoAdvancedColors: true,
-		};
+		const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || DEFAULT_THEME_CONFIG;
 
 		// Set the webview's HTML content
 		activePanel.webview.html = getWebviewContent(context, activePanel.webview, themeConfig);
@@ -63,6 +64,18 @@ export function activate(context: vscode.ExtensionContext) {
 			undefined,
 			context.subscriptions
 		);
+
+		// Handle visibility changes
+        activePanel.onDidChangeViewState((event) => {
+            if (activePanel?.visible) {
+				const themeConfig: ThemeConfig = context.globalState.get<ThemeConfig>("chromaskin-theme-config") || DEFAULT_THEME_CONFIG;
+				const { theme } = generateWorkbenchTheme(themeConfig);
+				activePanel.webview.postMessage({
+					command: "set-colors",
+					themeConfig: theme,
+				});
+            }
+        });
 	});
 
 	context.subscriptions.push(disposable);
