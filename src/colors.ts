@@ -9,7 +9,7 @@ export function getColors(provided: ThemeConfig) {
 		...provided,
 		activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
 		popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
-		button: provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.button,
+		button: provided.autoAdvancedColors ? primary : provided.button,
 	};
 
 	const darkOtherColors = {
@@ -26,10 +26,10 @@ export function getColors(provided: ThemeConfig) {
 			active: "#ff1111",
 		},
 		green: {
-			soft: "#a3d9b1",
-			default: "#73c991",
-			hover: "#55b37d",
-			active: "#33995d",
+			soft: "#b3d9a3",
+			default: "#8ac973",
+			hover: "#73b355",
+			active: "#5d9933",
 		},
 		yellow: {
 			soft: "#e2c08d",
@@ -257,8 +257,8 @@ export function getColors(provided: ThemeConfig) {
 			border: hexToHexAlpha(foreground, 0.1),
 		},
 		stickyScroll: {
-			border: adjustColor(background, 0, 0, 10),
-			shadow: adjustColor(background, 0, 0, -5),
+			border: adjustColor(background, 0, 0, 5),
+			shadow: adjustColor(background, 0, 0, -3),
 			background: background,
 		},
 		stickyScrollHover: {

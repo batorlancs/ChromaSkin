@@ -414,6 +414,10 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		// Integrated Terminal colors
 		"terminal.background": colors.accent,
 		"terminal.border": `${colors.foreground}00`,
+		"terminal.foreground": colors.foreground,
+		"terminal.selectionBackground": hexToHexAlpha(colors.foreground, 0.25),
+		"terminalCursor.background": colors.background,
+		"terminalCursor.foreground": colors.foreground,
 
 		// Breadcrumbs colors
 		"breadcrumb.background": colors.background,
