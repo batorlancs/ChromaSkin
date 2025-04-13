@@ -5,6 +5,13 @@ export function getColors(provided: ThemeConfig) {
 	const isDark = isDarkMode(provided.background);
 	const { primary, background, accent, foreground, border, borderOpacity } = provided;
 
+    const themeWithAuto = {
+        ...provided,
+        activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
+        popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
+        button: provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.buttonColor,
+    }
+
 	const darkOtherColors = {
 		blue: {
 			soft: "#8db9e2",
@@ -91,7 +98,7 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Button
-	const buttonBackground = provided.autoAdvancedColors ? adjustColor(primary, 0, -5, 5) : provided.buttonColor;
+	const buttonBackground = themeWithAuto.button;
 	const buttonForeground = whiteOrBlackText(buttonBackground);
     const secondaryBackground = adjustColor(getLightestColor([accent, background]), 0, 0, 10)
 	const button = {
@@ -113,7 +120,7 @@ export function getColors(provided: ThemeConfig) {
 
 	// Activity Bar
 	const activityBar = {
-		background: provided.autoAdvancedColors ? accent : provided.activityBar,
+		background: themeWithAuto.activityBar,
 		inactiveForeground: hexToHexAlpha(foreground, 0.38),
 		foreground: hexToHexAlpha(foreground, 0.83),
 		badgeForeground: badge.foreground,
@@ -198,7 +205,7 @@ export function getColors(provided: ThemeConfig) {
 	// based on borderOpacity get a value between 0 and 50 (50% of the input value)
 	const borderOpacityValue = Math.min(50, Math.max(0, borderOpacity * 0.5));
 
-	const popoverBackground = provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover;
+	const popoverBackground = themeWithAuto.popover;
 	const popoverForeground = adjustColor(foreground, 0, 0, -10);
 	const widget = {
 		background: popoverBackground,
@@ -232,22 +239,25 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	return {
-		...provided,
-		button,
-		defaults,
-		popover,
-		badge,
-		activityBar,
-		activityBarBadge,
-		profileBadge,
-		sideBar,
-		sideBarTitle,
-		sideBarSectionHeader,
-		sideBarStickyScroll,
-		statusBar,
-		panel,
-		cursor,
-		widget,
-		git,
-	};
+        theme: themeWithAuto,
+        colors: {
+            ...provided,
+            button,
+            defaults,
+            popover,
+            badge,
+            activityBar,
+            activityBarBadge,
+            profileBadge,
+            sideBar,
+            sideBarTitle,
+            sideBarSectionHeader,
+            sideBarStickyScroll,
+            statusBar,
+            panel,
+            cursor,
+            widget,
+            git,
+        }
+    }
 }

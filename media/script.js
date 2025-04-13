@@ -68,6 +68,26 @@
 		});
 	}
 
+    function setTheme(themeConfig) {
+        document.getElementById("color1").value = themeConfig.primary;
+        document.getElementById("color2").value = themeConfig.background;
+        document.getElementById("color3").value = themeConfig.accent;
+        document.getElementById("color4").value = themeConfig.foreground;
+        document.getElementById("color5").value = themeConfig.border;
+        document.getElementById("activityBarColor").value = themeConfig.activityBar;
+        document.getElementById("popoverColor").value = themeConfig.popover;
+        document.getElementById("buttonColor").value = themeConfig.button;
+        document.getElementById("coloredCursor").checked = themeConfig.coloredCursor;
+        document.getElementById("intensity").value = themeConfig.intensity;
+    }
+
+	window.addEventListener("message", (event) => {
+		const message = event.data;
+		if (message.command === "set-colors") {
+			setTheme(message.themeConfig);
+		}
+	});
+
 	// Initialize when DOM is ready
 	document.addEventListener("DOMContentLoaded", initializeUI);
 })();

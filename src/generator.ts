@@ -2,11 +2,16 @@ import { getColors } from "./colors";
 import { ThemeConfig } from "./types";
 import { adjustColor, hexToHexAlpha, whiteOrBlackText } from "./utils";
 
-// Generate the theme JSON
-export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, any> {
-	const colors = getColors(provided);
+interface GenerateWorkbenchThemeResponse {
+	data: Record<string, any>;
+	theme: ThemeConfig;
+}
 
-	return {
+// Generate the theme JSON
+export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbenchThemeResponse {
+	const { colors, theme: themeWithAuto } = getColors(provided);
+
+	const data = {
 		// Contrast colors
 		contrastActiveBorder: colors.defaults.transparent,
 		contrastBorder: colors.defaults.transparent,
@@ -480,5 +485,10 @@ export function generateWorkbenchTheme(provided: ThemeConfig): Record<string, an
 		// Snippets
 		"editor.snippetTabstopHighlightBackground": hexToHexAlpha(colors.primary, 0.2),
 		"editor.snippetFinalTabstopHighlightBackground": hexToHexAlpha(colors.defaults.other.green.default, 0.2),
+	};
+
+	return {
+		data,
+		theme: themeWithAuto,
 	};
 }

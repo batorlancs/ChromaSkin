@@ -19,6 +19,8 @@ interface ColorThemeConfig {
 	autoAdvancedColors: boolean;
 }
 
+let activePanel: vscode.WebviewPanel | undefined;
+
 /**
  * This method is called when the extension is activated.
  * @param context vscode.ExtensionContext
@@ -27,11 +29,11 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log("ChromaSkin extension is now active!");
 
 	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
-		const panel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
+		activePanel = vscode.window.createWebviewPanel("colorThemePicker", "ChromaSkin: Theme Generator", vscode.ViewColumn.One, {
 			enableScripts: true,
 			localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "media"))],
 		});
-		panel.iconPath = {
+		activePanel.iconPath = {
 			light: vscode.Uri.file(path.join(context.extensionPath, "resources", "chromaskin-lightmode.png")),
 			dark: vscode.Uri.file(path.join(context.extensionPath, "resources", "chromaskin-darkmode.png")),
 		};
@@ -52,10 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 
 		// Set the webview's HTML content
-		panel.webview.html = getWebviewContent(context, panel.webview, themeConfig);
+		activePanel.webview.html = getWebviewContent(context, activePanel.webview, themeConfig);
 
 		// Handle messages from the webview
-		panel.webview.onDidReceiveMessage(
+		activePanel.webview.onDidReceiveMessage(
 			(message) => {
 				switch (message.command) {
 					case "applyTheme":
@@ -92,7 +94,7 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 
 	console.log(themeConfig);
 
-	const colors = generateWorkbenchTheme({
+	const { data, theme } = generateWorkbenchTheme({
 		primary: themeConfig.color1,
 		background: themeConfig.color2,
 		accent: themeConfig.color3,
@@ -107,7 +109,7 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 	});
 
 	const colorCustomizations = {
-		colorCustomizations: colors,
+		colorCustomizations: data,
 		tokenColorCustomizations: {
 			textMateRules: [
 				{
@@ -123,6 +125,13 @@ function applyColorTheme(themeConfig: ColorThemeConfig) {
 	// Update both color and token customizations
 	config.update("colorCustomizations", colorCustomizations.colorCustomizations, vscode.ConfigurationTarget.Global);
 	editorConfig.update("tokenColorCustomizations", colorCustomizations.tokenColorCustomizations, vscode.ConfigurationTarget.Global);
+
+	if (themeConfig.autoAdvancedColors && activePanel) {
+		activePanel.webview.postMessage({
+			command: "set-colors",
+			themeConfig: theme,
+		});
+	}
 }
 
 /**
