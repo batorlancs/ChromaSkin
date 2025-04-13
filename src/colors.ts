@@ -90,8 +90,6 @@ export function getColors(provided: ThemeConfig) {
 		},
 	};
 
-	console.log("isDark", isDark);
-
 	const defaults = {
 		transparent: "#00000000",
 		other: isDark ? darkOtherColors : lightOtherColors,

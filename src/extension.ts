@@ -15,7 +15,7 @@ let extensionContext: vscode.ExtensionContext | undefined;
  * @param context vscode.ExtensionContext
  */
 export function activate(context: vscode.ExtensionContext) {
-	console.log("ChromaSkin extension is now active!");
+	console.log("ChromaSkin: activated!");
 	extensionContext = context;
 
 	let disposable = vscode.commands.registerCommand("chromaskin.openPicker", () => {
@@ -82,8 +82,6 @@ function applyColorTheme(themeConfig: ThemeConfig) {
 	const config = vscode.workspace.getConfiguration("workbench");
 	const editorConfig = vscode.workspace.getConfiguration("editor");
 
-	console.log(themeConfig);
-
 	const { data, theme } = generateWorkbenchTheme(themeConfig);
 
 	const colorCustomizations = {
@@ -112,7 +110,10 @@ function applyColorTheme(themeConfig: ThemeConfig) {
 	}
 
 	// Save to global state
-	extensionContext?.globalState.update("chromaskin-theme-config", themeConfig);
+	if (extensionContext) {
+		extensionContext.globalState.update("chromaskin-theme-config", themeConfig);
+		console.log("ChromaSkin: Theme Config Saved!");
+	}
 }
 
 /**
