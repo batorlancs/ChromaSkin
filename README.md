@@ -51,7 +51,7 @@ ChromaSkin works great with all VS Code themes like:
 
 ## 📝 Release Notes
 
-### 0.0.1
+### 1.0.0
 
 - Initial release of ChromaSkin
 
@@ -62,4 +62,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This extension is licensed under the [MIT License](LICENSE).
-

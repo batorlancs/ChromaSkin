@@ -2,8 +2,8 @@
 	"icon": "resources/chromaskin-darkmode.png",
 	"name": "chromaskin-by-bator",
 	"displayName": "ChromaSkin",
-	"description": "Mix & Match VS Code Syntax Highlighting with Custom UI 🎨🧪",
-	"version": "0.0.1",
+	"description": "Mix & Match VS Code Syntax Highlighting with Custom UI",
+	"version": "1.0.0",
 	"publisher": "GergelyBator",
 	"license": "MIT",
 	"repository": {
@@ -51,8 +51,7 @@
 	"author": "Gergely Bator",
 	"keywords": [
 		"vscode",
-		"theme",
-		"syntax highlighting"
+		"theme"
 	],
 	"homepage": "https://github.com/batorlancs/ChromaSkin#readme"
 }
