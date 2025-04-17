@@ -2,15 +2,33 @@
 
 ChromaSkin lets you mix and match your favorite syntax highlighting with custom editor chrome colors. Keep the code highlighting you love while personalizing VS Code's overall look and feel.
 
-## ✨ Features
+## 📖 Description
 
-ChromaSkin separates VS Code's chrome (UI elements like activity bar, sidebar, panels) from syntax highlighting, giving you unprecedented customization:
+### 🧠 What is it?
 
-- 🎨 Use any syntax highlighting theme you love
-- 🎯 Customize only the editor chrome/UI colors
-- 🖼️ Keep your preferred token colors untouched
+You know how picking a theme in VS Code usually changes everything – from your sidebar, status bar, and tabs, to the actual code syntax colors?
 
-Here's how it looks in action:
+**ChromaSkin decouples that.**
+With it, you can:
+
+- Keep your favorite syntax token colors (One Dark, Dracula, Monokai Pro, Night Owl... whatever!)
+- Style the UI/chrome separately: activity bar, side panel, status bar, etc.
+- Mix and match for way more control over your setup
+
+### 🎯 Why this is useful
+
+Let’s say you love Night Owl’s syntax colors, but don’t want the overall dark-blue UI. With ChromaSkin, you can keep Night Owl’s token coloring and pair it with a warm, light chrome — or go all out with your own custom palette.
+
+This opens up a whole world of personalization without sacrificing your coding flow.
+
+### 🎨 Theme Style Inspiration
+
+The default chrome themes in ChromaSkin are inspired by the clean, modern aesthetics of:
+
+- GitHub’s VS Code theme
+- VS Code’s built-in Dark+ theme
+
+## 📸 Example
 
 ![ChromaSkin Example](resources/example.png)
 
@@ -22,22 +40,20 @@ Here's how it looks in action:
 
 ## 🎨 Recommended Syntax Themes
 
-ChromaSkin works great with popular VS Code themes like:
+ChromaSkin works great with all VS Code themes like:
 
 - [One Dark Pro](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme)
 - [Dracula Official](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
 - [GitHub Theme](https://marketplace.visualstudio.com/items?itemName=GitHub.github-vscode-theme)
 - [Night Owl](https://marketplace.visualstudio.com/items?itemName=sdras.night-owl)
 - [Monokai Pro](https://marketplace.visualstudio.com/items?itemName=monokai.theme-monokai-pro-vscode)
+- Anything else you want to try!
 
 ## 📝 Release Notes
 
-### 1.0.0
+### 0.0.1
 
 - Initial release of ChromaSkin
-- Support for independent chrome/syntax theming
-- Light and dark mode support
-- Custom accent color options
 
 ## 🤝 Contributing
 
@@ -47,6 +63,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This extension is licensed under the [MIT License](LICENSE).
 
----
-
-**Enjoy your personalized VS Code experience with ChromaSkin! 🎉**
