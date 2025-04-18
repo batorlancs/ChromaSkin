@@ -223,7 +223,7 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Git
-	const gitOpacity = 0.6;
+	const gitOpacity = 0.75;
 	const git = {
 		ignoredResourceForeground: hexToHexAlpha(foreground, 0.16),
 		modifiedResourceForeground: blendColors(defaults.other.orange.default, foreground, gitOpacity),
