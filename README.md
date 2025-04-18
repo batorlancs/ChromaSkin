@@ -49,12 +49,6 @@ ChromaSkin works great with all VS Code themes like:
 - [Monokai Pro](https://marketplace.visualstudio.com/items?itemName=monokai.theme-monokai-pro-vscode)
 - Anything else you want to try!
 
-## 📝 Release Notes
-
-### 1.0.0
-
-- Initial release of ChromaSkin
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
