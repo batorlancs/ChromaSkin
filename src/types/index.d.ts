@@ -17,6 +17,7 @@ export interface ThemeConfig {
 	autoAdvancedColors: boolean;
 	coloredCursor: boolean;
 	editorHighlighting: boolean;
+	syntaxCommentsOverwrite: boolean;
 }
 
 export * from "./colors";

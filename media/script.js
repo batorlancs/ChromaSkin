@@ -53,6 +53,7 @@
 			borderOpacity: parseInt(document.getElementById("intensity").value),
 			autoAdvancedColors: autoAdvancedColors,
 			editorHighlighting: document.getElementById("editorHighlighting").checked,
+			syntaxCommentsOverwrite: document.getElementById("syntaxCommentsOverwrite").checked,
 		};
 
 		// Send message to extension
@@ -83,6 +84,7 @@
         document.getElementById("intensity-value").textContent = themeConfig.borderOpacity;
         document.getElementById("autoAdvancedColors").checked = themeConfig.autoAdvancedColors;
 		document.getElementById("editorHighlighting").checked = themeConfig.editorHighlighting;
+		document.getElementById("syntaxCommentsOverwrite").checked = themeConfig.syntaxCommentsOverwrite;
     }
 
 	window.addEventListener("message", (event) => {

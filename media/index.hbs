@@ -76,6 +76,11 @@
 				<label for="editorHighlighting">Editor Highlighting Overwrite</label>
 			</div>
 
+			<div class="checkbox-container">
+				<input type="checkbox" id="syntaxCommentsOverwrite" {{#if syntaxCommentsOverwrite}}checked{{/if}} />
+				<label for="syntaxCommentsOverwrite">Syntax Comments Overwrite</label>
+			</div>
+
             <div class="slider-container">
 				<input type="range" id="intensity" min="1" max="100" value="{{borderOpacity}}" />
 				<label for="intensity">Popever Border Strength</label>

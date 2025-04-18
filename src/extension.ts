@@ -5,7 +5,6 @@ import * as fs from "fs";
 import * as Handlebars from "handlebars";
 import { generateWorkbenchTheme } from "./generator";
 import { ThemeConfig } from "./types";
-import PersistentConfigManager from "./persistent-config-manager";
 import { getTokenColorCustomizations } from "./tokenizer";
 
 class ChromaSkinExtension {
@@ -27,15 +26,17 @@ class ChromaSkinExtension {
 		coloredCursor: true,
 		autoAdvancedColors: true,
 		editorHighlighting: true,
+		syntaxCommentsOverwrite: true,
 	};
-	private persistentConfigManager: PersistentConfigManager;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
-		this.persistentConfigManager = new PersistentConfigManager(context);
 	}
 
 	public activate() {
+		// clear global state
+		// this.context.globalState.update("chromaskin-theme-config", null);
+
 		console.log("ChromaSkin: activated!");
 		const disposable = vscode.commands.registerCommand("chromaskin.openThemeGenerator", () => {
 			this.openThemeGenerator();
@@ -96,12 +97,9 @@ class ChromaSkinExtension {
 	}
 
 	private applyColorTheme(themeConfig: ThemeConfig) {
-		// persist current configurations (on theme reset -> rollback to original)
-		this.persistentConfigManager.saveCurrentConfig();
-
 		// color customizations
 		const { data: colorCustomizations, theme } = generateWorkbenchTheme(themeConfig);
-		const tokenColorCustomizations = getTokenColorCustomizations();
+		const tokenColorCustomizations = getTokenColorCustomizations(themeConfig);
 
 		// update configurations
 		vscode.workspace
@@ -124,9 +122,8 @@ class ChromaSkinExtension {
 	}
 
 	private resetColorTheme() {
-		const { workbench, editor } = this.persistentConfigManager.restoreConfig();
-		vscode.workspace.getConfiguration("workbench").update("colorCustomizations", workbench, vscode.ConfigurationTarget.Global);
-		vscode.workspace.getConfiguration("editor").update("tokenColorCustomizations", editor, vscode.ConfigurationTarget.Global);
+		vscode.workspace.getConfiguration("workbench").update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
+		vscode.workspace.getConfiguration("editor").update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
 		console.log("ChromaSkin: Theme Reset!");
 	}
 
@@ -157,6 +154,7 @@ class ChromaSkinExtension {
 			borderOpacity: themeConfig.borderOpacity,
 			autoAdvancedColors: themeConfig.autoAdvancedColors,
 			editorHighlighting: themeConfig.editorHighlighting,
+			syntaxCommentsOverwrite: themeConfig.syntaxCommentsOverwrite,
 		});
 	}
 }

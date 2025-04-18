@@ -1,21 +1,19 @@
-import * as vscode from "vscode";
+// import * as vscode from "vscode";
+import { ThemeConfig } from "./types/index";
 
-const DEFAULT_TOKEN_COLOR_CUSTOMIZATIONS = {
-	textMateRules: [
-		{
-			scope: ["comment", "comment.block", "comment.line", "comment.block.documentation", "punctuation.definition.comment"],
-			settings: { foreground: "#FFFFFF30" },
-		},
-	],
+const SYNTAX_COMMENTS_OVERWRITE_TEXT_MATE_RULE = {
+	scope: ["comment", "comment.block", "comment.line", "comment.block.documentation", "punctuation.definition.comment"],
+	settings: { foreground: "#FFFFFF30" },
 };
 
-export function getTokenColorCustomizations() {
-	const editorConfig = vscode.workspace.getConfiguration("editor");
-	const tokenColorCustomizationsData = (editorConfig.get("tokenColorCustomizations") as any) || {};
-	const textMateRules = Array.isArray(tokenColorCustomizationsData.textMateRules) ? tokenColorCustomizationsData.textMateRules : [];
+export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
+    let textMateRules = []
+	if (themeConfig.syntaxCommentsOverwrite) {
+		textMateRules.push(SYNTAX_COMMENTS_OVERWRITE_TEXT_MATE_RULE);
+	}
+
 	const tokenColorCustomizations = {
-		...tokenColorCustomizationsData,
-		textMateRules: [...textMateRules, ...DEFAULT_TOKEN_COLOR_CUSTOMIZATIONS.textMateRules],
+		textMateRules,
 	};
 	return tokenColorCustomizations;
 }
