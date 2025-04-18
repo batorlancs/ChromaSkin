@@ -21,7 +21,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "chromaskin.openPicker",
+				"command": "chromaskin.openThemeGenerator",
 				"title": "ChromaSkin: Open Theme Generator"
 			}
 		]
@@ -46,6 +46,7 @@
 		"typescript": "^5.7.2"
 	},
 	"dependencies": {
+		"chromaskin-by-bator": "file:",
 		"handlebars": "^4.7.8"
 	},
 	"author": "Gergely Bator",
