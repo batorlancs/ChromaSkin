@@ -18,6 +18,8 @@ export interface ThemeConfig {
 	coloredCursor: boolean;
 	editorHighlighting: boolean;
 	syntaxCommentsOverwrite: boolean;
+	// optional color pickers
+	optionalEditorForeground: string;
 }
 
 export * from "./colors";

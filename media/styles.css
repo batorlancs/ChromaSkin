@@ -217,3 +217,40 @@ input[type="checkbox"]:checked {
 	opacity: 1;
 	pointer-events: all;
 }
+
+/* Styles for the Optional Color Picker */
+.optional-color-picker-container {
+	margin-top: 4px;
+	margin-bottom: 6px;
+	padding: 10px;
+	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
+	border-radius: 8px;
+	background-color: color-mix(in srgb, var(--vscode-foreground) 3%, transparent);
+	transition: background-color 0.2s ease;
+}
+
+.optional-toggle-container {
+	margin-bottom: 5px; /* Spacing between toggle and color input */
+}
+
+.optional-input-container {
+	transition: opacity 0.3s ease, filter 0.3s ease;
+	padding-left: 24px; /* Indent the color picker slightly */
+}
+
+/* Styles when the default IS selected (checkbox is checked) */
+.optional-color-picker-container.is-default {
+	background-color: color-mix(in srgb, var(--vscode-foreground) 1.5%, transparent);
+	border-color: color-mix(in srgb, var(--vscode-foreground) 4%, transparent);
+}
+
+.optional-color-picker-container.is-default .optional-input-container {
+	opacity: 0.4;
+	pointer-events: none; /* Disable interaction with color input */
+	filter: grayscale(80%); /* Visually indicate disabled state */
+}
+
+/* Adjust label width if needed for the optional picker */
+.optional-input-container label {
+	width: 130px; /* Adjust as needed */
+}

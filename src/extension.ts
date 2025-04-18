@@ -27,6 +27,8 @@ class ChromaSkinExtension {
 		autoAdvancedColors: true,
 		editorHighlighting: true,
 		syntaxCommentsOverwrite: true,
+		// optional color pickers
+		optionalEditorForeground: "default",
 	};
 
 	constructor(context: vscode.ExtensionContext) {
@@ -86,6 +88,7 @@ class ChromaSkinExtension {
 	private handleWebviewMessage(message: any) {
 		switch (message.command) {
 			case "applyTheme":
+				console.log("Got apply theme: ", message.themeConfig);
 				this.applyColorTheme(message.themeConfig);
 				vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied!");
 				break;
@@ -137,6 +140,7 @@ class ChromaSkinExtension {
 		const templatePath = path.join(context.extensionPath, "media", "index.hbs");
 		const templateSource = fs.readFileSync(templatePath, "utf8");
 
+		Handlebars.registerHelper("eq", (a, b) => a === b);
 		const template = Handlebars.compile(templateSource);
 
 		return template({
@@ -155,6 +159,7 @@ class ChromaSkinExtension {
 			autoAdvancedColors: themeConfig.autoAdvancedColors,
 			editorHighlighting: themeConfig.editorHighlighting,
 			syntaxCommentsOverwrite: themeConfig.syntaxCommentsOverwrite,
+			optionalEditorForeground: themeConfig.optionalEditorForeground,
 		});
 	}
 }

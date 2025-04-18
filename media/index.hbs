@@ -66,6 +66,21 @@
                 </div>
             </div>
 
+            {{!-- New Optional Color Picker --}}
+            <div class="optional-color-picker-container" data-setting-name="optionalEditorForeground">
+                <div class="checkbox-container optional-toggle-container">
+                    {{!-- Checkbox to enable/disable custom color --}}
+                    <input type="checkbox" id="optionalEditorForeground-default-toggle" class="optional-toggle" {{#if (eq optionalEditorForeground "default")}}checked{{/if}} />
+                    <label for="optionalEditorForeground-default-toggle">Use Default Editor Foreground</label>
+                </div>
+                <div class="color-picker-container optional-input-container">
+                    {{!-- The actual color input --}}
+                    <input type="color" id="optionalEditorForeground" class="optional-color-input" value="{{#unless (eq optionalEditorForeground "default")}}{{optionalEditorForeground}}{{else}}#808080{{/unless}}" />
+                    <label for="optionalEditorForeground">Editor Foreground</label>
+                </div>
+            </div>
+            {{!-- End New Optional Color Picker --}}
+
             <div class="checkbox-container">
                 <input type="checkbox" id="coloredCursor" {{#if coloredCursor}}checked{{/if}} />
                 <label for="coloredCursor">Colored Cursor</label>

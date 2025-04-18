@@ -3,7 +3,7 @@ import { adjustColor, blendColors, getLightestColor, hexToHexAlpha, isDarkMode, 
 
 export function getColors(provided: ThemeConfig) {
 	const isDark = isDarkMode(provided.background);
-	const { primary, background, accent, foreground, border, borderOpacity } = provided;
+	const { primary, background, accent, foreground, border, borderOpacity, optionalEditorForeground } = provided;
 
 	const themeWithAuto = {
 		...provided,
@@ -239,7 +239,7 @@ export function getColors(provided: ThemeConfig) {
 	// Editor
 	const editor = {
 		background: background,
-		foreground: foreground,
+		foreground: optionalEditorForeground,
 		selectionBackground: hexToHexAlpha(foreground, 0.12),
 		selectionHighlightBackground: hexToHexAlpha(foreground, 0.08),
 		inactiveSelectionBackground: hexToHexAlpha(foreground, 0.06),
