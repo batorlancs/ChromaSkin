@@ -87,7 +87,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		// Text colors
 		"textBlockQuote.background": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
 		"textBlockQuote.border": colors.border,
-		"textCodeBlock.background": colors.background,
+		"textCodeBlock.background": hexToHexAlpha(colors.foreground, 0.1),
 		"textLink.activeForeground": adjustColor(colors.primary, 0, 0, 10),
 		"textLink.foreground": colors.primary,
 		"textPreformat.foreground": colors.foreground,
