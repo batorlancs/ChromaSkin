@@ -88,7 +88,6 @@ class ChromaSkinExtension {
 	private handleWebviewMessage(message: any) {
 		switch (message.command) {
 			case "applyTheme":
-				console.log("Got apply theme: ", message.themeConfig);
 				this.applyColorTheme(message.themeConfig);
 				vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied!");
 				break;
@@ -109,6 +108,9 @@ class ChromaSkinExtension {
 				break;
 			case "showInfo":
 				vscode.window.showInformationMessage(`ChromaSkin: ${message.message}`);
+				break;
+			case "hideInfoMessage":
+				this.context.globalState.update("chromaskin-hide-info-message", true);
 				break;
 		}
 	}
@@ -205,6 +207,7 @@ class ChromaSkinExtension {
 			editorHighlighting: themeConfig.editorHighlighting,
 			syntaxCommentsOverwrite: themeConfig.syntaxCommentsOverwrite,
 			optionalEditorForeground: themeConfig.optionalEditorForeground,
+			hideInfoMessage: this.context.globalState.get("chromaskin-hide-info-message") === true,
 		});
 	}
 }

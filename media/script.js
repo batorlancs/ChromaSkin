@@ -23,6 +23,19 @@
 		// Initial state
 		advancedColorsContainer.classList.toggle("enabled", !autoAdvancedColors.checked);
 
+		// Add close button handler for the info message
+		const infoMessageCloseBtn = document.getElementById("info-message-close");
+		const infoMessage = document.querySelector(".info-message.warning");
+		if (infoMessageCloseBtn && infoMessage) {
+			infoMessageCloseBtn.addEventListener("click", () => {
+				infoMessage.style.display = "none";
+				// Save user preference to never show the message again
+				vscode.postMessage({
+					command: "hideInfoMessage",
+				});
+			});
+		}
+
 		// --- Reusable Optional Color Picker Logic ---
 		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
 			const toggle = container.querySelector(".optional-toggle");
