@@ -103,14 +103,40 @@
 			</div>
 
 			<div class="footer">
-                <button id="apply-button" class="apply-button">Apply Theme</button>
-                <button id="reset-button" class="reset-button">Clear</button>
-                <div class="export-import-container">
-                    <button id="export-button" class="secondary-button">Export</button>
-                    <button id="import-button" class="secondary-button">Import</button>
-                    <input type="file" id="import-file" accept=".json" style="display: none;" />
+                <div class="button-container">
+                    <button id="apply-button" class="apply-button">Apply Theme</button>
+                    <button id="reset-button" class="reset-button">Clear</button>
+                    <button id="menu-button" class="menu-button">⋯</button>
+                    <div id="dropdown-menu" class="dropdown-menu">
+                        <div class="dropdown-menu-item" id="export-file">
+                            <span>Export to file</span>
+                        </div>
+                        <div class="dropdown-menu-item" id="copy-clipboard">
+                            <span>Copy to clipboard</span>
+                        </div>
+                        <div class="dropdown-menu-separator"></div>
+                        <div class="dropdown-menu-item" id="import-file">
+                            <span>Import from file</span>
+                        </div>
+                        <div class="dropdown-menu-item" id="import-clipboard">
+                            <span>Import from clipboard</span>
+                        </div>
+                    </div>
+                    <input type="file" id="import-file-input" accept=".json" style="display: none;" />
                 </div>
             </div>
+		</div>
+
+		<!-- Modal for pasting JSON -->
+		<div id="import-modal-overlay" class="modal-overlay">
+			<div class="modal">
+				<h3 class="modal-title">Paste Theme JSON</h3>
+				<textarea id="import-json-textarea" placeholder="Paste your theme JSON here..."></textarea>
+				<div class="modal-buttons">
+					<button id="import-modal-cancel" class="secondary-button">Cancel</button>
+					<button id="import-modal-apply" class="apply-button">Apply</button>
+				</div>
+			</div>
 		</div>
 
 		<script src="{{scriptUri}}"></script>

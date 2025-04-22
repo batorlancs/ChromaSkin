@@ -274,3 +274,127 @@ input[type="checkbox"]:checked {
 .secondary-button:hover {
 	background-color: color-mix(in srgb, var(--vscode-foreground) 15%, transparent);
 }
+
+/* Dropdown menu styles */
+.menu-button {
+	background-color: transparent;
+	color: var(--vscode-foreground);
+	font-size: 1.2em;
+	padding: 5px 10px;
+	margin-left: 8px;
+	border-radius: 4px;
+	width: 36px;
+	position: relative;
+}
+
+.menu-button:hover {
+	background-color: color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
+}
+
+.dropdown-menu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background-color: var(--vscode-editor-background);
+	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+	border-radius: 6px;
+	min-width: 180px;
+	z-index: 1000;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	display: none;
+}
+
+.dropdown-menu.active {
+	display: block;
+}
+
+.dropdown-menu-item {
+	padding: 10px 16px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transition: background-color 0.2s ease;
+}
+
+.dropdown-menu-item:hover {
+	background-color: color-mix(in srgb, var(--vscode-foreground) 5%, transparent);
+}
+
+.dropdown-menu-item:first-child {
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.dropdown-menu-item:last-child {
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.dropdown-menu-separator {
+	height: 1px;
+	background-color: color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
+	margin: 5px 0;
+}
+
+.button-container {
+	display: flex;
+	align-items: center;
+	position: relative;
+	gap: 10px;
+}
+
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+	display: none;
+}
+
+.modal-overlay.active {
+	display: block;
+}
+
+.modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--vscode-editor-background);
+	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+	border-radius: 8px;
+	padding: 20px;
+	width: 80%;
+	max-width: 400px;
+	z-index: 1001;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+	margin-top: 0;
+	margin-bottom: 15px;
+	font-size: 1.1em;
+}
+
+.modal textarea {
+	width: 100%;
+	min-height: 120px;
+	background-color: color-mix(in srgb, var(--vscode-foreground) 3%, transparent);
+	color: var(--vscode-foreground);
+	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+	border-radius: 4px;
+	padding: 8px;
+	font-family: monospace;
+	resize: vertical;
+	margin-bottom: 15px;
+}
+
+.modal-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}

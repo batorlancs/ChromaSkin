@@ -18,13 +18,6 @@
 
 		autoAdvancedColors.addEventListener("change", () => {
 			advancedColorsContainer.classList.toggle("enabled", !autoAdvancedColors.checked);
-			// if (autoAdvancedColors.checked) {
-			// 	// When automatic is enabled, set colors based on accent color
-			// 	const accentColor = document.getElementById("color3").value;
-			// 	document.getElementById("activityBarColor").value = accentColor;
-			// 	document.getElementById("popoverColor").value = accentColor;
-			// 	document.getElementById("buttonColor").value = primaryColor;
-			// }
 		});
 
 		// Initial state
@@ -40,10 +33,6 @@
 			const updateOptionalState = () => {
 				const useDefault = toggle.checked;
 				container.classList.toggle("is-default", useDefault);
-				// Optional: Reset color visually when switching to default
-				// if (useDefault) {
-				//     colorInput.value = '#808080'; // Or another default visual indicator
-				// }
 			};
 
 			// Add event listener to the toggle
@@ -58,10 +47,41 @@
 		document.getElementById("apply-button").addEventListener("click", applyTheme);
 		document.getElementById("reset-button").addEventListener("click", resetTheme);
 
-		// Add event listeners for export/import buttons
-		document.getElementById("export-button").addEventListener("click", exportTheme);
-		document.getElementById("import-button").addEventListener("click", importTheme);
-		document.getElementById("import-file").addEventListener("change", handleFileSelect);
+		// Add events for dropdown menu
+		const menuButton = document.getElementById("menu-button");
+		const dropdownMenu = document.getElementById("dropdown-menu");
+
+		// Toggle dropdown menu
+		menuButton.addEventListener("click", (e) => {
+			e.stopPropagation();
+			dropdownMenu.classList.toggle("active");
+		});
+
+		// Close dropdown when clicking elsewhere
+		document.addEventListener("click", () => {
+			dropdownMenu.classList.remove("active");
+		});
+
+		// Prevent dropdown from closing when clicking inside it
+		dropdownMenu.addEventListener("click", (e) => {
+			e.stopPropagation();
+		});
+
+		// Setup dropdown menu items
+		document.getElementById("export-file").addEventListener("click", exportTheme);
+		document.getElementById("copy-clipboard").addEventListener("click", copyToClipboard);
+		document.getElementById("import-file").addEventListener("click", importThemeFile);
+		document.getElementById("import-clipboard").addEventListener("click", showImportModal);
+
+		// Handle file selection
+		document.getElementById("import-file-input").addEventListener("change", handleFileSelect);
+
+		// Import modal
+		const importModalOverlay = document.getElementById("import-modal-overlay");
+		document.getElementById("import-modal-cancel").addEventListener("click", () => {
+			importModalOverlay.classList.remove("active");
+		});
+		document.getElementById("import-modal-apply").addEventListener("click", importFromClipboard);
 	}
 
 	// Apply theme function
@@ -119,7 +139,6 @@
 				? "default"
 				: document.getElementById("optionalEditorForeground").value,
 		};
-
 	}
 
 	function setTheme(themeConfig) {
@@ -191,6 +210,7 @@
 	// Export theme function
 	function exportTheme() {
 		const themeConfig = getThemeFromElements();
+		document.getElementById("dropdown-menu").classList.remove("active");
 
 		// Add optional color picker values
 		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
@@ -202,21 +222,52 @@
 			}
 		});
 
-		// Create JSON file for download
-		const dataStr = JSON.stringify(themeConfig, null, 2);
-		const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-
 		// Ask extension to handle the export
 		vscode.postMessage({
 			command: "exportTheme",
 			themeConfig: themeConfig,
-			dataUri: dataUri,
 		});
 	}
 
-	// Import theme function
-	function importTheme() {
-		document.getElementById("import-file").click();
+	// Copy theme to clipboard
+	function copyToClipboard() {
+		const themeConfig = getThemeFromElements();
+		document.getElementById("dropdown-menu").classList.remove("active");
+
+		// Add optional color picker values
+		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
+			const settingName = container.dataset.settingName;
+			if (settingName) {
+				const toggle = container.querySelector(".optional-toggle");
+				const colorInput = container.querySelector(".optional-color-input");
+				themeConfig[settingName] = toggle.checked ? "default" : colorInput.value;
+			}
+		});
+
+		// Convert to JSON and copy to clipboard
+		const jsonString = JSON.stringify(themeConfig, null, 2);
+
+		// Use the clipboard API
+		navigator.clipboard
+			.writeText(jsonString)
+			.then(() => {
+				vscode.postMessage({
+					command: "showInfo",
+					message: "Theme JSON copied to clipboard",
+				});
+			})
+			.catch((err) => {
+				vscode.postMessage({
+					command: "showError",
+					message: "Failed to copy to clipboard: " + err,
+				});
+			});
+	}
+
+	// Import theme from file
+	function importThemeFile() {
+		document.getElementById("dropdown-menu").classList.remove("active");
+		document.getElementById("import-file-input").click();
 	}
 
 	// Handle file selection
@@ -242,5 +293,39 @@
 		reader.readAsText(file);
 		// Reset file input so same file can be selected again
 		event.target.value = "";
+	}
+
+	// Show import modal for pasting JSON
+	function showImportModal() {
+		document.getElementById("dropdown-menu").classList.remove("active");
+		document.getElementById("import-json-textarea").value = "";
+		document.getElementById("import-modal-overlay").classList.add("active");
+	}
+
+	// Import theme from clipboard (pasted in modal)
+	function importFromClipboard() {
+		const jsonText = document.getElementById("import-json-textarea").value.trim();
+		document.getElementById("import-modal-overlay").classList.remove("active");
+
+		if (!jsonText) {
+			vscode.postMessage({
+				command: "showError",
+				message: "No JSON provided",
+			});
+			return;
+		}
+
+		try {
+			const themeConfig = JSON.parse(jsonText);
+			vscode.postMessage({
+				command: "importTheme",
+				themeConfig: themeConfig,
+			});
+		} catch (error) {
+			vscode.postMessage({
+				command: "showError",
+				message: "Invalid JSON format",
+			});
+		}
 	}
 })();
