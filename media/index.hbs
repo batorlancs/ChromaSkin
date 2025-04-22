@@ -14,112 +14,120 @@
                 <p>Create a custom VS Code theme by selecting colors and adjusting intensity settings.</p>
             </div>
 
-            <div class="section-header"><hr><h3>Basic Settings</h3></div>
+            <div class="settings-container">
+                <!-- Basic Settings Column -->
+                <div class="settings-column">
+                    <div class="section-header"><hr><h3>Basic Settings</h3></div>
+                    
+                    <div class="color-picker-container">
+                        <input type="color" id="color1" value="{{primary}}" />
+                        <label for="color1">Primary Color</label>
+                    </div>
 
-			<div class="color-picker-container">
-				<input type="color" id="color1" value="{{primary}}" />
-				<label for="color1">Primary Color</label>
-			</div>
+                    <div class="color-picker-container">
+                        <input type="color" id="color2" value="{{background}}" />
+                        <label for="color2">Background Color</label>
+                    </div>
 
-			<div class="color-picker-container">
-				<input type="color" id="color2" value="{{background}}" />
-				<label for="color2">Background Color</label>
-			</div>
+                    <div class="color-picker-container">
+                        <input type="color" id="color3" value="{{accent}}" />
+                        <label for="color3">Accent Color</label>
+                    </div>
 
-			<div class="color-picker-container">
-				<input type="color" id="color3" value="{{accent}}" />
-				<label for="color3">Accent Color</label>
-			</div>
+                    <div class="color-picker-container">
+                        <input type="color" id="color4" value="{{foreground}}" />
+                        <label for="color4">Foreground Color</label>
+                    </div>
 
-			<div class="color-picker-container">
-				<input type="color" id="color4" value="{{foreground}}" />
-				<label for="color4">Foreground Color</label>
-			</div>
+                    <div class="color-picker-container">
+                        <input type="color" id="color5" value="{{border}}" />
+                        <label for="color5">Border Color</label>
+                    </div>
+                </div>
 
-			<div class="color-picker-container">
-				<input type="color" id="color5" value="{{border}}" />
-				<label for="color5">Border Color</label>
-			</div>
+                <!-- Advanced Settings Column -->
+                <div class="settings-column">
+                    <div class="section-header"><hr><h3>Advanced Settings</h3></div>
 
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="autoAdvancedColors" {{#if autoAdvancedColors}}checked{{/if}} />
+                        <label for="autoAdvancedColors">Automatic Colors</label>
+                    </div>
 
-            <div class="section-header"><hr><h3>Advanced Settings</h3></div>
+                    <div id="advanced-colors-container" class="advanced-colors-container">
+                        <div class="color-picker-container">
+                            <input type="color" id="activityBarColor" value="{{activityBar}}" />
+                            <label for="activityBarColor">Activity Bar Color</label>
+                        </div>
 
-            <div class="checkbox-container">
-                <input type="checkbox" id="autoAdvancedColors" {{#if autoAdvancedColors}}checked{{/if}} />
-                <label for="autoAdvancedColors">Automatic Colors</label>
+                        <div class="color-picker-container">
+                            <input type="color" id="popoverColor" value="{{popover}}" />
+                            <label for="popoverColor">Popover Color</label>
+                        </div>
+
+                        <div class="color-picker-container">
+                            <input type="color" id="buttonColor" value="{{button}}" />
+                            <label for="buttonColor">Button Color</label>
+                        </div>
+                    </div>
+
+                    <!-- Optional Editor Foreground -->
+                    <div class="optional-color-picker-container" data-setting-name="optionalEditorForeground">
+                        <div class="checkbox-container optional-toggle-container">
+                            {{!-- Checkbox to enable/disable custom color --}}
+                            <input type="checkbox" id="optionalEditorForeground-default-toggle" class="optional-toggle" {{#if (eq optionalEditorForeground "default")}}checked{{/if}} />
+                            <label for="optionalEditorForeground-default-toggle">Use Default Editor Foreground</label>
+                        </div>
+                        <div class="color-picker-container optional-input-container">
+                            {{!-- The actual color input --}}
+                            <input type="color" id="optionalEditorForeground" class="optional-color-input" value="{{#unless (eq optionalEditorForeground "default")}}{{optionalEditorForeground}}{{else}}#808080{{/unless}}" />
+                            <label for="optionalEditorForeground">Editor Foreground</label>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="coloredCursor" {{#if coloredCursor}}checked{{/if}} />
+                        <label for="coloredCursor">Colored Cursor</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="editorHighlighting" {{#if editorHighlighting}}checked{{/if}} />
+                        <label for="editorHighlighting">Editor Highlighting Overwrite</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="syntaxCommentsOverwrite" {{#if syntaxCommentsOverwrite}}checked{{/if}} />
+                        <label for="syntaxCommentsOverwrite">Syntax Comments Overwrite</label>
+                    </div>
+
+                    <div class="slider-container">
+                        <input type="range" id="intensity" min="1" max="100" value="{{borderOpacity}}" />
+                        <label for="intensity">Popever Border Strength</label>
+                        <div class="slider-value" id="intensity-value">{{borderOpacity}}</div>
+                    </div>
+                </div>
             </div>
 
-            <div id="advanced-colors-container" class="advanced-colors-container">
-                <div class="color-picker-container">
-                    <input type="color" id="activityBarColor" value="{{activityBar}}" />
-                    <label for="activityBarColor">Activity Bar Color</label>
-                </div>
-
-                <div class="color-picker-container">
-                    <input type="color" id="popoverColor" value="{{popover}}" />
-                    <label for="popoverColor">Popover Color</label>
-                </div>
-
-                <div class="color-picker-container">
-                    <input type="color" id="buttonColor" value="{{button}}" />
-                    <label for="buttonColor">Button Color</label>
-                </div>
-            </div>
-
-            {{!-- New Optional Color Picker --}}
-            <div class="optional-color-picker-container" data-setting-name="optionalEditorForeground">
-                <div class="checkbox-container optional-toggle-container">
-                    {{!-- Checkbox to enable/disable custom color --}}
-                    <input type="checkbox" id="optionalEditorForeground-default-toggle" class="optional-toggle" {{#if (eq optionalEditorForeground "default")}}checked{{/if}} />
-                    <label for="optionalEditorForeground-default-toggle">Use Default Editor Foreground</label>
-                </div>
-                <div class="color-picker-container optional-input-container">
-                    {{!-- The actual color input --}}
-                    <input type="color" id="optionalEditorForeground" class="optional-color-input" value="{{#unless (eq optionalEditorForeground "default")}}{{optionalEditorForeground}}{{else}}#808080{{/unless}}" />
-                    <label for="optionalEditorForeground">Editor Foreground</label>
-                </div>
-            </div>
-            {{!-- End New Optional Color Picker --}}
-
-            <div class="checkbox-container">
-                <input type="checkbox" id="coloredCursor" {{#if coloredCursor}}checked{{/if}} />
-                <label for="coloredCursor">Colored Cursor</label>
-            </div>
-
-			<div class="checkbox-container">
-				<input type="checkbox" id="editorHighlighting" {{#if editorHighlighting}}checked{{/if}} />
-				<label for="editorHighlighting">Editor Highlighting Overwrite</label>
-			</div>
-
-			<div class="checkbox-container">
-				<input type="checkbox" id="syntaxCommentsOverwrite" {{#if syntaxCommentsOverwrite}}checked{{/if}} />
-				<label for="syntaxCommentsOverwrite">Syntax Comments Overwrite</label>
-			</div>
-
-            <div class="slider-container">
-				<input type="range" id="intensity" min="1" max="100" value="{{borderOpacity}}" />
-				<label for="intensity">Popever Border Strength</label>
-				<div class="slider-value" id="intensity-value">{{borderOpacity}}</div>
-			</div>
-
-			<div class="footer">
+            <div class="footer">
                 <div class="button-container">
                     <button id="apply-button" class="apply-button">Apply Theme</button>
                     <button id="reset-button" class="reset-button">Clear</button>
-                    <button id="menu-button" class="menu-button">⋯</button>
-                    <div id="dropdown-menu" class="dropdown-menu">
-                        <div class="dropdown-menu-item" id="export-file">
-                            <span>Export to file</span>
-                        </div>
-                        <div class="dropdown-menu-item" id="copy-clipboard">
-                            <span>Copy to clipboard</span>
-                        </div>
-                        <div class="dropdown-menu-separator"></div>
-                        <div class="dropdown-menu-item" id="import-file">
-                            <span>Import from file</span>
-                        </div>
-                        <div class="dropdown-menu-item" id="import-clipboard">
-                            <span>Import from clipboard</span>
+                    <div class="dropdown-menu-container">
+                        <button id="menu-button" class="menu-button">⋯</button>
+                        <div id="dropdown-menu" class="dropdown-menu">
+                            <div class="dropdown-menu-item" id="export-file">
+                                <span>Export to file</span>
+                            </div>
+                            <div class="dropdown-menu-item" id="copy-clipboard">
+                                <span>Copy to clipboard</span>
+                            </div>
+                            <div class="dropdown-menu-separator"></div>
+                            <div class="dropdown-menu-item" id="import-file">
+                                <span>Import from file</span>
+                            </div>
+                            <div class="dropdown-menu-item" id="import-clipboard">
+                                <span>Import from clipboard</span>
+                            </div>
                         </div>
                     </div>
                     <input type="file" id="import-file-input" accept=".json" style="display: none;" />

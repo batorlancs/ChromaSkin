@@ -35,7 +35,7 @@ body {
 	border-radius: 12px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
-	max-width: 400px;
+	max-width: 1000px;
 }
 
 .color-picker-container {
@@ -149,7 +149,7 @@ hr {
 .section-header {
 	width: 100%;
 	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
 
 .section-header hr {
@@ -276,6 +276,16 @@ input[type="checkbox"]:checked {
 }
 
 /* Dropdown menu styles */
+.button-container {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.dropdown-menu-container {
+	position: relative;
+}
+
 .menu-button {
 	background-color: transparent;
 	color: var(--vscode-foreground);
@@ -284,7 +294,6 @@ input[type="checkbox"]:checked {
 	margin-left: 8px;
 	border-radius: 4px;
 	width: 36px;
-	position: relative;
 }
 
 .menu-button:hover {
@@ -293,8 +302,8 @@ input[type="checkbox"]:checked {
 
 .dropdown-menu {
 	position: absolute;
-	top: 100%;
-	right: 0;
+	top: calc(100% + 10px);
+	left: 0;
 	background-color: var(--vscode-editor-background);
 	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
 	border-radius: 6px;
@@ -335,13 +344,6 @@ input[type="checkbox"]:checked {
 	height: 1px;
 	background-color: color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
 	margin: 5px 0;
-}
-
-.button-container {
-	display: flex;
-	align-items: center;
-	position: relative;
-	gap: 10px;
 }
 
 .modal-overlay {
@@ -397,4 +399,23 @@ input[type="checkbox"]:checked {
 	display: flex;
 	justify-content: flex-end;
 	gap: 10px;
+}
+
+/* Add new styles for the settings layout */
+.settings-container {
+	display: flex;
+	gap: 30px;
+	margin-top: 10px;
+}
+
+.settings-column {
+	flex: 1;
+	min-width: 0; /* Prevents flex items from overflowing */
+	/* width: 300px; */
+}
+
+/* Optional: Add a subtle separator between columns */
+.settings-column + .settings-column {
+	border-left: 1px solid color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
+	padding-left: 30px;
 }
