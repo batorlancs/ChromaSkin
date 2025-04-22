@@ -96,6 +96,19 @@ class ChromaSkinExtension {
 				this.resetColorTheme();
 				vscode.window.showInformationMessage("ChromaSkin: Theme Reset!");
 				break;
+			case "exportTheme":
+				console.log("Got export theme: ", message.themeConfig);
+				vscode.window.showInformationMessage("ChromaSkin: Exporting Theme...");
+				this.exportTheme(message.themeConfig);
+				break;
+			case "importTheme":
+				console.log("Got import theme: ", message.themeConfig);
+				vscode.window.showInformationMessage("ChromaSkin: Importing Theme...");
+				this.importTheme(message.themeConfig);
+				break;
+			case "showError":
+				vscode.window.showErrorMessage(`ChromaSkin: ${message.message}`);
+				break;
 		}
 	}
 
@@ -128,6 +141,37 @@ class ChromaSkinExtension {
 		vscode.workspace.getConfiguration("workbench").update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
 		vscode.workspace.getConfiguration("editor").update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
 		console.log("ChromaSkin: Theme Reset!");
+	}
+
+	private exportTheme(themeConfig: ThemeConfig) {
+		vscode.window
+			.showSaveDialog({
+				defaultUri: vscode.Uri.file("chromaskin-theme.json"),
+				filters: {
+					"JSON files": ["json"],
+				},
+			})
+			.then((fileUri) => {
+				if (fileUri) {
+					const content = JSON.stringify(themeConfig, null, 2);
+					fs.writeFileSync(fileUri.fsPath, content);
+					vscode.window.showInformationMessage("ChromaSkin: Theme exported successfully!");
+				}
+			});
+	}
+
+	private importTheme(themeConfig: ThemeConfig) {
+		this.applyColorTheme(themeConfig);
+
+		// Update the webview with the new theme
+		if (this.activePanel) {
+			this.activePanel.webview.postMessage({
+				command: "set-colors",
+				themeConfig: themeConfig,
+			});
+		}
+
+		vscode.window.showInformationMessage("ChromaSkin: Theme imported successfully!");
 	}
 
 	private getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ThemeConfig): string {

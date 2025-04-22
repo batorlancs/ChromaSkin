@@ -254,3 +254,23 @@ input[type="checkbox"]:checked {
 .optional-input-container label {
 	width: 130px; /* Adjust as needed */
 }
+
+.export-import-container {
+	display: flex;
+	margin-top: 10px;
+	gap: 10px;
+	padding: 10px;
+	border-radius: 8px;
+	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
+}
+
+.secondary-button {
+	background-color: color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
+	color: var(--vscode-foreground);
+	font-size: 0.9em;
+	padding: 8px 16px;
+}
+
+.secondary-button:hover {
+	background-color: color-mix(in srgb, var(--vscode-foreground) 15%, transparent);
+}

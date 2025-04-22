@@ -57,31 +57,16 @@
 		// Apply theme button click handler
 		document.getElementById("apply-button").addEventListener("click", applyTheme);
 		document.getElementById("reset-button").addEventListener("click", resetTheme);
+
+		// Add event listeners for export/import buttons
+		document.getElementById("export-button").addEventListener("click", exportTheme);
+		document.getElementById("import-button").addEventListener("click", importTheme);
+		document.getElementById("import-file").addEventListener("change", handleFileSelect);
 	}
 
 	// Apply theme function
 	function applyTheme() {
-		const autoAdvancedColors = document.getElementById("autoAdvancedColors").checked;
-		const accentColor = document.getElementById("color3").value;
-		const isOptionalEditorForegroundChecked = document.getElementById("optionalEditorForeground-default-toggle").checked;
-
-
-		const themeConfig = {
-			primary: document.getElementById("color1").value,
-			background: document.getElementById("color2").value,
-			accent: accentColor,
-			foreground: document.getElementById("color4").value,
-			border: document.getElementById("color5").value,
-			activityBar: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
-			popover: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
-			button: autoAdvancedColors ? accentColor : document.getElementById("buttonColor").value,
-			coloredCursor: document.getElementById("coloredCursor").checked,
-			borderOpacity: parseInt(document.getElementById("intensity").value),
-			autoAdvancedColors: autoAdvancedColors,
-			editorHighlighting: document.getElementById("editorHighlighting").checked,
-			syntaxCommentsOverwrite: document.getElementById("syntaxCommentsOverwrite").checked,
-			optionalEditorForeground: isOptionalEditorForegroundChecked ? "default" : document.getElementById("optionalEditorForeground").value,
-		};
+		const themeConfig = getThemeFromElements();
 
 		// --- Add Optional Color Picker Values ---
 		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
@@ -110,6 +95,31 @@
 		vscode.postMessage({
 			command: "resetTheme",
 		});
+	}
+
+	function getThemeFromElements() {
+		const autoAdvancedColors = document.getElementById("autoAdvancedColors").checked;
+		const accentColor = document.getElementById("color3").value;
+		const isOptionalEditorForegroundChecked = document.getElementById("optionalEditorForeground-default-toggle").checked;
+		return {
+			primary: document.getElementById("color1").value,
+			background: document.getElementById("color2").value,
+			accent: accentColor,
+			foreground: document.getElementById("color4").value,
+			border: document.getElementById("color5").value,
+			activityBar: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
+			popover: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
+			button: autoAdvancedColors ? accentColor : document.getElementById("buttonColor").value,
+			coloredCursor: document.getElementById("coloredCursor").checked,
+			borderOpacity: parseInt(document.getElementById("intensity").value),
+			autoAdvancedColors: autoAdvancedColors,
+			editorHighlighting: document.getElementById("editorHighlighting").checked,
+			syntaxCommentsOverwrite: document.getElementById("syntaxCommentsOverwrite").checked,
+			optionalEditorForeground: isOptionalEditorForegroundChecked
+				? "default"
+				: document.getElementById("optionalEditorForeground").value,
+		};
+
 	}
 
 	function setTheme(themeConfig) {
@@ -177,4 +187,60 @@
 
 	// Initialize when DOM is ready
 	document.addEventListener("DOMContentLoaded", initializeUI);
+
+	// Export theme function
+	function exportTheme() {
+		const themeConfig = getThemeFromElements();
+
+		// Add optional color picker values
+		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
+			const settingName = container.dataset.settingName;
+			if (settingName) {
+				const toggle = container.querySelector(".optional-toggle");
+				const colorInput = container.querySelector(".optional-color-input");
+				themeConfig[settingName] = toggle.checked ? "default" : colorInput.value;
+			}
+		});
+
+		// Create JSON file for download
+		const dataStr = JSON.stringify(themeConfig, null, 2);
+		const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+		// Ask extension to handle the export
+		vscode.postMessage({
+			command: "exportTheme",
+			themeConfig: themeConfig,
+			dataUri: dataUri,
+		});
+	}
+
+	// Import theme function
+	function importTheme() {
+		document.getElementById("import-file").click();
+	}
+
+	// Handle file selection
+	function handleFileSelect(event) {
+		const file = event.target.files[0];
+		if (!file) return;
+
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			try {
+				const themeConfig = JSON.parse(e.target.result);
+				vscode.postMessage({
+					command: "importTheme",
+					themeConfig: themeConfig,
+				});
+			} catch (error) {
+				vscode.postMessage({
+					command: "showError",
+					message: "Invalid theme configuration file",
+				});
+			}
+		};
+		reader.readAsText(file);
+		// Reset file input so same file can be selected again
+		event.target.value = "";
+	}
 })();
