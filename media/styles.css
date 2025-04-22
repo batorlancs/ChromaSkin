@@ -229,6 +229,12 @@ input[type="checkbox"]:checked {
 	transition: background-color 0.2s ease;
 }
 
+.basic-settings-column {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
 .optional-toggle-container {
 	margin-bottom: 5px; /* Spacing between toggle and color input */
 }
@@ -418,4 +424,25 @@ input[type="checkbox"]:checked {
 .settings-column + .settings-column {
 	border-left: 1px solid color-mix(in srgb, var(--vscode-foreground) 8%, transparent);
 	padding-left: 30px;
+}
+
+
+.info-message.warning {
+    background-color: rgba(255, 166, 0, 0.1);
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.warning-icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.info-message p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
 }
