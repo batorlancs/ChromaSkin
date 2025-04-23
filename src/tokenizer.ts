@@ -5,8 +5,16 @@ import { adjustColor, blendColors, hexToHexAlpha } from "./utils";
 export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 	let textMateRules = [];
 	if (themeConfig.syntaxCommentsOverwrite) {
-		const generalCommentColor = adjustColor(themeConfig.background, 0, 0, 25);
 		const fontStyle = "italic"
+
+		function getOpacityFromMinMax(min: number, max: number) {
+			return min + (max - min) * (themeConfig.commentOpacity / 10);
+		}
+
+		// generate colors
+		const generalCommentColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(10, 50));
+		const jsdocVariableColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(20, 80));
+		const jsdocAtColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(15, 60));
 
 		// general comments
 		textMateRules.push({
@@ -17,14 +25,14 @@ export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 		textMateRules.push({
 			scope: ["storage.type.class.jsdoc"],
 			settings: {
-				foreground: blendColors(themeConfig.primary, adjustColor(themeConfig.background, 0, 0, 45), 0.5),
+				foreground: blendColors(themeConfig.primary, jsdocVariableColor, 0.75),
 				fontStyle,
 			},
 		});
 		textMateRules.push({
 			scope: ["variable.other.jsdoc"],
 			settings: {
-				foreground: adjustColor(themeConfig.background, 0, 0, 45),
+				foreground: jsdocVariableColor,
 				fontStyle,
 			},
 		});
@@ -33,7 +41,7 @@ export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 		textMateRules.push({
 			scope: ["punctuation.definition.block.tag.jsdoc"],
 			settings: {
-				foreground: adjustColor(themeConfig.background, 0, 0, 35),
+				foreground: jsdocAtColor,
 				fontStyle,
 			},
 		});

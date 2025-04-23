@@ -26,6 +26,7 @@ class ChromaSkinExtension {
 		indicator: "#b8b8b8",
 		// slider
 		borderOpacity: 30,
+		commentOpacity: 4,
 		// checkbox
 		coloredCursor: true,
 		autoAdvancedColors: true,
@@ -225,6 +226,7 @@ class ChromaSkinExtension {
 			indicator: themeConfig.indicator,
 			coloredCursor: themeConfig.coloredCursor,
 			borderOpacity: themeConfig.borderOpacity,
+			commentOpacity: themeConfig.commentOpacity,
 			autoAdvancedColors: themeConfig.autoAdvancedColors,
 			editorHighlighting: themeConfig.editorHighlighting,
 			syntaxCommentsOverwrite: themeConfig.syntaxCommentsOverwrite,

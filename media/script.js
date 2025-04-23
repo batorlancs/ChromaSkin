@@ -12,6 +12,13 @@
 			intensityValue.textContent = intensitySlider.value;
 		});
 
+		// Update comment opacity value display
+		const commentOpacitySlider = document.getElementById("commentOpacity");
+		const commentOpacityValue = document.getElementById("commentOpacity-value");
+		commentOpacitySlider.addEventListener("input", () => {
+			commentOpacityValue.textContent = commentOpacitySlider.value;
+		});
+
 		// Advanced colors toggle
 		const autoAdvancedColors = document.getElementById("autoAdvancedColors");
 		const advancedColorsContainer = document.getElementById("advanced-colors-container");
@@ -146,6 +153,7 @@
 			button: autoAdvancedColors ? accentColor : document.getElementById("buttonColor").value,
 			coloredCursor: document.getElementById("coloredCursor").checked,
 			borderOpacity: parseInt(document.getElementById("intensity").value),
+			commentOpacity: parseInt(document.getElementById("commentOpacity").value),
 			autoAdvancedColors: autoAdvancedColors,
 			editorHighlighting: document.getElementById("editorHighlighting").checked,
 			syntaxCommentsOverwrite: document.getElementById("syntaxCommentsOverwrite").checked,
@@ -172,6 +180,8 @@
 		document.getElementById("editorHighlighting").checked = themeConfig.editorHighlighting;
 		document.getElementById("syntaxCommentsOverwrite").checked = themeConfig.syntaxCommentsOverwrite;
 		document.getElementById("indicatorColor").value = themeConfig.indicator;
+		document.getElementById("commentOpacity").value = themeConfig.commentOpacity;
+		document.getElementById("commentOpacity-value").textContent = themeConfig.commentOpacity;
 
 		// Set the optional editor foreground color
 		const isOptionalEditorForegroundChecked = document.getElementById("optionalEditorForeground-default-toggle").checked;

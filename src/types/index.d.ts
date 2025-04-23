@@ -14,6 +14,7 @@ export interface ThemeConfig {
 	indicator: string;
 	// slider
 	borderOpacity: number;
+	commentOpacity: number;
 	// checkbox
 	autoAdvancedColors: boolean;
 	coloredCursor: boolean;
