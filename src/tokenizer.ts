@@ -1,11 +1,10 @@
 import { ThemeConfig } from "./types/index";
 import { adjustColor, blendColors, hexToHexAlpha } from "./utils";
 
-
 export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 	let textMateRules = [];
 	if (themeConfig.syntaxCommentsOverwrite) {
-		const fontStyle = "italic"
+		const fontStyle = "italic";
 
 		function getOpacityFromMinMax(min: number, max: number) {
 			return min + (max - min) * (themeConfig.commentOpacity / 10);
@@ -59,6 +58,20 @@ export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 				fontStyle,
 			},
 		});
+
+		// python
+		// textMateRules.push({
+		// 	scope: [
+		// 		"string.quoted.docstring",
+		// 		"punctuation.definition.string.begin.python",
+		// 		"punctuation.definition.string.end.python",
+		// 		"string.quoted.docstring.multi.python",
+		// 	],
+		// 	settings: {
+		// 		foreground: generalCommentColor,
+		// 		fontStyle,
+		// 	},
+		// });
 	}
 
 	const tokenColorCustomizations = {
