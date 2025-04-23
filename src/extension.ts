@@ -90,19 +90,19 @@ class ChromaSkinExtension {
 		switch (message.command) {
 			case "applyTheme":
 				this.applyColorTheme(message.themeConfig);
-				vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied!");
+				vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied! 🎨");
 				break;
 			case "resetTheme":
 				this.resetColorTheme();
-				vscode.window.showInformationMessage("ChromaSkin: Theme Reset!");
+				vscode.window.showInformationMessage("ChromaSkin: Theme Reset! 🔄");
 				break;
 			case "exportTheme":
 				this.exportTheme(message.themeConfig);
-				vscode.window.showInformationMessage("ChromaSkin: Theme Exported!");
+				vscode.window.showInformationMessage("ChromaSkin: Theme Exported! 📤");
 				break;
 			case "importTheme":
 				this.importTheme(message.themeConfig);
-				vscode.window.showInformationMessage("ChromaSkin: Theme Imported!");
+				vscode.window.showInformationMessage("ChromaSkin: Theme Imported! 📥");
 				break;
 			case "showError":
 				vscode.window.showErrorMessage(`ChromaSkin: ${message.message}`);
