@@ -1,11 +1,6 @@
-// import * as vscode from "vscode";
 import { ThemeConfig } from "./types/index";
 import { adjustColor, blendColors, hexToHexAlpha } from "./utils";
 
-const SYNTAX_COMMENTS_OVERWRITE_TEXT_MATE_RULE = {
-	scope: ["comment", "comment.block", "comment.line", "comment.block.documentation", "punctuation.definition.comment"],
-	settings: { foreground: "#FFFFFF40", fontStyle: "italic" },
-};
 
 export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 	let textMateRules = [];
