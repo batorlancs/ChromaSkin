@@ -10,6 +10,7 @@ import { getTokenColorCustomizations } from "./tokenizer";
 class ChromaSkinExtension {
 	private activePanel: vscode.WebviewPanel | undefined;
 	private context: vscode.ExtensionContext;
+	private previousBreadcrumbsState: boolean | undefined;
 	private readonly DEFAULT_THEME_CONFIG: ThemeConfig = {
 		// color pickers
 		primary: "#c089f0",
@@ -116,6 +117,9 @@ class ChromaSkinExtension {
 	}
 
 	private applyColorTheme(themeConfig: ThemeConfig) {
+		// Store current breadcrumbs state before changing it
+		this.previousBreadcrumbsState = vscode.workspace.getConfiguration("breadcrumbs").get("enabled");
+
 		// color customizations
 		const { data: colorCustomizations, theme } = generateWorkbenchTheme(themeConfig);
 		const tokenColorCustomizations = getTokenColorCustomizations(themeConfig);
@@ -127,6 +131,8 @@ class ChromaSkinExtension {
 		vscode.workspace
 			.getConfiguration("editor")
 			.update("tokenColorCustomizations", tokenColorCustomizations, vscode.ConfigurationTarget.Global);
+		// Hide breadcrumbs
+		vscode.workspace.getConfiguration("breadcrumbs").update("enabled", false, vscode.ConfigurationTarget.Global);
 
 		if (themeConfig.autoAdvancedColors && this.activePanel) {
 			this.activePanel.webview.postMessage({
@@ -143,6 +149,15 @@ class ChromaSkinExtension {
 	private resetColorTheme() {
 		vscode.workspace.getConfiguration("workbench").update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
 		vscode.workspace.getConfiguration("editor").update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
+
+		// Restore breadcrumbs to previous state if it was previously stored
+		if (this.previousBreadcrumbsState !== undefined) {
+			vscode.workspace
+				.getConfiguration("breadcrumbs")
+				.update("enabled", this.previousBreadcrumbsState, vscode.ConfigurationTarget.Global);
+			this.previousBreadcrumbsState = undefined;
+		}
+
 		console.log("ChromaSkin: Theme Reset!");
 	}
 
