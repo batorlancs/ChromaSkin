@@ -133,12 +133,13 @@
 	function getThemeFromElements() {
 		const autoAdvancedColors = document.getElementById("autoAdvancedColors").checked;
 		const accentColor = document.getElementById("color3").value;
+		const foreground = document.getElementById("color4").value;
 		const isOptionalEditorForegroundChecked = document.getElementById("optionalEditorForeground-default-toggle").checked;
 		return {
 			primary: document.getElementById("color1").value,
 			background: document.getElementById("color2").value,
 			accent: accentColor,
-			foreground: document.getElementById("color4").value,
+			foreground: foreground,
 			border: document.getElementById("color5").value,
 			activityBar: autoAdvancedColors ? accentColor : document.getElementById("activityBarColor").value,
 			popover: autoAdvancedColors ? accentColor : document.getElementById("popoverColor").value,
@@ -151,6 +152,7 @@
 			optionalEditorForeground: isOptionalEditorForegroundChecked
 				? "default"
 				: document.getElementById("optionalEditorForeground").value,
+			indicator: autoAdvancedColors ? foreground : document.getElementById("indicatorColor").value,
 		};
 	}
 
@@ -169,6 +171,7 @@
 		document.getElementById("autoAdvancedColors").checked = themeConfig.autoAdvancedColors;
 		document.getElementById("editorHighlighting").checked = themeConfig.editorHighlighting;
 		document.getElementById("syntaxCommentsOverwrite").checked = themeConfig.syntaxCommentsOverwrite;
+		document.getElementById("indicatorColor").value = themeConfig.indicator;
 
 		// Set the optional editor foreground color
 		const isOptionalEditorForegroundChecked = document.getElementById("optionalEditorForeground-default-toggle").checked;

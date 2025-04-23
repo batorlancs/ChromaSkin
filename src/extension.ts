@@ -23,6 +23,7 @@ class ChromaSkinExtension {
 		activityBar: "#252525",
 		popover: "#252525",
 		button: "#c089f0",
+		indicator: "#b8b8b8",
 		// slider
 		borderOpacity: 30,
 		// checkbox
@@ -221,6 +222,7 @@ class ChromaSkinExtension {
 			activityBar: themeConfig.activityBar,
 			popover: themeConfig.popover,
 			button: themeConfig.button,
+			indicator: themeConfig.indicator,
 			coloredCursor: themeConfig.coloredCursor,
 			borderOpacity: themeConfig.borderOpacity,
 			autoAdvancedColors: themeConfig.autoAdvancedColors,

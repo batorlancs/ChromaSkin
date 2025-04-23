@@ -11,6 +11,7 @@ export interface ThemeConfig {
 	activityBar: string;
 	popover: string;
 	button: string;
+	indicator: string;
 	// slider
 	borderOpacity: number;
 	// checkbox

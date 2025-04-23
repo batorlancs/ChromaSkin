@@ -10,6 +10,7 @@ export function getColors(provided: ThemeConfig) {
 		activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
 		popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
 		button: provided.autoAdvancedColors ? primary : provided.button,
+		indicator: provided.autoAdvancedColors ? foreground : provided.indicator,
 	};
 
 	const darkOtherColors = {
@@ -123,9 +124,10 @@ export function getColors(provided: ThemeConfig) {
 		foreground: hexToHexAlpha(foreground, 0.83),
 		badgeForeground: badge.foreground,
 		badgeBackground: badge.background,
-		activeBorder: hexToHexAlpha(foreground, 0.68),
+		// activeBorder: hexToHexAlpha(themeWithAuto.indicator, 0.68),
+        activeBorder: themeWithAuto.indicator,
 		border: border,
-		activeBackground: hexToHexAlpha(foreground, 0.04),
+		activeBackground: border === accent ? defaults.transparent : hexToHexAlpha(foreground, 0.04)
 	};
 	const activityBarBadge = {
 		foreground: badge.foreground,
