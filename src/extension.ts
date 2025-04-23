@@ -40,11 +40,22 @@ class ChromaSkinExtension {
 		this.context = context;
 	}
 
+	private isDevMode(): boolean {
+		return this.context.extensionMode === vscode.ExtensionMode.Development;
+	}
+
+	private clearAllGlobalState() {
+		this.context.globalState.update("chromaskin-theme-config", null);
+		this.context.globalState.update("chromaskin-hide-info-message", false);
+	}
+
 	public activate() {
 		// clear global state
-		// this.context.globalState.update("chromaskin-theme-config", null);
-
 		console.log("ChromaSkin: activated!");
+		if (this.isDevMode()) {
+			console.log("ChromaSkin: Running in development mode!");
+			this.clearAllGlobalState();
+		}
 		const disposable = vscode.commands.registerCommand("chromaskin.openThemeGenerator", () => {
 			this.openThemeGenerator();
 		});
