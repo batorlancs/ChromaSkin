@@ -36,7 +36,6 @@
 		if (infoMessageCloseBtn && infoMessage) {
 			infoMessageCloseBtn.addEventListener("click", () => {
 				infoMessage.style.display = "none";
-				// Save user preference to never show the message again
 				vscode.postMessage({
 					command: "hideInfoMessage",
 				});
@@ -227,6 +226,11 @@
 		const message = event.data;
 		if (message.command === "set-colors") {
 			setTheme(message.themeConfig);
+		} else if (message.command === "hide-info-message") {
+			const infoMessage = document.querySelector(".info-message.warning");
+			if (infoMessage) {
+				infoMessage.style.display = "none";
+			}
 		}
 	});
 

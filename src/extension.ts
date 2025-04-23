@@ -28,7 +28,7 @@ class ChromaSkinExtension {
 		borderOpacity: 30,
 		commentOpacity: 4,
 		// checkbox
-		coloredCursor: true,
+		coloredCursor: false,
 		autoAdvancedColors: true,
 		editorHighlighting: true,
 		syntaxCommentsOverwrite: true,
@@ -45,8 +45,9 @@ class ChromaSkinExtension {
 	}
 
 	private clearAllGlobalState() {
+		console.log("ChromaSkin: Clearing all global state!");
 		this.context.globalState.update("chromaskin-theme-config", null);
-		this.context.globalState.update("chromaskin-hide-info-message", false);
+		this.context.globalState.update("chromaskin-hide-info-message", null);
 	}
 
 	public activate() {
@@ -90,7 +91,9 @@ class ChromaSkinExtension {
 
 		this.activePanel.onDidChangeViewState((event) => {
 			// If the panel is visible after being hidden, apply the theme
+			// console.log("ChromaSkin: Panel state changed!", this.activePanel?.visible, this.activePanel?.active, this.isPanelVisiblePrev, this.isPanelActivePrev);
 			if (this.activePanel?.visible && this.activePanel?.active && !(this.isPanelVisiblePrev && !this.isPanelActivePrev)) {
+				// console.log("ChromaSkin: Applying theme, because panel is visible and active!");
 				const themeConfig: ThemeConfig =
 					this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
 				const { theme } = generateWorkbenchTheme(themeConfig);
@@ -98,6 +101,13 @@ class ChromaSkinExtension {
 					command: "set-colors",
 					themeConfig: theme,
 				});
+
+				const hideInfoMessage = this.context.globalState.get<boolean>("chromaskin-hide-info-message");
+				if (hideInfoMessage) {
+					this.activePanel.webview.postMessage({
+						command: "hide-info-message",
+					});
+				}
 			}
 			this.isPanelVisiblePrev = this.activePanel?.visible || false;
 			this.isPanelActivePrev = this.activePanel?.active || false;
@@ -129,6 +139,7 @@ class ChromaSkinExtension {
 				vscode.window.showInformationMessage(`ChromaSkin: ${message.message}`);
 				break;
 			case "hideInfoMessage":
+				console.log("ChromaSkin: GOT HIDING INFO MESSAGE!");
 				this.context.globalState.update("chromaskin-hide-info-message", true);
 				break;
 		}
