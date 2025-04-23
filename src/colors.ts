@@ -120,8 +120,8 @@ export function getColors(provided: ThemeConfig) {
 	// Activity Bar
 	const activityBar = {
 		background: themeWithAuto.activityBar,
-		inactiveForeground: hexToHexAlpha(foreground, 0.38),
-		foreground: hexToHexAlpha(foreground, 0.83),
+		inactiveForeground: hexToHexAlpha(foreground, 0.35),
+		foreground: hexToHexAlpha(foreground, 1),
 		badgeForeground: badge.foreground,
 		badgeBackground: badge.background,
 		// activeBorder: hexToHexAlpha(themeWithAuto.indicator, 0.68),
