@@ -11,6 +11,8 @@ class ChromaSkinExtension {
 	private activePanel: vscode.WebviewPanel | undefined;
 	private context: vscode.ExtensionContext;
 	private previousBreadcrumbsState: boolean | undefined;
+	private isPanelVisiblePrev: boolean = false;
+	private isPanelActivePrev: boolean = false;
 	private readonly DEFAULT_THEME_CONFIG: ThemeConfig = {
 		// color pickers
 		primary: "#c089f0",
@@ -74,7 +76,8 @@ class ChromaSkinExtension {
 		);
 
 		this.activePanel.onDidChangeViewState((event) => {
-			if (this.activePanel?.visible) {
+			// If the panel is visible after being hidden, apply the theme
+			if (this.activePanel?.visible && this.activePanel?.active && !(this.isPanelVisiblePrev && !this.isPanelActivePrev)) {
 				const themeConfig: ThemeConfig =
 					this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
 				const { theme } = generateWorkbenchTheme(themeConfig);
@@ -83,6 +86,8 @@ class ChromaSkinExtension {
 					themeConfig: theme,
 				});
 			}
+			this.isPanelVisiblePrev = this.activePanel?.visible || false;
+			this.isPanelActivePrev = this.activePanel?.active || false;
 		});
 	}
 
