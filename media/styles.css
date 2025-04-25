@@ -1,13 +1,16 @@
 body {
 	font-family: monospace;
-	padding: 80px;
 	color: var(--vscode-foreground);
-	max-width: 1000px;
-	margin: 0 auto;
+	margin: 0px;
+	padding: 40px;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
+}
+
+.main-container {
+	max-width: 1000px;
 }
 
 .header h2 {
@@ -45,8 +48,6 @@ body {
 	border-radius: 12px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
-	max-width: 1000px;
-	width: 100%;
 }
 
 .color-picker-container {
@@ -499,9 +500,6 @@ input[type="checkbox"]:checked {
 	border-radius: 12px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	border: 1px solid color-mix(in srgb, var(--vscode-foreground) 10%, transparent);
-	max-width: 1000px;
-	width: 100%;
-	min-width: auto; /* Remove fixed min-width to allow proper scaling */
 }
 
 .theme-categories {
@@ -582,7 +580,7 @@ input[type="checkbox"]:checked {
 	}
 
 	body {
-		padding: 40px;
+		padding: 20px;
 	}
 }
 
@@ -590,12 +588,11 @@ input[type="checkbox"]:checked {
 @media (max-width: 650px) {
 	.settings-container {
 		flex-direction: column;
-		gap: 15px;
+		gap: 0;
 	}
 
 	.settings-column + .settings-column {
 		border-left: none;
 		padding-left: 0;
-		padding-top: 5px;
 	}
 }
