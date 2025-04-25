@@ -228,7 +228,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"tab.hoverForeground": colors.foreground,
 		"tab.activeBorderTop": colors.indicator,
 		"tab.unfocusedActiveBorder": colors.background,
-		"tab.unfocusedActiveBorderTop": hexToHexAlpha(colors.indicator, 0.4),
+		"tab.unfocusedActiveBorderTop": colors.defaults.transparent,
 		"tab.unfocusedActiveBackground": colors.background,
 		"tab.unfocusedActiveForeground": colors.foreground,
 		"tab.unfocusedHoverBackground": colors.sideBar.background,
