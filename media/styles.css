@@ -10,7 +10,9 @@ body {
 }
 
 .main-container {
-	max-width: 1000px;
+	max-width: 900px;
+    width: 100%;
+    min-width: auto;
 }
 
 .header h2 {
@@ -120,7 +122,7 @@ button:hover {
 }
 
 .footer {
-	margin-top: 30px;
+	margin-top: 15px;
 }
 
 .slider-container {
@@ -239,12 +241,6 @@ input[type="checkbox"]:checked {
 	border-radius: 8px;
 	background-color: color-mix(in srgb, var(--vscode-foreground) 3%, transparent);
 	transition: background-color 0.2s ease;
-}
-
-.basic-settings-column {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
 }
 
 .optional-toggle-container {
@@ -439,15 +435,15 @@ input[type="checkbox"]:checked {
 .info-message.warning {
 	background-color: rgba(255, 166, 0, 0.05);
 	padding: 10px 15px;
-	margin: 15px 0;
+	margin-bottom: 15px;
 	border-radius: 8px;
 	display: flex;
 	align-items: flex-start;
-	opacity: 0.5;
+	opacity: 0.75;
 }
 
 .info-message.warning:hover {
-	opacity: 0.75;
+	opacity: 1;
 }
 
 .warning-icon {

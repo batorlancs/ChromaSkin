@@ -17,39 +17,32 @@
 
                 <div class="settings-container">
                     <!-- Basic Settings Column -->
-                    <div class="settings-column basic-settings-column">
-                        <div>
-                            <div class="section-header"><hr><h3>Basic Settings</h3></div>
-                        
-                            <div class="color-picker-container">
-                                <input type="color" id="color1" value="{{primary}}" />
-                                <label for="color1">Primary Color</label>
-                            </div>
-
-                            <div class="color-picker-container">
-                                <input type="color" id="color2" value="{{background}}" />
-                                <label for="color2">Background Color</label>
-                            </div>
-
-                            <div class="color-picker-container">
-                                <input type="color" id="color3" value="{{accent}}" />
-                                <label for="color3">Accent Color</label>
-                            </div>
-
-                            <div class="color-picker-container">
-                                <input type="color" id="color4" value="{{foreground}}" />
-                                <label for="color4">Foreground Color</label>
-                            </div>
-
-                            <div class="color-picker-container">
-                                <input type="color" id="color5" value="{{border}}" />
-                                <label for="color5">Border Color</label>
-                            </div>
+                    <div class="settings-column">
+                        <div class="section-header"><hr><h3>Basic Settings</h3></div>
+                    
+                        <div class="color-picker-container">
+                            <input type="color" id="color1" value="{{primary}}" />
+                            <label for="color1">Primary Color</label>
                         </div>
-                        <div class="info-message warning" {{#if hideInfoMessage}}style="display:none;"{{/if}}>
-                            <span class="warning-icon">⚠️</span>
-                            <p>This extension modifies VS Code's workbench and token color customization settings. If you have existing custom color settings, they may be overwritten when applying a theme. If you haven't customized these settings before, this won't affect you.</p>
-                            <button id="info-message-close" class="info-message-close" aria-label="Close warning message">×</button>
+
+                        <div class="color-picker-container">
+                            <input type="color" id="color2" value="{{background}}" />
+                            <label for="color2">Background Color</label>
+                        </div>
+
+                        <div class="color-picker-container">
+                            <input type="color" id="color3" value="{{accent}}" />
+                            <label for="color3">Accent Color</label>
+                        </div>
+
+                        <div class="color-picker-container">
+                            <input type="color" id="color4" value="{{foreground}}" />
+                            <label for="color4">Foreground Color</label>
+                        </div>
+
+                        <div class="color-picker-container">
+                            <input type="color" id="color5" value="{{border}}" />
+                            <label for="color5">Border Color</label>
                         </div>
                     </div>
 
@@ -128,6 +121,13 @@
                 </div>
 
                 <div class="footer">
+                    {{!-- info message --}}
+                    <div class="info-message warning" {{#if hideInfoMessage}}style="display:none;"{{/if}}>
+                        <span class="warning-icon">⚠️</span>
+                        <p>This extension modifies VS Code's workbench and token color customization settings. If you have existing custom color settings, they may be overwritten when applying a theme. If you haven't customized these settings before, this won't affect you.</p>
+                        <button id="info-message-close" class="info-message-close" aria-label="Close warning message">×</button>
+                    </div>
+                    {{!-- button container --}}
                     <div class="button-container">
                         <button id="apply-button" class="apply-button">Apply Theme</button>
                         <button id="reset-button" class="reset-button">Clear</button>
