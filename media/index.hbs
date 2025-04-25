@@ -154,33 +154,88 @@
                 </div>
             </div>
 
-            <!-- Add predefined themes section -->
-            <div class="predefined-themes-container">
-                <div class="sub-header">
-                    <h2>Predefined Themes</h2>
-                    <p>Choose a predefined theme to get started.</p>
-                </div>
-                <div class="theme-categories">
-                    {{#each themes}}
-                    <div class="theme-category">
-                        <div class="category-header">{{@key}}</div>
-                        <div class="theme-list">
-                            {{#each this}}
-                            <div class="theme-item" data-theme-category="{{@../key}}" data-theme-index="{{@index}}">
-                                <div class="theme-name">{{this.name}}</div>
-                                <div class="theme-description">{{this.description}}</div>
-                                <div class="theme-preview">
-                                    <div class="preview-color" style="background-color: {{this.config.primary}}"></div>
-                                    <div class="preview-color" style="background-color: {{this.config.background}}"></div>
-                                    <div class="preview-color" style="background-color: {{this.config.accent}}"></div>
-                                    <div class="preview-color" style="background-color: {{this.config.foreground}}"></div>
-                                    <div class="preview-color" style="background-color: {{this.config.border}}"></div>
-                                </div>
-                            </div>
-                            {{/each}}
-                        </div>
+            <div class="below-container">
+                <!-- Add this section alongside the predefined-themes-container -->
+                <div class="user-themes-container sub-container-style">
+                    <div class="sub-header">
+                        <h2>Saved Themes</h2>
+                        <p>Save your custom themes for quick access</p>
                     </div>
-                    {{/each}}
+                    
+                    <div class="save-theme-form">
+                        <div class="form-group">
+                            <input type="text" id="save-theme-name" placeholder="Theme name" class="theme-input">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="save-theme-description" placeholder="Brief description" class="theme-input">
+                        </div>
+                        <button id="save-theme-button" class="secondary-button">Save Current Theme</button>
+                    </div>
+                    
+                    <div class="saved-themes-list">
+                        {{#if userThemes.length}}
+                            <div class="theme-list">
+                                {{#each userThemes}}
+                                    <div class="theme-item user-theme-item" data-theme-id="{{id}}">
+                                        <div class="theme-info">
+                                            <div>
+                                                <div class="theme-name">{{name}}</div>
+                                                <div class="theme-description">{{description}}</div>
+                                            </div>
+                                            <div class="theme-preview">
+                                                <div class="preview-color" style="background-color: {{config.primary}}"></div>
+                                                <div class="preview-color" style="background-color: {{config.background}}"></div>
+                                                <div class="preview-color" style="background-color: {{config.accent}}"></div>
+                                                <div class="preview-color" style="background-color: {{config.foreground}}"></div>
+                                                <div class="preview-color" style="background-color: {{config.border}}"></div>
+                                            </div>
+                                        </div>
+                                        <div class="theme-actions">
+                                            <button class="icon-button delete-user-theme" title="Delete theme">
+                                                <span class="icon">🗑️</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <div class="empty-state">
+                                <p>You haven't saved any themes yet</p>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                <!-- Add predefined themes section -->
+                <div class="predefined-themes-container sub-container-style">
+                    <div class="sub-header">
+                        <h2>Predefined Themes</h2>
+                        <p>Choose a predefined theme to get started.</p>
+                    </div>
+                    <div class="theme-categories">
+                        {{#each themes}}
+                        <div class="theme-category">
+                            <div class="category-header">{{@key}}</div>
+                            <div class="theme-list">
+                                {{#each this}}
+                                <div class="theme-item predefined-theme-item theme-info" data-theme-category="{{@../key}}" data-theme-index="{{@index}}">
+                                    <div>
+                                        <div class="theme-name">{{this.name}}</div>
+                                        <div class="theme-description">{{this.description}}</div>
+                                    </div>
+                                    <div class="theme-preview">
+                                        <div class="preview-color" style="background-color: {{this.config.primary}}"></div>
+                                        <div class="preview-color" style="background-color: {{this.config.background}}"></div>
+                                        <div class="preview-color" style="background-color: {{this.config.accent}}"></div>
+                                        <div class="preview-color" style="background-color: {{this.config.foreground}}"></div>
+                                        <div class="preview-color" style="background-color: {{this.config.border}}"></div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
                 </div>
             </div>
 

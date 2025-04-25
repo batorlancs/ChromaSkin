@@ -103,18 +103,40 @@
 		document.getElementById("import-modal-apply").addEventListener("click", importFromClipboard);
 
 		// Setup predefined themes
-		document.querySelectorAll('.theme-item').forEach(item => {
-			item.addEventListener('click', function() {
-				const category = this.getAttribute('data-theme-category');
-				const index = parseInt(this.getAttribute('data-theme-index'));
-				
+		document.querySelectorAll(".predefined-theme-item").forEach((item) => {
+			item.addEventListener("click", function () {
+				const category = this.getAttribute("data-theme-category");
+				const index = parseInt(this.getAttribute("data-theme-index"));
+
 				// Ask the extension to apply the predefined theme
 				vscode.postMessage({
-					command: 'applyPredefinedTheme',
+					command: "applyPredefinedTheme",
 					category: category,
-					index: index
+					index: index,
 				});
 			});
+		});
+
+		// Setup user theme functionality
+		document.getElementById("save-theme-button").addEventListener("click", saveUserTheme);
+
+		document.querySelectorAll(".user-theme-item").forEach((item) => {
+			console.log("USER THEME ITEM", item);
+			item.addEventListener("click", function () {
+				const themeId = this.dataset.themeId;
+				applyUserTheme(themeId);
+			});
+			
+			// Add event listener to the delete button inside the theme item
+			const deleteButton = item.querySelector(".delete-user-theme");
+			if (deleteButton) {
+				console.log("DELETE BUTTON", deleteButton);
+				deleteButton.addEventListener("click", function(e) {
+					e.stopPropagation(); // Prevent the item click event from firing
+					const themeId = item.dataset.themeId;
+					deleteUserTheme(themeId);
+				});
+			}
 		});
 	}
 
@@ -374,5 +396,65 @@
 				message: "Invalid JSON format",
 			});
 		}
+	}
+
+	// Function to save the current theme as a user theme
+	function saveUserTheme() {
+		console.log("SAVING USER THEME");
+		const themeName = document.getElementById("save-theme-name").value.trim();
+		const themeDescription = document.getElementById("save-theme-description").value.trim();
+
+		if (!themeName) {
+			vscode.postMessage({
+				command: "showError",
+				message: "Please enter a name for your theme",
+			});
+			return;
+		}
+
+		const themeConfig = getThemeFromElements();
+
+		// Add optional color picker values
+		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
+			const settingName = container.dataset.settingName;
+			if (settingName) {
+				const toggle = container.querySelector(".optional-toggle");
+				const colorInput = container.querySelector(".optional-color-input");
+				themeConfig[settingName] = toggle.checked ? "default" : colorInput.value;
+			}
+		});
+
+		vscode.postMessage({
+			command: "saveUserTheme",
+			name: themeName,
+			description: themeDescription || "Custom theme",
+			themeConfig: themeConfig,
+		});
+
+		// Clear the form
+		document.getElementById("save-theme-name").value = "";
+		document.getElementById("save-theme-description").value = "";
+	}
+
+	function applyUserTheme(themeId) {
+		console.log("APPLYING USER THEME", themeId);
+		const themeItems = document.querySelectorAll(".user-theme-item");
+		for (const item of themeItems) {
+			if (item.dataset.themeId === themeId) {
+				vscode.postMessage({
+					command: "applyUserTheme",
+					themeId: themeId,
+				});
+				return;
+			}
+		}
+	}
+
+	function deleteUserTheme(themeId) {
+		console.log("DELETING USER THEME", themeId);
+		vscode.postMessage({
+			command: "confirmDeleteTheme",
+			themeId: themeId
+		});
 	}
 })();

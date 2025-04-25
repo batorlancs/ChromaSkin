@@ -7,6 +7,7 @@ import { generateWorkbenchTheme } from "./generator";
 import { ThemeConfig } from "./types";
 import { getTokenColorCustomizations } from "./tokenizer";
 import themes, { getPredefinedTheme } from "./themes";
+import { UserThemeManager } from "./userThemes";
 
 class ChromaSkinExtension {
 	private activePanel: vscode.WebviewPanel | undefined;
@@ -36,9 +37,11 @@ class ChromaSkinExtension {
 		// optional color pickers
 		optionalEditorForeground: "default",
 	};
+	private userThemeManager: UserThemeManager;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
+		this.userThemeManager = new UserThemeManager(context);
 	}
 
 	private isDevMode(): boolean {
@@ -78,7 +81,6 @@ class ChromaSkinExtension {
 			light: vscode.Uri.file(path.join(this.context.extensionPath, "resources", "chromaskin-lightmode.png")),
 			dark: vscode.Uri.file(path.join(this.context.extensionPath, "resources", "chromaskin-darkmode.png")),
 		};
-
 		const themeConfig: ThemeConfig = this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
 		const { theme } = generateWorkbenchTheme(themeConfig);
 
@@ -148,6 +150,38 @@ class ChromaSkinExtension {
 				console.log("ChromaSkin: GOT HIDING INFO MESSAGE!");
 				this.context.globalState.update("chromaskin-hide-info-message", true);
 				break;
+			case "saveUserTheme":
+				const savedTheme = this.userThemeManager.saveTheme(message.name, message.description, message.themeConfig);
+				this.reloadWebview();
+				vscode.window.showInformationMessage(`ChromaSkin: Theme "${message.name}" saved! 💾`);
+				break;
+			case "deleteUserTheme":
+				const deleted = this.userThemeManager.deleteTheme(message.themeId);
+				if (deleted) {
+					this.reloadWebview();
+					vscode.window.showInformationMessage(`ChromaSkin: Theme deleted! 🗑️`);
+				}
+				break;
+			case "applyUserTheme":
+				const theme = this.userThemeManager.getTheme(message.themeId);
+				if (theme) {
+					this.applyColorTheme(theme.config);
+					vscode.window.showInformationMessage("ChromaSkin: Saved Theme Applied! 🎨");
+				} else {
+					vscode.window.showErrorMessage("ChromaSkin: Theme not found! 🚫");
+				}
+				break;
+			case "confirmDeleteTheme": {
+				const themeId = message.themeId;
+				vscode.window.showWarningMessage("Are you sure you want to delete this theme?", "Delete", "Cancel").then((selection) => {
+					if (selection === "Delete") {
+						this.userThemeManager.deleteTheme(themeId);
+						this.reloadWebview();
+						vscode.window.showInformationMessage("ChromaSkin: Theme deleted! 🗑️");
+					}
+				});
+				break;
+			}
 		}
 	}
 
@@ -169,12 +203,12 @@ class ChromaSkinExtension {
 		// Hide breadcrumbs
 		vscode.workspace.getConfiguration("breadcrumbs").update("enabled", false, vscode.ConfigurationTarget.Global);
 
-		if (themeConfig.autoAdvancedColors && this.activePanel) {
-			this.activePanel.webview.postMessage({
-				command: "set-colors",
-				themeConfig: theme,
-			});
-		}
+		// if (themeConfig.autoAdvancedColors && this.activePanel) {
+		this.activePanel?.webview.postMessage({
+			command: "set-colors",
+			themeConfig: theme,
+		});
+		// }
 
 		// persist theme config (needed for web view change)
 		this.context.globalState.update("chromaskin-theme-config", themeConfig);
@@ -227,6 +261,15 @@ class ChromaSkinExtension {
 		vscode.window.showInformationMessage("ChromaSkin: Theme imported successfully!");
 	}
 
+	private reloadWebview() {
+		const themeConfig: ThemeConfig = this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
+		const { theme } = generateWorkbenchTheme(themeConfig);
+
+		if (this.activePanel) {
+			this.activePanel.webview.html = this.getWebviewContent(this.context, this.activePanel.webview, theme);
+		}
+	}
+
 	private getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview, themeConfig: ThemeConfig): string {
 		const stylesPath = vscode.Uri.file(path.join(context.extensionPath, "media", "styles.css"));
 		const scriptPath = vscode.Uri.file(path.join(context.extensionPath, "media", "script.js"));
@@ -260,7 +303,8 @@ class ChromaSkinExtension {
 			syntaxCommentsOverwrite: themeConfig.syntaxCommentsOverwrite,
 			optionalEditorForeground: themeConfig.optionalEditorForeground,
 			hideInfoMessage: this.context.globalState.get("chromaskin-hide-info-message") === true,
-			themes, 
+			userThemes: this.userThemeManager.getAllThemes(),
+			themes,
 		});
 	}
 }
