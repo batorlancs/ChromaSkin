@@ -588,7 +588,7 @@ input[type="checkbox"]:checked {
 @media (max-width: 650px) {
 	.settings-container {
 		flex-direction: column;
-		gap: 0;
+		gap: 10px;
 	}
 
 	.settings-column + .settings-column {
