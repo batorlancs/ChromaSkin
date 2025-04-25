@@ -6,6 +6,7 @@ import * as Handlebars from "handlebars";
 import { generateWorkbenchTheme } from "./generator";
 import { ThemeConfig } from "./types";
 import { getTokenColorCustomizations } from "./tokenizer";
+import themes, { getPredefinedTheme } from "./themes";
 
 class ChromaSkinExtension {
 	private activePanel: vscode.WebviewPanel | undefined;
@@ -119,6 +120,11 @@ class ChromaSkinExtension {
 			case "applyTheme":
 				this.applyColorTheme(message.themeConfig);
 				vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied! 🎨");
+				break;
+			case "applyPredefinedTheme":
+				const { config } = getPredefinedTheme(message.category, message.index);
+				this.applyColorTheme(config);
+				vscode.window.showInformationMessage("ChromaSkin: Predefined Theme Applied! 🎨");
 				break;
 			case "resetTheme":
 				this.resetColorTheme();
@@ -254,6 +260,7 @@ class ChromaSkinExtension {
 			syntaxCommentsOverwrite: themeConfig.syntaxCommentsOverwrite,
 			optionalEditorForeground: themeConfig.optionalEditorForeground,
 			hideInfoMessage: this.context.globalState.get("chromaskin-hide-info-message") === true,
+			themes, 
 		});
 	}
 }

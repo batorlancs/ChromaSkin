@@ -101,6 +101,21 @@
 			importModalOverlay.classList.remove("active");
 		});
 		document.getElementById("import-modal-apply").addEventListener("click", importFromClipboard);
+
+		// Setup predefined themes
+		document.querySelectorAll('.theme-item').forEach(item => {
+			item.addEventListener('click', function() {
+				const category = this.getAttribute('data-theme-category');
+				const index = parseInt(this.getAttribute('data-theme-index'));
+				
+				// Ask the extension to apply the predefined theme
+				vscode.postMessage({
+					command: 'applyPredefinedTheme',
+					category: category,
+					index: index
+				});
+			});
+		});
 	}
 
 	// Apply theme function
@@ -231,6 +246,8 @@
 			if (infoMessage) {
 				infoMessage.style.display = "none";
 			}
+		} else if (message.command === "setPredefinedTheme") {
+			setTheme(message.themeConfig);
 		}
 	});
 

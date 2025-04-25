@@ -153,6 +153,36 @@
             </div>
 		</div>
 
+        <!-- Add predefined themes section -->
+        <div class="predefined-themes-container">
+            <div class="sub-header">
+                <h2>Predefined Themes</h2>
+                <p>Choose a predefined theme to get started.</p>
+            </div>
+            <div class="theme-categories">
+                {{#each themes}}
+                <div class="theme-category">
+                    <div class="category-header">{{@key}}</div>
+                    <div class="theme-list">
+                        {{#each this}}
+                        <div class="theme-item" data-theme-category="{{@../key}}" data-theme-index="{{@index}}">
+                            <div class="theme-name">{{this.name}}</div>
+                            <div class="theme-description">{{this.description}}</div>
+                            <div class="theme-preview">
+                                <div class="preview-color" style="background-color: {{this.config.primary}}"></div>
+                                <div class="preview-color" style="background-color: {{this.config.background}}"></div>
+                                <div class="preview-color" style="background-color: {{this.config.accent}}"></div>
+                                <div class="preview-color" style="background-color: {{this.config.foreground}}"></div>
+                                <div class="preview-color" style="background-color: {{this.config.border}}"></div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
 		<!-- Modal for pasting JSON -->
 		<div id="import-modal-overlay" class="modal-overlay">
 			<div class="modal">
