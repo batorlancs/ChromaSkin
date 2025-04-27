@@ -15,28 +15,7 @@ class ChromaSkinExtension {
 	private previousBreadcrumbsState: boolean | undefined;
 	private isPanelVisiblePrev: boolean = false;
 	private isPanelActivePrev: boolean = false;
-	private readonly DEFAULT_THEME_CONFIG: ThemeConfig = {
-		// color pickers
-		primary: "#c089f0",
-		background: "#2b2b2b",
-		accent: "#252525",
-		foreground: "#b8b8b8",
-		border: "#454545",
-		activityBar: "#252525",
-		popover: "#252525",
-		button: "#c089f0",
-		indicator: "#b8b8b8",
-		// slider
-		borderOpacity: 30,
-		commentOpacity: 4,
-		// checkbox
-		coloredCursor: false,
-		autoAdvancedColors: true,
-		editorHighlighting: true,
-		syntaxCommentsOverwrite: true,
-		// optional color pickers
-		optionalEditorForeground: "default",
-	};
+	private readonly DEFAULT_THEME_CONFIG: ThemeConfig = themes["default"][0].config;
 	private userThemeManager: UserThemeManager;
 
 	constructor(context: vscode.ExtensionContext) {
@@ -51,6 +30,7 @@ class ChromaSkinExtension {
 	private clearAllGlobalState() {
 		console.log("ChromaSkin: Clearing all global state!");
 		this.context.globalState.update("chromaskin-theme-config", null);
+		this.context.globalState.update("chromaskin-theme-config-unapplied", null);
 		this.context.globalState.update("chromaskin-hide-info-message", null);
 	}
 
@@ -98,7 +78,9 @@ class ChromaSkinExtension {
 			if (this.activePanel?.visible && this.activePanel?.active && !(this.isPanelVisiblePrev && !this.isPanelActivePrev)) {
 				// console.log("ChromaSkin: Applying theme, because panel is visible and active!");
 				const themeConfig: ThemeConfig =
-					this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
+					this.context.globalState.get<ThemeConfig>("chromaskin-theme-config-unapplied") ||
+					this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") ||
+					this.DEFAULT_THEME_CONFIG;
 				const { theme } = generateWorkbenchTheme(themeConfig);
 				this.activePanel.webview.postMessage({
 					command: "set-colors",
@@ -186,6 +168,10 @@ class ChromaSkinExtension {
 				});
 				break;
 			}
+			case "saveCurrentState":
+				// Save the current state without applying it as a theme
+				this.saveCurrentState(message.themeConfig);
+				break;
 		}
 	}
 
@@ -320,6 +306,12 @@ class ChromaSkinExtension {
 			userThemes: this.userThemeManager.getAllThemes(),
 			themes,
 		});
+	}
+
+	private saveCurrentState(themeConfig: ThemeConfig) {
+		// Only save to global state, don't apply to VS Code's theme
+		this.context.globalState.update("chromaskin-theme-config-unapplied", themeConfig);
+		console.log("ChromaSkin: Current state saved");
 	}
 }
 

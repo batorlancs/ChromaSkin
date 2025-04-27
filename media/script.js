@@ -127,46 +127,32 @@
 				const themeId = this.dataset.themeId;
 				applyUserTheme(themeId);
 			});
-			
+
 			// Add event listener to the delete button inside the theme item
 			const deleteButton = item.querySelector(".delete-user-theme");
 			if (deleteButton) {
 				console.log("DELETE BUTTON", deleteButton);
-				deleteButton.addEventListener("click", function(e) {
+				deleteButton.addEventListener("click", function (e) {
 					e.stopPropagation(); // Prevent the item click event from firing
 					const themeId = item.dataset.themeId;
 					deleteUserTheme(themeId);
 				});
 			}
 		});
+
+		// Setup listeners for automatically saving configuration on change
+		setupInputChangeListeners();
 	}
 
 	// Apply theme function
 	function applyTheme() {
 		const themeConfig = getThemeFromElements();
-
-		// --- Add Optional Color Picker Values ---
-		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
-			const settingName = container.dataset.settingName; // Get name from data attribute
-			if (settingName) {
-				const toggle = container.querySelector(".optional-toggle");
-				const colorInput = container.querySelector(".optional-color-input");
-				if (toggle.checked) {
-					themeConfig[settingName] = "default"; // Use "default" string
-				} else {
-					themeConfig[settingName] = colorInput.value; // Use selected color
-				}
-			}
-		});
-		// --- End Optional Color Picker Values ---
-
 		// Send message to extension
 		vscode.postMessage({
 			command: "applyTheme",
 			themeConfig: themeConfig,
 		});
 	}
-
 
 	// Reset colors function
 	function resetColors() {
@@ -187,7 +173,7 @@
 		const accentColor = document.getElementById("color3").value;
 		const foreground = document.getElementById("color4").value;
 		const isOptionalEditorForegroundChecked = document.getElementById("optionalEditorForeground-default-toggle").checked;
-		return {
+		let themeConfig = {
 			primary: document.getElementById("color1").value,
 			background: document.getElementById("color2").value,
 			accent: accentColor,
@@ -207,6 +193,20 @@
 				: document.getElementById("optionalEditorForeground").value,
 			indicator: autoAdvancedColors ? foreground : document.getElementById("indicatorColor").value,
 		};
+		// --- Add Optional Color Picker Values ---
+		document.querySelectorAll(".optional-color-picker-container").forEach((container) => {
+			const settingName = container.dataset.settingName; // Get name from data attribute
+			if (settingName) {
+				const toggle = container.querySelector(".optional-toggle");
+				const colorInput = container.querySelector(".optional-color-input");
+				if (toggle.checked) {
+					themeConfig[settingName] = "default"; // Use "default" string
+				} else {
+					themeConfig[settingName] = colorInput.value; // Use selected color
+				}
+			}
+		});
+		return themeConfig;
 	}
 
 	function setTheme(themeConfig) {
@@ -266,6 +266,9 @@
 		const autoAdvancedColors = document.getElementById("autoAdvancedColors");
 		const advancedColorsContainer = document.getElementById("advanced-colors-container");
 		advancedColorsContainer.classList.toggle("enabled", !autoAdvancedColors.checked);
+
+		// Send message to extension that the inputs have been changed
+		handleConfigChange();
 	}
 
 	window.addEventListener("message", (event) => {
@@ -463,7 +466,68 @@
 		console.log("DELETING USER THEME", themeId);
 		vscode.postMessage({
 			command: "confirmDeleteTheme",
-			themeId: themeId
+			themeId: themeId,
+		});
+	}
+
+	// Add this function to handle input changes and save state
+	function setupInputChangeListeners() {
+		// Color pickers
+		const colorPickers = [
+			"color1",
+			"color2",
+			"color3",
+			"color4",
+			"color5",
+			"activityBarColor",
+			"popoverColor",
+			"buttonColor",
+			"indicatorColor",
+			"optionalEditorForeground",
+		];
+
+		colorPickers.forEach((id) => {
+			const element = document.getElementById(id);
+			if (element) {
+				element.addEventListener("input", handleConfigChange);
+			}
+		});
+
+		// Checkboxes
+		const checkboxes = [
+			"autoAdvancedColors",
+			"coloredCursor",
+			"editorHighlighting",
+			"syntaxCommentsOverwrite",
+			"optionalEditorForeground-default-toggle",
+		];
+
+		checkboxes.forEach((id) => {
+			const element = document.getElementById(id);
+			if (element) {
+				element.addEventListener("change", handleConfigChange);
+			}
+		});
+
+		// Sliders
+		const sliders = ["intensity", "commentOpacity"];
+
+		sliders.forEach((id) => {
+			const element = document.getElementById(id);
+			if (element) {
+				element.addEventListener("input", handleConfigChange);
+			}
+		});
+	}
+
+	// Function to handle configuration changes
+	function handleConfigChange() {
+		const themeConfig = getThemeFromElements();
+
+		// Send message to extension to save the current state without applying
+		vscode.postMessage({
+			command: "saveCurrentState",
+			themeConfig: themeConfig,
 		});
 	}
 })();
