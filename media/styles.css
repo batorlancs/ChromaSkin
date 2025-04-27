@@ -562,6 +562,9 @@ input[type="checkbox"]:checked {
 	transition: all 0.2s ease;
 	overflow: hidden;
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .theme-item:hover {
