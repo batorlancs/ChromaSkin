@@ -44,11 +44,27 @@ export function hexToHexAlpha(hex: string, alpha: number): string {
  * @param lChange - The change in lightness
  * @returns The adjusted hex color
  */
-export function adjustColor(hex: string, hChange: number, sChange: number, lChange: number): string {
+export function adjustColor(hex: string, hChange: number, sChange: number, lChange: number, options: { saturation: number } = { saturation: 1 }): string {
 	const hsl = hexToHsl(ensureHexPrefix(hex));
 	hsl[0] = Math.max(0, Math.min(360, hsl[0] + hChange));
 	hsl[1] = Math.max(0, Math.min(100, hsl[1] + sChange));
 	hsl[2] = Math.max(0, Math.min(100, hsl[2] + lChange));
+	const adjustedHex = hslToHex(hsl);
+	if (options.saturation !== 1) {
+		return adjustHexSaturation(adjustedHex, options.saturation);
+	}
+	return adjustedHex;
+}
+
+/**
+ * Adjusts the saturation of a hex color
+ * @param hex - The hex color to adjust
+ * @param saturation - The saturation value to adjust to
+ * @returns The adjusted hex color
+ */
+export function adjustHexSaturation(hex: string, saturation: number): string {
+	const hsl = hexToHsl(ensureHexPrefix(hex));
+	hsl[1] = Math.max(0, Math.min(100, hsl[1] * saturation));
 	return hslToHex(hsl);
 }
 

@@ -11,9 +11,10 @@ export function getTokenColorCustomizations(themeConfig: ThemeConfig) {
 		}
 
 		// generate colors
-		const generalCommentColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(10, 50));
-		const jsdocVariableColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(20, 80));
-		const jsdocAtColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(15, 60));
+		const saturation = 0.4;
+		const generalCommentColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(5, 50), { saturation });
+		const jsdocVariableColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(10, 80), { saturation });
+		const jsdocAtColor = adjustColor(themeConfig.background, 0, 0, getOpacityFromMinMax(7.5, 60), { saturation });
 
 		// general comments
 		textMateRules.push({
