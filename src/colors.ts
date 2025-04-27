@@ -310,6 +310,19 @@ export function getColors(provided: ThemeConfig) {
 		rangeHighlightBorder: defaults.transparent,
 	};
 
+	let editorGroupBorder = border;
+	if (border === background) {
+		if (border === accent) {
+			editorGroupBorder = adjustColor(background, 0, 0, 5);
+		} else {
+			editorGroupBorder = accent;
+		}
+	}
+	const editorGroup = {
+		border: editorGroupBorder,
+		
+	}
+
 	const diffEditor = {
 		// Text changes
 		insertedTextBackground: hexToHexAlpha(defaults.other.green.default, 0.15),
@@ -395,6 +408,7 @@ export function getColors(provided: ThemeConfig) {
 			editor,
 			diffEditor,
 			inlineEdit,
+			editorGroup,
 		},
 	};
 }

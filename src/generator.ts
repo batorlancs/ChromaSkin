@@ -209,7 +209,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"minimap.background": colors.background,
 
 		// Editor Groups and Tabs
-		"editorGroup.border": colors.border,
+		"editorGroup.border": colors.editorGroup.border,
 		"editorGroup.emptyBackground": colors.background,
 		"editorGroupHeader.tabsBackground": colors.sideBar.background,
 		"editorGroupHeader.tabsBorder": colors.sideBar.background,
