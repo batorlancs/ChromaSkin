@@ -13,3 +13,14 @@ All notable changes to the "chromaskin-by-bator" extension will be documented in
 ## 1.0.2
 
 - Other fixes for initial release
+
+## 1.1.0
+
+- Added automatic syntax coloring with improved tokenization
+- Added import/export theme configuration options
+- Added predefined themes with color palette previews
+- Added comment visibility strength controls
+- Improved GitHub Copilot integration
+- Enhanced UI responsiveness and loading experience
+- Fixed various color and border visibility issues
+- Added reset button for theme colors

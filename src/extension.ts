@@ -58,8 +58,8 @@ class ChromaSkinExtension {
 			}
 		);
 		this.activePanel.iconPath = {
-			light: vscode.Uri.file(path.join(this.context.extensionPath, "resources", "chromaskin-lightmode.png")),
-			dark: vscode.Uri.file(path.join(this.context.extensionPath, "resources", "chromaskin-darkmode.png")),
+			light: vscode.Uri.file(path.join(this.context.extensionPath, "resources", "chromaskin.png")),
+			dark: vscode.Uri.file(path.join(this.context.extensionPath, "resources", "chromaskin.png")),
 		};
 		const themeConfig: ThemeConfig = this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
 		const { theme } = generateWorkbenchTheme(themeConfig);
