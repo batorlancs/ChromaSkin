@@ -3,13 +3,15 @@ import { adjustColor, blendColors, getLightestColor, hexToHexAlpha, isDarkMode, 
 
 export function getColors(provided: ThemeConfig) {
 	const isDark = isDarkMode(provided.background);
-	const { primary, background, accent, foreground, border, borderOpacity } = provided;
+	const contrastTextColor = isDark ? "#ffffff" : "#000000";
+	const { primary, background, accent, foreground, border, borderOpacity, optionalEditorForeground } = provided;
 
 	const themeWithAuto = {
 		...provided,
 		activityBar: provided.autoAdvancedColors ? accent : provided.activityBar,
 		popover: provided.autoAdvancedColors ? adjustColor(accent, 0, 0, 5) : provided.popover,
 		button: provided.autoAdvancedColors ? primary : provided.button,
+		indicator: provided.autoAdvancedColors ? foreground : provided.indicator,
 	};
 
 	const darkOtherColors = {
@@ -119,13 +121,14 @@ export function getColors(provided: ThemeConfig) {
 	// Activity Bar
 	const activityBar = {
 		background: themeWithAuto.activityBar,
-		inactiveForeground: hexToHexAlpha(foreground, 0.38),
-		foreground: hexToHexAlpha(foreground, 0.83),
+		inactiveForeground: hexToHexAlpha(foreground, 0.35),
+		foreground: hexToHexAlpha(foreground, 1),
 		badgeForeground: badge.foreground,
 		badgeBackground: badge.background,
-		activeBorder: hexToHexAlpha(foreground, 0.68),
+		// activeBorder: hexToHexAlpha(themeWithAuto.indicator, 0.68),
+        activeBorder: themeWithAuto.indicator,
 		border: border,
-		activeBackground: hexToHexAlpha(foreground, 0.04),
+		activeBackground: border === accent ? defaults.transparent : hexToHexAlpha(foreground, 0.04)
 	};
 	const activityBarBadge = {
 		foreground: badge.foreground,
@@ -223,7 +226,7 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Git
-	const gitOpacity = 0.75;
+	const gitOpacity = 0.65;
 	const git = {
 		ignoredResourceForeground: hexToHexAlpha(foreground, 0.16),
 		modifiedResourceForeground: blendColors(defaults.other.orange.default, foreground, gitOpacity),
@@ -237,24 +240,25 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Editor
+	const editorContrastTextColor = contrastTextColor;
 	const editor = {
 		background: background,
-		foreground: foreground,
-		selectionBackground: hexToHexAlpha(foreground, 0.12),
-		selectionHighlightBackground: hexToHexAlpha(foreground, 0.08),
-		inactiveSelectionBackground: hexToHexAlpha(foreground, 0.06),
+		foreground: optionalEditorForeground,
+		selectionBackground: hexToHexAlpha(editorContrastTextColor, 0.12),
+		selectionHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
+		inactiveSelectionBackground: hexToHexAlpha(editorContrastTextColor, 0.06),
 		lineHighlightBorder: defaults.transparent,
-		lineHighlightBackground: hexToHexAlpha(foreground, 0.04),
+		lineHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.04),
 		lineNumber: {
-			foreground: hexToHexAlpha(foreground, 0.18),
-			activeForeground: hexToHexAlpha(foreground, 0.59),
+			foreground: hexToHexAlpha(editorContrastTextColor, 0.18),
+			activeForeground: hexToHexAlpha(editorContrastTextColor, 0.59),
 		},
 		gutter: {
 			background: background,
 		},
 		bracketMatch: {
-			background: hexToHexAlpha(foreground, 0.05),
-			border: hexToHexAlpha(foreground, 0.1),
+			background: hexToHexAlpha(editorContrastTextColor, 0.06),
+			border: hexToHexAlpha(editorContrastTextColor, 0.12),
 		},
 		stickyScroll: {
 			border: adjustColor(background, 0, 0, 5),
@@ -265,48 +269,61 @@ export function getColors(provided: ThemeConfig) {
 			background: adjustColor(background, 0, 0, 3),
 		},
 		indentGuide: {
-			activeBackground1: hexToHexAlpha(foreground, 0.22),
-			background1: hexToHexAlpha(foreground, 0.1),
+			activeBackground1: hexToHexAlpha(editorContrastTextColor, 0.22),
+			background1: hexToHexAlpha(editorContrastTextColor, 0.1),
 		},
 		selectionForeground: "default",
-		selectionHighlightBorder: hexToHexAlpha(foreground, 0),
-		wordHighlightBackground: hexToHexAlpha(foreground, 0.08),
-		wordHighlightBorder: hexToHexAlpha(foreground, 0),
-		wordHighlightStrongBackground: hexToHexAlpha(foreground, 0.12),
-		wordHighlightStrongBorder: hexToHexAlpha(foreground, 0),
-		wordHighlightTextBackground: hexToHexAlpha(foreground, 0.06),
-		wordHighlightTextBorder: hexToHexAlpha(foreground, 0),
-		findMatchBackground: hexToHexAlpha(foreground, 0.2),
+		selectionHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0),
+		wordHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.1),
+		wordHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0),
+		wordHighlightStrongBackground: hexToHexAlpha(editorContrastTextColor, 0.13),
+		wordHighlightStrongBorder: hexToHexAlpha(editorContrastTextColor, 0),
+		wordHighlightTextBackground: hexToHexAlpha(editorContrastTextColor, 0.1),
+		wordHighlightTextBorder: hexToHexAlpha(editorContrastTextColor, 0),
+		findMatchBackground: hexToHexAlpha(editorContrastTextColor, 0.15),
 		findMatchForeground: "default",
-		findMatchHighlightBackground: hexToHexAlpha(foreground, 0.15),
+		findMatchHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.15),
 		findMatchHighlightForeground: "default",
-		findRangeHighlightBackground: hexToHexAlpha(foreground, 0.05),
-		findMatchBorder: hexToHexAlpha(foreground, 0),
-		findMatchHighlightBorder: hexToHexAlpha(foreground, 0),
-		findRangeHighlightBorder: hexToHexAlpha(foreground, 0),
-		hoverHighlightBackground: hexToHexAlpha(foreground, 0.08),
+		findRangeHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.1),
+		findMatchBorder: hexToHexAlpha(editorContrastTextColor, 0.65),
+		findMatchHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0.1),
+		findRangeHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0.1),
+		hoverHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
 		linkActiveForeground: primary,
 		unicodeHighlightBorder: hexToHexAlpha(defaults.other.yellow.default, 0.5),
 		unicodeHighlightBackground: hexToHexAlpha(defaults.other.yellow.default, 0.2),
-		symbolHighlightBackground: hexToHexAlpha(foreground, 0.1),
-		symbolHighlightBorder: hexToHexAlpha(foreground, 0),
-		whitespace: hexToHexAlpha(foreground, 0.15),
-		indentGuideBackground: hexToHexAlpha(foreground, 0.08),
-		indentGuideActiveBackground: hexToHexAlpha(foreground, 0.25),
-		inlayHintBackground: hexToHexAlpha(foreground, 0.08),
-		inlayHintForeground: hexToHexAlpha(foreground, 0.8),
+		symbolHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.1),
+		symbolHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0),
+		whitespace: hexToHexAlpha(editorContrastTextColor, 0.15),
+		indentGuideBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
+		indentGuideActiveBackground: hexToHexAlpha(editorContrastTextColor, 0.25),
+		inlayHintBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
+		inlayHintForeground: hexToHexAlpha(editorContrastTextColor, 0.8),
 		inlayHintTypeBackground: hexToHexAlpha(defaults.other.blue.default, 0.08),
 		inlayHintTypeForeground: hexToHexAlpha(defaults.other.blue.default, 0.8),
 		inlayHintParameterBackground: hexToHexAlpha(defaults.other.orange.default, 0.08),
 		inlayHintParameterForeground: hexToHexAlpha(defaults.other.orange.default, 0.8),
-		rulerForeground: hexToHexAlpha(foreground, 0.15),
-		codeLensForeground: hexToHexAlpha(foreground, 0.5),
+		rulerForeground: hexToHexAlpha(editorContrastTextColor, 0.15),
+		codeLensForeground: hexToHexAlpha(editorContrastTextColor, 0.5),
 		linkedEditingBackground: hexToHexAlpha(primary, 0.1),
 		foldBackground: adjustColor(background, 0, 0, 5),
-		foldPlaceholderForeground: hexToHexAlpha(foreground, 0.5),
-		rangeHighlightBackground: hexToHexAlpha(foreground, 0.08),
+		foldPlaceholderForeground: hexToHexAlpha(editorContrastTextColor, 0.5),
+		rangeHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
 		rangeHighlightBorder: defaults.transparent,
 	};
+
+	let editorGroupBorder = border;
+	if (border === background) {
+		if (border === accent) {
+			editorGroupBorder = adjustColor(background, 0, 0, 5);
+		} else {
+			editorGroupBorder = accent;
+		}
+	}
+	const editorGroup = {
+		border: editorGroupBorder,
+		
+	}
 
 	const diffEditor = {
 		// Text changes
@@ -393,6 +410,7 @@ export function getColors(provided: ThemeConfig) {
 			editor,
 			diffEditor,
 			inlineEdit,
+			editorGroup,
 		},
 	};
 }

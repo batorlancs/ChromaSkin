@@ -11,12 +11,17 @@ export interface ThemeConfig {
 	activityBar: string;
 	popover: string;
 	button: string;
+	indicator: string;
 	// slider
 	borderOpacity: number;
+	commentOpacity: number;
 	// checkbox
 	autoAdvancedColors: boolean;
 	coloredCursor: boolean;
 	editorHighlighting: boolean;
+	syntaxCommentsOverwrite: boolean;
+	// optional color pickers
+	optionalEditorForeground: string;
 }
 
 export * from "./colors";

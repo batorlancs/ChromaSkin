@@ -1,9 +1,9 @@
 {
-	"icon": "resources/chromaskin-darkmode.png",
+	"icon": "resources/chromaskin.png",
 	"name": "chromaskin-by-bator",
 	"displayName": "ChromaSkin",
 	"description": "Mix & Match VS Code Syntax Highlighting with Custom UI",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"publisher": "GergelyBator",
 	"license": "MIT",
 	"repository": {
@@ -21,7 +21,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "chromaskin.openPicker",
+				"command": "chromaskin.openThemeGenerator",
 				"title": "ChromaSkin: Open Theme Generator"
 			}
 		]
@@ -46,6 +46,7 @@
 		"typescript": "^5.7.2"
 	},
 	"dependencies": {
+		"chromaskin-by-bator": "file:",
 		"handlebars": "^4.7.8"
 	},
 	"author": "Gergely Bator",

@@ -44,11 +44,27 @@ export function hexToHexAlpha(hex: string, alpha: number): string {
  * @param lChange - The change in lightness
  * @returns The adjusted hex color
  */
-export function adjustColor(hex: string, hChange: number, sChange: number, lChange: number): string {
+export function adjustColor(hex: string, hChange: number, sChange: number, lChange: number, options: { saturation: number } = { saturation: 1 }): string {
 	const hsl = hexToHsl(ensureHexPrefix(hex));
 	hsl[0] = Math.max(0, Math.min(360, hsl[0] + hChange));
 	hsl[1] = Math.max(0, Math.min(100, hsl[1] + sChange));
 	hsl[2] = Math.max(0, Math.min(100, hsl[2] + lChange));
+	const adjustedHex = hslToHex(hsl);
+	if (options.saturation !== 1) {
+		return adjustHexSaturation(adjustedHex, options.saturation);
+	}
+	return adjustedHex;
+}
+
+/**
+ * Adjusts the saturation of a hex color
+ * @param hex - The hex color to adjust
+ * @param saturation - The saturation value to adjust to
+ * @returns The adjusted hex color
+ */
+export function adjustHexSaturation(hex: string, saturation: number): string {
+	const hsl = hexToHsl(ensureHexPrefix(hex));
+	hsl[1] = Math.max(0, Math.min(100, hsl[1] * saturation));
 	return hslToHex(hsl);
 }
 
@@ -70,8 +86,12 @@ export function isDarkMode(hex: string): boolean {
  * @returns The text color
  */
 export function whiteOrBlackText(hex: string, alpha: number = 1): string {
-	const hsl = hexToHsl(ensureHexPrefix(hex));
-	return hsl[2] > 50 ? hexToHexAlpha("#000000", alpha) : hexToHexAlpha("#ffffff", alpha);
+	const hexcolor = ensureHexPrefix(hex).replace("#", "");
+	const r = parseInt(hexcolor.substring(0, 2), 16);
+	const g = parseInt(hexcolor.substring(2, 4), 16);
+	const b = parseInt(hexcolor.substring(4, 6), 16);
+	const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+	return yiq >= 128 ? hexToHexAlpha("#000000", alpha) : hexToHexAlpha("#ffffff", alpha);
 }
 
 /**
@@ -158,7 +178,6 @@ export function hslToHex(hsl: number[]): string {
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-
 /**
  * Blends two colors
  * @param color1 - The first color
@@ -169,35 +188,34 @@ export function hslToHex(hsl: number[]): string {
 export function blendColors(color1: string, color2: string, ratio: number): string {
 	// Ensure ratio is between 0 and 1
 	ratio = Math.max(0, Math.min(1, ratio));
-	
+
 	// Convert hex to RGB
 	const parseHex = (hex: string) => {
-	  const r = parseInt(hex.substring(1, 3), 16);
-	  const g = parseInt(hex.substring(3, 5), 16);
-	  const b = parseInt(hex.substring(5, 7), 16);
-	  return [r, g, b];
+		const r = parseInt(hex.substring(1, 3), 16);
+		const g = parseInt(hex.substring(3, 5), 16);
+		const b = parseInt(hex.substring(5, 7), 16);
+		return [r, g, b];
 	};
-	
+
 	// If either color has alpha, we need to handle that separately
 	// For simplicity, we'll just assume no alpha in this example
-	
+
 	const rgb1 = parseHex(color1);
 	const rgb2 = parseHex(color2);
-	
+
 	// Blend RGB values
 	const blended = rgb1.map((channel, i) => {
-	  return Math.round(channel * (1 - ratio) + rgb2[i] * ratio);
+		return Math.round(channel * (1 - ratio) + rgb2[i] * ratio);
 	});
-	
+
 	// Convert back to hex
 	const toHex = (val: number) => {
-	  const hex = val.toString(16);
-	  return hex.length === 1 ? "0" + hex : hex;
+		const hex = val.toString(16);
+		return hex.length === 1 ? "0" + hex : hex;
 	};
-	
+
 	return "#" + blended.map(toHex).join("");
 }
-
 
 /**
  * Finds the lightest color from a list of hex colors
@@ -208,7 +226,7 @@ export function getLightestColor(colors: string[]): string {
 	if (colors.length === 0) {
 		throw new Error("Cannot find lightest color from an empty array");
 	}
-	
+
 	// Function to calculate the perceived brightness of a color
 	// Using the formula: (0.299*R + 0.587*G + 0.114*B)
 	const getColorBrightness = (hexColor: string): number => {
@@ -216,15 +234,15 @@ export function getLightestColor(colors: string[]): string {
 		const r = parseInt(hexColor.substring(1, 3), 16);
 		const g = parseInt(hexColor.substring(3, 5), 16);
 		const b = parseInt(hexColor.substring(5, 7), 16);
-		
+
 		// Calculate perceived brightness
 		return 0.299 * r + 0.587 * g + 0.114 * b;
 	};
-	
+
 	// Find the color with the highest brightness value
 	let lightestColor = colors[0];
 	let highestBrightness = getColorBrightness(lightestColor);
-	
+
 	for (let i = 1; i < colors.length; i++) {
 		const currentBrightness = getColorBrightness(colors[i]);
 		if (currentBrightness > highestBrightness) {
@@ -232,6 +250,6 @@ export function getLightestColor(colors: string[]): string {
 			lightestColor = colors[i];
 		}
 	}
-	
+
 	return lightestColor;
 }

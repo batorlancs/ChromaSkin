@@ -87,7 +87,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		// Text colors
 		"textBlockQuote.background": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
 		"textBlockQuote.border": colors.border,
-		"textCodeBlock.background": colors.background,
+		"textCodeBlock.background": hexToHexAlpha(colors.foreground, 0.1),
 		"textLink.activeForeground": adjustColor(colors.primary, 0, 0, 10),
 		"textLink.foreground": colors.primary,
 		"textPreformat.foreground": colors.foreground,
@@ -209,7 +209,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"minimap.background": colors.background,
 
 		// Editor Groups and Tabs
-		"editorGroup.border": colors.border,
+		"editorGroup.border": colors.editorGroup.border,
 		"editorGroup.emptyBackground": colors.background,
 		"editorGroupHeader.tabsBackground": colors.sideBar.background,
 		"editorGroupHeader.tabsBorder": colors.sideBar.background,
@@ -226,9 +226,9 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"tab.activeBorder": colors.background,
 		"tab.hoverBackground": colors.defaults.transparent,
 		"tab.hoverForeground": colors.foreground,
-		"tab.activeBorderTop": colors.foreground,
+		"tab.activeBorderTop": colors.indicator,
 		"tab.unfocusedActiveBorder": colors.background,
-		"tab.unfocusedActiveBorderTop": hexToHexAlpha(colors.foreground, 0.4),
+		"tab.unfocusedActiveBorderTop": colors.defaults.transparent,
 		"tab.unfocusedActiveBackground": colors.background,
 		"tab.unfocusedActiveForeground": colors.foreground,
 		"tab.unfocusedHoverBackground": colors.sideBar.background,
@@ -363,7 +363,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		// Command Center
 		"commandCenter.background": colors.accent,
 		"commandCenter.border": hexToHexAlpha(colors.foreground, 0.1),
-		"commandCenter.activeBackground": colors.accent,
+		"commandCenter.activeBackground": adjustColor(colors.accent, 0, 0, 3),
 		"commandCenter.inactiveBorder": hexToHexAlpha(colors.foreground, 0.1),
 		"commandCenter.foreground": colors.foreground,
 		"commandCenter.activeForeground": colors.foreground,
