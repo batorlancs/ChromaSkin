@@ -65,6 +65,7 @@
 		// Apply theme button click handler
 		document.getElementById("apply-button").addEventListener("click", applyTheme);
 		document.getElementById("reset-button").addEventListener("click", resetTheme);
+		document.getElementById("reset-colors-button").addEventListener("click", resetColors);
 
 		// Add events for dropdown menu
 		const menuButton = document.getElementById("menu-button");
@@ -163,6 +164,14 @@
 		vscode.postMessage({
 			command: "applyTheme",
 			themeConfig: themeConfig,
+		});
+	}
+
+
+	// Reset colors function
+	function resetColors() {
+		vscode.postMessage({
+			command: "resetColors",
 		});
 	}
 

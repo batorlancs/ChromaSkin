@@ -132,6 +132,10 @@ class ChromaSkinExtension {
 				this.resetColorTheme();
 				vscode.window.showInformationMessage("ChromaSkin: Theme Reset! 🔄");
 				break;
+			case "resetColors":
+				this.resetColors();
+				vscode.window.showInformationMessage("ChromaSkin: Colors Reset! 🔄");
+				break;
 			case "exportTheme":
 				this.exportTheme(message.themeConfig);
 				vscode.window.showInformationMessage("ChromaSkin: Theme Exported! 📤");
@@ -185,7 +189,7 @@ class ChromaSkinExtension {
 		}
 	}
 
-	private applyColorTheme(themeConfig: ThemeConfig) {
+	private applyColorTheme(themeConfig: ThemeConfig, saveConfig: boolean = true) {
 		// Store current breadcrumbs state before changing it
 		this.previousBreadcrumbsState = vscode.workspace.getConfiguration("breadcrumbs").get("enabled");
 
@@ -213,6 +217,16 @@ class ChromaSkinExtension {
 		// persist theme config (needed for web view change)
 		this.context.globalState.update("chromaskin-theme-config", themeConfig);
 		console.log("ChromaSkin: Theme Config Saved!");
+	}
+
+	private resetColors() {
+		const themeConfig: ThemeConfig = this.context.globalState.get<ThemeConfig>("chromaskin-theme-config") || this.DEFAULT_THEME_CONFIG;
+		const { data: colorCustomizations, theme } = generateWorkbenchTheme(themeConfig);
+		const tokenColorCustomizations = getTokenColorCustomizations(themeConfig);
+		this.activePanel?.webview.postMessage({
+			command: "set-colors",
+			themeConfig: theme,
+		});
 	}
 
 	private resetColorTheme() {
