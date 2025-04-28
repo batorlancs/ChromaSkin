@@ -61,7 +61,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"editorRuler.foreground": colors.editor.rulerForeground,
 		"editor.codeLensForeground": colors.editor.codeLensForeground,
 		"editor.linkedEditingBackground": colors.editor.linkedEditingBackground,
-	}
+	};
 
 	let data = {
 		// Contrast colors
@@ -309,7 +309,6 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 
 		// Diff editor
 		"diffEditor.border": colors.border,
-		
 
 		// Editor widget
 		"editorWidget.background": adjustColor(colors.background, 0, 0, 5),
@@ -456,6 +455,15 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"editorError.foreground": colors.defaults.other.red.default,
 		"editorInfo.foreground": colors.defaults.other.blue.default,
 		"editorHint.foreground": hexToHexAlpha(colors.defaults.other.blue.default, 0.6),
+
+		// File decoration colors for errors/warnings
+		"explorer.errorDecorationForeground": colors.errorForeground,
+		"explorer.warningDecorationForeground": colors.warningForeground,
+		"problemsErrorIcon.foreground": colors.errorForeground,
+		"problemsWarningIcon.foreground": colors.warningForeground,
+		"problemsInfoIcon.foreground": colors.infoForeground,
+		"list.errorForeground": colors.errorForeground,
+		"list.warningForeground": colors.warningForeground,
 
 		// Peek view colors
 		"peekView.border": colors.border,

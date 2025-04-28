@@ -226,7 +226,7 @@ export function getColors(provided: ThemeConfig) {
 	};
 
 	// Git
-	const gitOpacity = 0.65;
+	const gitOpacity = 0.7;
 	const git = {
 		ignoredResourceForeground: hexToHexAlpha(foreground, 0.25),
 		modifiedResourceForeground: blendColors(defaults.other.orange.default, foreground, gitOpacity),
@@ -238,6 +238,12 @@ export function getColors(provided: ThemeConfig) {
 		stageModifiedResourceForeground: blendColors(defaults.other.orange.default, foreground, gitOpacity),
 		stageDeletedResourceForeground: blendColors(defaults.other.red.default, foreground, gitOpacity),
 	};
+
+	// Error and warning foreground colors
+	const foregroundErrorWarningOpacity = 0.3;
+	const errorForeground = blendColors(defaults.other.red.default, foreground, foregroundErrorWarningOpacity);
+	const warningForeground = blendColors(defaults.other.orange.default, foreground, foregroundErrorWarningOpacity);
+	const infoForeground = blendColors(defaults.other.blue.default, foreground, foregroundErrorWarningOpacity);
 
 	// Editor
 	const editorContrastTextColor = contrastTextColor;
@@ -391,6 +397,9 @@ export function getColors(provided: ThemeConfig) {
 		colors: {
 			...provided,
 			primaryForeground,
+			errorForeground,
+			warningForeground,
+			infoForeground,
 			button,
 			defaults,
 			popover,
