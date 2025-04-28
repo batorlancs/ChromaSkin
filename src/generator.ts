@@ -61,7 +61,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"editorRuler.foreground": colors.editor.rulerForeground,
 		"editor.codeLensForeground": colors.editor.codeLensForeground,
 		"editor.linkedEditingBackground": colors.editor.linkedEditingBackground,
-	}
+	};
 
 	let data = {
 		// Contrast colors
@@ -73,7 +73,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		foreground: colors.foreground,
 		disabledForeground: hexToHexAlpha(colors.foreground, 0.3),
 		"widget.border": hexToHexAlpha(colors.widget.border, 0.6),
-		"widget.shadow": colors.defaults.transparent,
+		"widget.shadow": colors.widget.shadow,
 		"selection.background": hexToHexAlpha(provided.primary, 0.15),
 		descriptionForeground: adjustColor(colors.foreground, 0, 0, -10),
 		errorForeground: colors.defaults.other.red.default,
@@ -88,8 +88,8 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"textBlockQuote.background": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
 		"textBlockQuote.border": colors.border,
 		"textCodeBlock.background": hexToHexAlpha(colors.foreground, 0.1),
-		"textLink.activeForeground": adjustColor(colors.primary, 0, 0, 10),
-		"textLink.foreground": colors.primary,
+		"textLink.activeForeground": adjustColor(colors.primaryForeground, 0, 0, 10),
+		"textLink.foreground": colors.primaryForeground,
 		"textPreformat.foreground": colors.foreground,
 		"textPreformat.background": hexToHexAlpha(adjustColor(colors.background, 0, 0, 10), 0.37),
 		"textSeparator.foreground": colors.foreground,
@@ -309,7 +309,6 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 
 		// Diff editor
 		"diffEditor.border": colors.border,
-		
 
 		// Editor widget
 		"editorWidget.background": adjustColor(colors.background, 0, 0, 5),
@@ -379,7 +378,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"notifications.border": colors.popover.border,
 		"notifications.foreground": colors.popover.foreground,
 		"notificationToast.border": colors.popover.border,
-		"notificationLink.foreground": colors.primary,
+		"notificationLink.foreground": colors.primaryForeground,
 		"notificationsErrorIcon.foreground": colors.defaults.other.red.default,
 		"notificationsWarningIcon.foreground": colors.defaults.other.yellow.default,
 		"notificationsInfoIcon.foreground": colors.defaults.other.blue.default,
@@ -399,10 +398,10 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"extensionBadge.remoteBackground": colors.primary,
 		"extensionBadge.remoteForeground": whiteOrBlackText(colors.primary),
 		"extensionIcon.starForeground": colors.defaults.other.yellow.default,
-		"extensionIcon.verifiedForeground": colors.primary,
-		"extensionIcon.preReleaseForeground": colors.primary,
-		"extensionIcon.sponsorForeground": colors.primary,
-		"extensionIcon.privateForeground": colors.primary,
+		"extensionIcon.verifiedForeground": colors.primaryForeground,
+		"extensionIcon.preReleaseForeground": colors.primaryForeground,
+		"extensionIcon.sponsorForeground": colors.primaryForeground,
+		"extensionIcon.privateForeground": colors.primaryForeground,
 
 		// Quick picker colors
 		"pickerGroup.border": hexToHexAlpha(colors.foreground, 0.15),
@@ -456,6 +455,15 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		"editorError.foreground": colors.defaults.other.red.default,
 		"editorInfo.foreground": colors.defaults.other.blue.default,
 		"editorHint.foreground": hexToHexAlpha(colors.defaults.other.blue.default, 0.6),
+
+		// File decoration colors for errors/warnings
+		"explorer.errorDecorationForeground": colors.errorForeground,
+		"explorer.warningDecorationForeground": colors.warningForeground,
+		"problemsErrorIcon.foreground": colors.errorForeground,
+		"problemsWarningIcon.foreground": colors.warningForeground,
+		"problemsInfoIcon.foreground": colors.infoForeground,
+		"list.errorForeground": colors.errorForeground,
+		"list.warningForeground": colors.warningForeground,
 
 		// Peek view colors
 		"peekView.border": colors.border,

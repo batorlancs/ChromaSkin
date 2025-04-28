@@ -2,9 +2,10 @@ import { ThemeConfig } from "./types";
 import { adjustColor, blendColors, getLightestColor, hexToHexAlpha, isDarkMode, whiteOrBlackText } from "./utils";
 
 export function getColors(provided: ThemeConfig) {
+	const { primary, background, accent, foreground, border, borderOpacity, optionalEditorForeground } = provided;
 	const isDark = isDarkMode(provided.background);
 	const contrastTextColor = isDark ? "#ffffff" : "#000000";
-	const { primary, background, accent, foreground, border, borderOpacity, optionalEditorForeground } = provided;
+	const primaryForeground = adjustColor(primary, 0, 0, 0, { minLightness: isDark ? 0.54 : 0, maxLightness: isDark ? 1 : 0.46 });
 
 	const themeWithAuto = {
 		...provided,
@@ -126,9 +127,9 @@ export function getColors(provided: ThemeConfig) {
 		badgeForeground: badge.foreground,
 		badgeBackground: badge.background,
 		// activeBorder: hexToHexAlpha(themeWithAuto.indicator, 0.68),
-        activeBorder: themeWithAuto.indicator,
+		activeBorder: themeWithAuto.indicator,
 		border: border,
-		activeBackground: border === accent ? defaults.transparent : hexToHexAlpha(foreground, 0.04)
+		activeBackground: border === themeWithAuto.activityBar ? defaults.transparent : hexToHexAlpha(foreground, 0.04),
 	};
 	const activityBarBadge = {
 		foreground: badge.foreground,
@@ -200,12 +201,11 @@ export function getColors(provided: ThemeConfig) {
 
 	// Cursor
 	const cursor = {
-		foreground: provided.coloredCursor ? primary : foreground,
+		foreground: provided.coloredCursor ? primaryForeground : foreground,
 	};
 
 	// based on borderOpacity get a value between 0 and 50 (50% of the input value)
 	const borderOpacityValue = Math.min(50, Math.max(0, borderOpacity * 0.5));
-
 	const popoverBackground = themeWithAuto.popover;
 	const popoverForeground = adjustColor(foreground, 0, 0, -10);
 	const widget = {
@@ -213,8 +213,8 @@ export function getColors(provided: ThemeConfig) {
 		foreground: popoverForeground,
 		focusBackground: adjustColor(popoverBackground, 0, 0, 5),
 		focusForeground: popoverForeground,
-		border: adjustColor(popoverBackground, 0, 0, borderOpacityValue),
-		shadow: adjustColor(accent, 0, 0, -5),
+		border: adjustColor(popoverBackground, 0, 0, borderOpacityValue, { saturation: 0.7 }),
+		shadow: hexToHexAlpha(adjustColor(popoverBackground, 0, 0, -10, { saturation: 0.4 }), 0.5),
 	};
 
 	const popover = {
@@ -222,13 +222,13 @@ export function getColors(provided: ThemeConfig) {
 		foreground: popoverForeground,
 		focusBackground: adjustColor(popoverBackground, 0, 0, 5),
 		focusForeground: popoverForeground,
-		border: adjustColor(popoverBackground, 0, 0, borderOpacityValue),
+		border: adjustColor(popoverBackground, 0, 0, borderOpacityValue, { saturation: 0.7 }),
 	};
 
 	// Git
-	const gitOpacity = 0.65;
+	const gitOpacity = 0.7;
 	const git = {
-		ignoredResourceForeground: hexToHexAlpha(foreground, 0.16),
+		ignoredResourceForeground: hexToHexAlpha(foreground, 0.25),
 		modifiedResourceForeground: blendColors(defaults.other.orange.default, foreground, gitOpacity),
 		deletedResourceForeground: blendColors(defaults.other.red.default, foreground, gitOpacity),
 		untrackedResourceForeground: blendColors(defaults.other.green.default, foreground, gitOpacity),
@@ -238,6 +238,12 @@ export function getColors(provided: ThemeConfig) {
 		stageModifiedResourceForeground: blendColors(defaults.other.orange.default, foreground, gitOpacity),
 		stageDeletedResourceForeground: blendColors(defaults.other.red.default, foreground, gitOpacity),
 	};
+
+	// Error and warning foreground colors
+	const foregroundErrorWarningOpacity = 0.3;
+	const errorForeground = blendColors(defaults.other.red.default, foreground, foregroundErrorWarningOpacity);
+	const warningForeground = blendColors(defaults.other.orange.default, foreground, foregroundErrorWarningOpacity);
+	const infoForeground = blendColors(defaults.other.blue.default, foreground, foregroundErrorWarningOpacity);
 
 	// Editor
 	const editorContrastTextColor = contrastTextColor;
@@ -289,7 +295,7 @@ export function getColors(provided: ThemeConfig) {
 		findMatchHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0.1),
 		findRangeHighlightBorder: hexToHexAlpha(editorContrastTextColor, 0.1),
 		hoverHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
-		linkActiveForeground: primary,
+		linkActiveForeground: primaryForeground,
 		unicodeHighlightBorder: hexToHexAlpha(defaults.other.yellow.default, 0.5),
 		unicodeHighlightBackground: hexToHexAlpha(defaults.other.yellow.default, 0.2),
 		symbolHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.1),
@@ -305,7 +311,7 @@ export function getColors(provided: ThemeConfig) {
 		inlayHintParameterForeground: hexToHexAlpha(defaults.other.orange.default, 0.8),
 		rulerForeground: hexToHexAlpha(editorContrastTextColor, 0.15),
 		codeLensForeground: hexToHexAlpha(editorContrastTextColor, 0.5),
-		linkedEditingBackground: hexToHexAlpha(primary, 0.1),
+		linkedEditingBackground: hexToHexAlpha(primaryForeground, 0.1),
 		foldBackground: adjustColor(background, 0, 0, 5),
 		foldPlaceholderForeground: hexToHexAlpha(editorContrastTextColor, 0.5),
 		rangeHighlightBackground: hexToHexAlpha(editorContrastTextColor, 0.08),
@@ -322,8 +328,7 @@ export function getColors(provided: ThemeConfig) {
 	}
 	const editorGroup = {
 		border: editorGroupBorder,
-		
-	}
+	};
 
 	const diffEditor = {
 		// Text changes
@@ -391,6 +396,10 @@ export function getColors(provided: ThemeConfig) {
 		theme: themeWithAuto,
 		colors: {
 			...provided,
+			primaryForeground,
+			errorForeground,
+			warningForeground,
+			infoForeground,
 			button,
 			defaults,
 			popover,
