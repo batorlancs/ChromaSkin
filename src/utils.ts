@@ -42,18 +42,34 @@ export function hexToHexAlpha(hex: string, alpha: number): string {
  * @param hChange - The change in hue
  * @param sChange - The change in saturation
  * @param lChange - The change in lightness
+ * @param options - The options for the adjustment
+ * @param options.saturation - The saturation value to adjust to
+ * @param options.minLightness - The minimum lightness value to adjust to
+ * @param options.maxLightness - The maximum lightness value to adjust to
  * @returns The adjusted hex color
  */
-export function adjustColor(hex: string, hChange: number, sChange: number, lChange: number, options: { saturation: number } = { saturation: 1 }): string {
+export function adjustColor(
+	hex: string,
+	hChange: number,
+	sChange: number,
+	lChange: number,
+	options?: { saturation?: number; minLightness?: number; maxLightness?: number }
+): string {
+	const { saturation = 1, minLightness = 0, maxLightness = 1 } = options ?? {};
 	const hsl = hexToHsl(ensureHexPrefix(hex));
 	hsl[0] = Math.max(0, Math.min(360, hsl[0] + hChange));
 	hsl[1] = Math.max(0, Math.min(100, hsl[1] + sChange));
 	hsl[2] = Math.max(0, Math.min(100, hsl[2] + lChange));
-	const adjustedHex = hslToHex(hsl);
-	if (options.saturation !== 1) {
-		return adjustHexSaturation(adjustedHex, options.saturation);
+	if (saturation !== 1) {
+		hsl[1] = Math.max(0, Math.min(100, hsl[1] * saturation));
 	}
-	return adjustedHex;
+	if (minLightness !== 0) {
+		hsl[2] = Math.max(0, Math.max(100 * minLightness, hsl[2]));
+	}
+	if (maxLightness !== 100) {
+		hsl[2] = Math.max(0, Math.min(100 * maxLightness, hsl[2]));
+	}
+	return hslToHex(hsl);
 }
 
 /**
@@ -77,7 +93,6 @@ export function isDarkMode(hex: string): boolean {
 	const hsl = hexToHsl(ensureHexPrefix(hex));
 	return hsl[2] < 50;
 }
-
 
 /**
  * Returns a black or white text color based on the lightness of the hex color
