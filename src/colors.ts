@@ -213,7 +213,7 @@ export function getColors(provided: ThemeConfig) {
 		foreground: popoverForeground,
 		focusBackground: adjustColor(popoverBackground, 0, 0, 5),
 		focusForeground: popoverForeground,
-		border: hexToHexAlpha(adjustColor(popoverBackground, 0, 0, borderOpacityValue, { saturation: 0.7 }), 0.6),
+		border: adjustColor(popoverBackground, 0, 0, borderOpacityValue, { saturation: 0.7 }),
 		shadow: hexToHexAlpha(adjustColor(popoverBackground, 0, 0, -10, { saturation: 0.4 }), 0.5),
 	};
 

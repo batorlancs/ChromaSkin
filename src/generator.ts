@@ -72,7 +72,7 @@ export function generateWorkbenchTheme(provided: ThemeConfig): GenerateWorkbench
 		focusBorder: "#8e8eff00",
 		foreground: colors.foreground,
 		disabledForeground: hexToHexAlpha(colors.foreground, 0.3),
-		"widget.border": colors.widget.border,
+		"widget.border": hexToHexAlpha(colors.widget.border, 0.6),
 		"widget.shadow": colors.widget.shadow,
 		"selection.background": hexToHexAlpha(provided.primary, 0.15),
 		descriptionForeground: adjustColor(colors.foreground, 0, 0, -10),
