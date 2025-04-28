@@ -129,7 +129,7 @@ export function getColors(provided: ThemeConfig) {
 		// activeBorder: hexToHexAlpha(themeWithAuto.indicator, 0.68),
 		activeBorder: themeWithAuto.indicator,
 		border: border,
-		activeBackground: border === accent ? defaults.transparent : hexToHexAlpha(foreground, 0.04),
+		activeBackground: border === themeWithAuto.activityBar ? defaults.transparent : hexToHexAlpha(foreground, 0.04),
 	};
 	const activityBarBadge = {
 		foreground: badge.foreground,
