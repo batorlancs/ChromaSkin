@@ -25,7 +25,7 @@ All notable changes to the "chromaskin-by-bator" extension will be documented in
 - Fixed various color and border visibility issues
 - Added reset button for theme colors
 
-## 1.1.1 - 2025-04-28
+## 1.1.1
 
 - Fixed popover border saturation.
 - Added shadow effect to widgets.
@@ -34,3 +34,7 @@ All notable changes to the "chromaskin-by-bator" extension will be documented in
 - Adjusted editor error and warning colors.
 - Increased opacity for ignored files in Git view.
 - Fixed issue where the active background color in the activity bar was not applied correctly.
+
+## 1.1.2
+
+- Fixed problem with widget border opacity.

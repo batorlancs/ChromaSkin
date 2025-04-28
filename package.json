@@ -3,7 +3,7 @@
 	"name": "chromaskin-by-bator",
 	"displayName": "ChromaSkin",
 	"description": "Mix & Match VS Code Syntax Highlighting with Custom UI",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"publisher": "GergelyBator",
 	"license": "MIT",
 	"repository": {
