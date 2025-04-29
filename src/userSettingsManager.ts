@@ -47,9 +47,19 @@ export class UserSettingsManager {
 	 * Saves the user's current color settings before applying a new theme
 	 */
 	public saveCurrentSettings(): void {
-		const currentSettings = this.getCurrentColorSettings();
-		this.context.globalState.update(UserSettingsManager.PREVIOUS_SETTINGS_KEY, currentSettings);
-		console.log("ChromaSkin: Current user settings saved");
+		if (!this.context.globalState.get(UserSettingsManager.PREVIOUS_SETTINGS_KEY)) {
+			const currentSettings = this.getCurrentColorSettings();
+			this.context.globalState.update(UserSettingsManager.PREVIOUS_SETTINGS_KEY, currentSettings);
+			console.log("ChromaSkin: Current user settings saved");
+		}
+	}
+
+	/**
+	 * Clears the current user settings
+	 */
+	public clearPreviousSettings(): void {
+		this.context.globalState.update(UserSettingsManager.PREVIOUS_SETTINGS_KEY, null);
+		console.log("ChromaSkin: Previous user settings cleared");
 	}
 
 	/**
@@ -125,10 +135,8 @@ export class UserSettingsManager {
 				vscode.ConfigurationTarget.Global
 			);
 
+			this.clearPreviousSettings()
 			console.log("ChromaSkin: Previous user settings restored");
-		} else {
-			// If there are no previous settings, just clear everything
-			this.clearColorSettings();
 		}
 	}
 

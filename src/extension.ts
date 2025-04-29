@@ -252,6 +252,7 @@ class ChromaSkinExtension {
 	private resetColorTheme() {
 		// Restore initial user settings
 		this.userSettingsManager.restorePreviousSettings();
+		
 
 		// Restore breadcrumbs to previous state if it was previously stored
 		if (this.previousBreadcrumbsState !== undefined) {
