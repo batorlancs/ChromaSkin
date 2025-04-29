@@ -12,7 +12,9 @@ ChromaSkin lets you mix and match your favorite syntax highlighting with custom 
     - Preview changes
     - Save your customized theme
 
-> [!TIP] Use the color picker's eyedropper tool to sample colors from anywhere on your screen to fine-tune any UI element
+> **🖱️ Tip:** Use the color picker's eyedropper tool to sample colors from anywhere on your screen to fine-tune any UI element
+
+> **⚠️ Important:** ChromaSkin uses VS Code's global color customizations. If you have existing custom color settings, they may be overwritten when applying a theme. If you haven't customized these settings before, this won't affect you. (In case your settings are overwritten, you can recover them using the "⋯" -> "Export Original Settings" menu option)
 
 ## 🎨 Theme Generator Preview
 
