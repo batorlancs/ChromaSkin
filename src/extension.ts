@@ -8,6 +8,7 @@ import { ThemeConfig } from "./types";
 import { getTokenColorCustomizations } from "./tokenizer";
 import themes, { getPredefinedTheme } from "./themes";
 import { UserThemeManager } from "./userThemes";
+import { UserSettingsManager } from "./userSettingsManager";
 
 class ChromaSkinExtension {
 	private activePanel: vscode.WebviewPanel | undefined;
@@ -17,21 +18,28 @@ class ChromaSkinExtension {
 	private isPanelActivePrev: boolean = false;
 	private readonly DEFAULT_THEME_CONFIG: ThemeConfig = themes["default"][0].config;
 	private userThemeManager: UserThemeManager;
+	private userSettingsManager: UserSettingsManager;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
 		this.userThemeManager = new UserThemeManager(context);
+		this.userSettingsManager = new UserSettingsManager(context);
 	}
 
 	private isDevMode(): boolean {
 		return this.context.extensionMode === vscode.ExtensionMode.Development;
 	}
 
+	/**
+	 * !IMPORTANT: This is only used in development mode to clear the global state before the extension is activated
+	 * For production, we don't need to clear the global state, because the extension is activated on every VS Code startup
+	 */
 	private clearAllGlobalState() {
-		console.log("ChromaSkin: Clearing all global state!");
+		console.log("ChromaSkin: Clearing all global state (including initial user settings)!");
 		this.context.globalState.update("chromaskin-theme-config", null);
 		this.context.globalState.update("chromaskin-theme-config-unapplied", null);
 		this.context.globalState.update("chromaskin-hide-info-message", null);
+		this.userSettingsManager.clearAllGlobalState();
 	}
 
 	public activate() {
@@ -67,7 +75,97 @@ class ChromaSkinExtension {
 		this.activePanel.webview.html = this.getWebviewContent(this.context, this.activePanel.webview, theme);
 
 		this.activePanel.webview.onDidReceiveMessage(
-			(message) => this.handleWebviewMessage(message),
+			async (message) => {
+				switch (message.command) {
+					case "applyTheme":
+						this.applyColorTheme(message.themeConfig);
+						vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied! 🎨");
+						break;
+					case "applyPredefinedTheme":
+						const { config } = getPredefinedTheme(message.category, message.index);
+						this.applyColorTheme(config);
+						vscode.window.showInformationMessage("ChromaSkin: Predefined Theme Applied! 🎨");
+						break;
+					case "resetTheme":
+						this.resetColorTheme();
+						vscode.window.showInformationMessage("ChromaSkin: Theme Reset! 🔄");
+						break;
+					case "resetColors":
+						this.resetColors();
+						vscode.window.showInformationMessage("ChromaSkin: Colors Reset! 🔄");
+						break;
+					case "exportTheme":
+						this.exportTheme(message.themeConfig);
+						vscode.window.showInformationMessage("ChromaSkin: Theme Exported! 📤");
+						break;
+					case "importTheme":
+						this.importTheme(message.themeConfig);
+						vscode.window.showInformationMessage("ChromaSkin: Theme Imported! 📥");
+						break;
+					case "showError":
+						vscode.window.showErrorMessage(`ChromaSkin: ${message.message}`);
+						break;
+					case "showInfo":
+						vscode.window.showInformationMessage(`ChromaSkin: ${message.message}`);
+						break;
+					case "hideInfoMessage":
+						console.log("ChromaSkin: GOT HIDING INFO MESSAGE!");
+						this.context.globalState.update("chromaskin-hide-info-message", true);
+						break;
+					case "saveUserTheme":
+						const savedTheme = this.userThemeManager.saveTheme(message.name, message.description, message.themeConfig);
+						this.reloadWebview();
+						vscode.window.showInformationMessage(`ChromaSkin: Theme "${message.name}" saved! 💾`);
+						break;
+					case "deleteUserTheme":
+						const deleted = this.userThemeManager.deleteTheme(message.themeId);
+						if (deleted) {
+							this.reloadWebview();
+							vscode.window.showInformationMessage(`ChromaSkin: Theme deleted! 🗑️`);
+						}
+						break;
+					case "applyUserTheme":
+						const theme = this.userThemeManager.getTheme(message.themeId);
+						if (theme) {
+							this.applyColorTheme(theme.config);
+							vscode.window.showInformationMessage("ChromaSkin: Saved Theme Applied! 🎨");
+						} else {
+							vscode.window.showErrorMessage("ChromaSkin: Theme not found! 🚫");
+						}
+						break;
+					case "confirmDeleteTheme": {
+						const themeId = message.themeId;
+						vscode.window
+							.showWarningMessage("Are you sure you want to delete this theme?", "Delete", "Cancel")
+							.then((selection) => {
+								if (selection === "Delete") {
+									this.userThemeManager.deleteTheme(themeId);
+									this.reloadWebview();
+									vscode.window.showInformationMessage("ChromaSkin: Theme deleted! 🗑️");
+								}
+							});
+						break;
+					}
+					case "saveCurrentState":
+						// Save the current state without applying it as a theme
+						this.saveCurrentState(message.themeConfig);
+						break;
+					case "exportOriginalSettings":
+						this.exportOriginalSettings();
+						break;
+					case "exportPreviousSettings":
+						const prevSettings = this.userSettingsManager.getPreviousSettings();
+						if (prevSettings) {
+							const document = JSON.stringify(prevSettings, null, 2);
+							vscode.workspace
+								.openTextDocument({ content: document, language: "json" })
+								.then((doc) => vscode.window.showTextDocument(doc));
+						} else {
+							vscode.window.showInformationMessage("No previous settings found.");
+						}
+						break;
+				}
+			},
 			undefined,
 			this.context.subscriptions
 		);
@@ -99,83 +197,10 @@ class ChromaSkinExtension {
 		});
 	}
 
-	private handleWebviewMessage(message: any) {
-		switch (message.command) {
-			case "applyTheme":
-				this.applyColorTheme(message.themeConfig);
-				vscode.window.showInformationMessage("ChromaSkin: Custom Theme Applied! 🎨");
-				break;
-			case "applyPredefinedTheme":
-				const { config } = getPredefinedTheme(message.category, message.index);
-				this.applyColorTheme(config);
-				vscode.window.showInformationMessage("ChromaSkin: Predefined Theme Applied! 🎨");
-				break;
-			case "resetTheme":
-				this.resetColorTheme();
-				vscode.window.showInformationMessage("ChromaSkin: Theme Reset! 🔄");
-				break;
-			case "resetColors":
-				this.resetColors();
-				vscode.window.showInformationMessage("ChromaSkin: Colors Reset! 🔄");
-				break;
-			case "exportTheme":
-				this.exportTheme(message.themeConfig);
-				vscode.window.showInformationMessage("ChromaSkin: Theme Exported! 📤");
-				break;
-			case "importTheme":
-				this.importTheme(message.themeConfig);
-				vscode.window.showInformationMessage("ChromaSkin: Theme Imported! 📥");
-				break;
-			case "showError":
-				vscode.window.showErrorMessage(`ChromaSkin: ${message.message}`);
-				break;
-			case "showInfo":
-				vscode.window.showInformationMessage(`ChromaSkin: ${message.message}`);
-				break;
-			case "hideInfoMessage":
-				console.log("ChromaSkin: GOT HIDING INFO MESSAGE!");
-				this.context.globalState.update("chromaskin-hide-info-message", true);
-				break;
-			case "saveUserTheme":
-				const savedTheme = this.userThemeManager.saveTheme(message.name, message.description, message.themeConfig);
-				this.reloadWebview();
-				vscode.window.showInformationMessage(`ChromaSkin: Theme "${message.name}" saved! 💾`);
-				break;
-			case "deleteUserTheme":
-				const deleted = this.userThemeManager.deleteTheme(message.themeId);
-				if (deleted) {
-					this.reloadWebview();
-					vscode.window.showInformationMessage(`ChromaSkin: Theme deleted! 🗑️`);
-				}
-				break;
-			case "applyUserTheme":
-				const theme = this.userThemeManager.getTheme(message.themeId);
-				if (theme) {
-					this.applyColorTheme(theme.config);
-					vscode.window.showInformationMessage("ChromaSkin: Saved Theme Applied! 🎨");
-				} else {
-					vscode.window.showErrorMessage("ChromaSkin: Theme not found! 🚫");
-				}
-				break;
-			case "confirmDeleteTheme": {
-				const themeId = message.themeId;
-				vscode.window.showWarningMessage("Are you sure you want to delete this theme?", "Delete", "Cancel").then((selection) => {
-					if (selection === "Delete") {
-						this.userThemeManager.deleteTheme(themeId);
-						this.reloadWebview();
-						vscode.window.showInformationMessage("ChromaSkin: Theme deleted! 🗑️");
-					}
-				});
-				break;
-			}
-			case "saveCurrentState":
-				// Save the current state without applying it as a theme
-				this.saveCurrentState(message.themeConfig);
-				break;
-		}
-	}
-
 	private applyColorTheme(themeConfig: ThemeConfig, saveConfig: boolean = true) {
+		this.userSettingsManager.saveInitialSettings();
+		this.userSettingsManager.saveCurrentSettings();
+
 		// Store current breadcrumbs state before changing it
 		this.previousBreadcrumbsState = vscode.workspace.getConfiguration("breadcrumbs").get("enabled");
 
@@ -183,13 +208,22 @@ class ChromaSkinExtension {
 		const { data: colorCustomizations, theme } = generateWorkbenchTheme(themeConfig);
 		const tokenColorCustomizations = getTokenColorCustomizations(themeConfig);
 
+		const currentColorCustomizations = this.userSettingsManager.getCurrentColorSettings();
+		const currentTextMateRules = (currentColorCustomizations.tokenColorCustomizations as any)?.textMateRules || [];
+
 		// update configurations
 		vscode.workspace
 			.getConfiguration("workbench")
 			.update("colorCustomizations", colorCustomizations, vscode.ConfigurationTarget.Global);
-		vscode.workspace
-			.getConfiguration("editor")
-			.update("tokenColorCustomizations", tokenColorCustomizations, vscode.ConfigurationTarget.Global);
+		vscode.workspace.getConfiguration("editor").update(
+			"tokenColorCustomizations",
+			{
+				...(currentColorCustomizations.tokenColorCustomizations || {}),
+				...tokenColorCustomizations,
+				textMateRules: [...currentTextMateRules, ...tokenColorCustomizations.textMateRules],
+			},
+			vscode.ConfigurationTarget.Global
+		);
 		// Hide breadcrumbs
 		vscode.workspace.getConfiguration("breadcrumbs").update("enabled", false, vscode.ConfigurationTarget.Global);
 
@@ -216,8 +250,9 @@ class ChromaSkinExtension {
 	}
 
 	private resetColorTheme() {
-		vscode.workspace.getConfiguration("workbench").update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
-		vscode.workspace.getConfiguration("editor").update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
+		// Restore initial user settings
+		this.userSettingsManager.restorePreviousSettings();
+		
 
 		// Restore breadcrumbs to previous state if it was previously stored
 		if (this.previousBreadcrumbsState !== undefined) {
@@ -312,6 +347,19 @@ class ChromaSkinExtension {
 		// Only save to global state, don't apply to VS Code's theme
 		this.context.globalState.update("chromaskin-theme-config-unapplied", themeConfig);
 		console.log("ChromaSkin: Current state saved");
+	}
+
+	private exportOriginalSettings() {
+		const initialSettings = this.userSettingsManager.getInitialSettings();
+
+		if (!initialSettings) {
+			vscode.window.showInformationMessage("No original settings found.");
+			return;
+		}
+
+		// Show JSON in a new document
+		const document = JSON.stringify(initialSettings, null, 2);
+		vscode.workspace.openTextDocument({ content: document, language: "json" }).then((doc) => vscode.window.showTextDocument(doc));
 	}
 }
 

@@ -142,6 +142,10 @@
 
 		// Setup listeners for automatically saving configuration on change
 		setupInputChangeListeners();
+
+		// Add settings export buttons to dropdown
+		document.getElementById("export-original-settings").addEventListener("click", exportOriginalSettings);
+		document.getElementById("export-previous-settings").addEventListener("click", exportPreviousSettings);
 	}
 
 	// Apply theme function
@@ -528,6 +532,22 @@
 		vscode.postMessage({
 			command: "saveCurrentState",
 			themeConfig: themeConfig,
+		});
+	}
+
+	// Function to export original settings
+	function exportOriginalSettings() {
+		document.getElementById("dropdown-menu").classList.remove("active");
+		vscode.postMessage({
+			command: "exportOriginalSettings",
+		});
+	}
+
+	// Function to export previous settings
+	function exportPreviousSettings() {
+		document.getElementById("dropdown-menu").classList.remove("active");
+		vscode.postMessage({
+			command: "exportPreviousSettings",
 		});
 	}
 })();

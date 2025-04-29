@@ -468,7 +468,9 @@ input[type="checkbox"]:checked {
 }
 
 .info-message.warning {
+	margin-top: 15px;
 	background-color: rgba(255, 166, 0, 0.05);
+	border: 1px solid rgba(255, 166, 0, 0.2);
 	padding: 10px 15px;
 	padding-right: 40px;
 	margin-bottom: 15px;
@@ -507,8 +509,9 @@ input[type="checkbox"]:checked {
 	font-weight: bold;
 	cursor: pointer;
 	padding: 0;
-	width: 24px;
-	height: 24px;
+	width: 28px;
+	height: 28px;
+	font-size: 24px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -715,6 +718,29 @@ input[type="checkbox"]:checked {
 
 .user-theme-item {
 	position: relative;
+}
+
+.info-message.info {
+    background-color: rgba(0, 120, 215, 0.05);
+    padding: 10px 15px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+	border: 1px solid rgba(0, 118, 215, 0.288);
+	color: color-mix(in srgb, var(--vscode-foreground) 80%, rgba(0, 118, 215, 0.651));
+    display: flex;
+    align-items: flex-start;
+    opacity: 0.9;
+	pointer-events: none;
+}
+
+.info-message.info:hover {
+    opacity: 1;
+}
+
+.info-icon {
+    margin-right: 10px;
+    font-size: 18px;
 }
 
 /* Add responsive adjustments */

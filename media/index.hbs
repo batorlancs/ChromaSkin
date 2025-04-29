@@ -121,12 +121,6 @@
                 </div>
 
                 <div class="footer">
-                    {{!-- info message --}}
-                    <div class="info-message warning" {{#if hideInfoMessage}}style="display:none;"{{/if}}>
-                        <span class="warning-icon">⚠️</span>
-                        <p>This extension modifies VS Code's workbench and token color customization settings. If you have existing custom color settings, they may be overwritten when applying a theme. If you haven't customized these settings before, this won't affect you.</p>
-                        <button id="info-message-close" class="info-message-close" aria-label="Close warning message">×</button>
-                    </div>
                     {{!-- button container --}}
                     <div class="button-container">
                         <button id="apply-button" class="apply-button" title="Apply the current color settings to your VS Code theme">Apply Theme</button>
@@ -135,22 +129,30 @@
                         <div class="dropdown-menu-container">
                             <button id="menu-button" class="menu-button">⋯</button>
                             <div id="dropdown-menu" class="dropdown-menu">
-                                <div class="dropdown-menu-item" id="export-file">
-                                    <span>Export to file</span>
-                                </div>
-                                <div class="dropdown-menu-item" id="copy-clipboard">
-                                    <span>Copy to clipboard</span>
-                                </div>
+                                <div class="dropdown-menu-item" id="export-file">Export to file</div>
+                                <div class="dropdown-menu-item" id="import-file">Import from file</div>
                                 <div class="dropdown-menu-separator"></div>
-                                <div class="dropdown-menu-item" id="import-file">
-                                    <span>Import from file</span>
-                                </div>
-                                <div class="dropdown-menu-item" id="import-clipboard">
-                                    <span>Import from clipboard</span>
-                                </div>
+                                <div class="dropdown-menu-item" id="copy-clipboard">Copy to clipboard</div>
+                                <div class="dropdown-menu-item" id="import-clipboard">Import from clipboard</div>
+                                <div class="dropdown-menu-separator"></div>
+                                <div class="dropdown-menu-item" id="export-original-settings">Export Original Settings</div>
                             </div>
                         </div>
                         <input type="file" id="import-file-input" accept=".json" style="display: none;" />
+                    </div>
+
+                    {{!-- info message --}}
+                    <div class="info-message warning" {{#if hideInfoMessage}}style="display:none;"{{/if}}>
+                        <span class="warning-icon">⚠️</span>
+                        <p>This extension modifies VS Code's workbench and token color customization settings. If you have existing custom color settings, they may be overwritten when applying a theme. If you haven't customized these settings before, this won't affect you.</p>
+                        <button id="info-message-close" class="info-message-close" aria-label="Close warning message">×</button>
+                    </div>
+                    
+                    <!-- Recovery info message at the bottom -->
+                    <div class="info-message info">
+                        <span class="info-icon">ℹ️</span>
+                        <p>If ChromaSkin has overwritten important editor or workbench color customizations, you can recover them using the "⋯" menu:
+                        <br/><br/>* <strong>Export Original Settings</strong>: Recovers User JSON settings from before first theme application
                     </div>
                 </div>
             </div>
