@@ -470,6 +470,7 @@ input[type="checkbox"]:checked {
 .info-message.warning {
 	margin-top: 15px;
 	background-color: rgba(255, 166, 0, 0.05);
+	border: 1px solid rgba(255, 166, 0, 0.2);
 	padding: 10px 15px;
 	padding-right: 40px;
 	margin-bottom: 15px;
@@ -508,8 +509,9 @@ input[type="checkbox"]:checked {
 	font-weight: bold;
 	cursor: pointer;
 	padding: 0;
-	width: 24px;
-	height: 24px;
+	width: 28px;
+	height: 28px;
+	font-size: 24px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
