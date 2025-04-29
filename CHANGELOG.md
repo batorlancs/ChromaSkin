@@ -38,3 +38,8 @@ All notable changes to the "chromaskin-by-bator" extension will be documented in
 ## 1.1.2
 
 - Fixed problem with widget border opacity.
+
+## 1.1.3
+
+- Improved recovery options with helpful guidance on restoring your personalized settings
+- Further improved visibility of gitignore files with optimized opacity settings
