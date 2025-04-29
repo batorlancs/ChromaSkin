@@ -468,6 +468,7 @@ input[type="checkbox"]:checked {
 }
 
 .info-message.warning {
+	margin-top: 15px;
 	background-color: rgba(255, 166, 0, 0.05);
 	padding: 10px 15px;
 	padding-right: 40px;
@@ -715,6 +716,29 @@ input[type="checkbox"]:checked {
 
 .user-theme-item {
 	position: relative;
+}
+
+.info-message.info {
+    background-color: rgba(0, 120, 215, 0.05);
+    padding: 10px 15px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+	border: 1px solid rgba(0, 118, 215, 0.288);
+	color: color-mix(in srgb, var(--vscode-foreground) 80%, rgba(0, 118, 215, 0.651));
+    display: flex;
+    align-items: flex-start;
+    opacity: 0.9;
+	pointer-events: none;
+}
+
+.info-message.info:hover {
+    opacity: 1;
+}
+
+.info-icon {
+    margin-right: 10px;
+    font-size: 18px;
 }
 
 /* Add responsive adjustments */
