@@ -22,6 +22,15 @@ export class UserSettingsManager {
 	}
 
 	/**
+	 * Clears all global state
+	 * !IMPORTANT: This is only used in development mode to clear the global state before the extension is activated
+	 */
+	public clearAllGlobalState(): void {
+		this.context.globalState.update(UserSettingsManager.INITIAL_SETTINGS_KEY, null);
+		this.context.globalState.update(UserSettingsManager.PREVIOUS_SETTINGS_KEY, null);
+	}
+
+	/**
 	 * Saves the user's current color settings before first theme application
 	 * Only saves if settings haven't been saved before
 	 */
@@ -46,7 +55,7 @@ export class UserSettingsManager {
 	/**
 	 * Gets the user's current color customization settings from VS Code configuration
 	 */
-	private getCurrentColorSettings(): UserColorSettings {
+	public getCurrentColorSettings(): UserColorSettings {
 		const config = vscode.workspace.getConfiguration();
 
 		return {
@@ -92,6 +101,33 @@ export class UserSettingsManager {
 			console.log("ChromaSkin: Initial user settings restored");
 		} else {
 			// If there are no initial settings, just clear everything
+			this.clearColorSettings();
+		}
+	}
+
+	/**
+	 * Restores the user's previous color settings
+	 */
+	public async restorePreviousSettings(): Promise<void> {
+		const previousSettings = this.getPreviousSettings();
+		if (previousSettings) {
+			const config = vscode.workspace.getConfiguration();
+
+			await config.update(
+				"workbench.colorCustomizations",
+				previousSettings.workbenchColorCustomizations,
+				vscode.ConfigurationTarget.Global
+			);
+
+			await config.update(
+				"editor.tokenColorCustomizations",
+				previousSettings.tokenColorCustomizations,
+				vscode.ConfigurationTarget.Global
+			);
+
+			console.log("ChromaSkin: Previous user settings restored");
+		} else {
+			// If there are no previous settings, just clear everything
 			this.clearColorSettings();
 		}
 	}

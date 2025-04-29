@@ -30,11 +30,16 @@ class ChromaSkinExtension {
 		return this.context.extensionMode === vscode.ExtensionMode.Development;
 	}
 
+	/**
+	 * !IMPORTANT: This is only used in development mode to clear the global state before the extension is activated
+	 * For production, we don't need to clear the global state, because the extension is activated on every VS Code startup
+	 */
 	private clearAllGlobalState() {
-		console.log("ChromaSkin: Clearing all global state (except initial settings)!");
+		console.log("ChromaSkin: Clearing all global state (including initial user settings)!");
 		this.context.globalState.update("chromaskin-theme-config", null);
 		this.context.globalState.update("chromaskin-theme-config-unapplied", null);
 		this.context.globalState.update("chromaskin-hide-info-message", null);
+		this.userSettingsManager.clearAllGlobalState();
 	}
 
 	public activate() {
@@ -193,10 +198,7 @@ class ChromaSkinExtension {
 	}
 
 	private applyColorTheme(themeConfig: ThemeConfig, saveConfig: boolean = true) {
-		// Save initial settings before applying first theme
 		this.userSettingsManager.saveInitialSettings();
-
-		// Save current settings before applying new theme
 		this.userSettingsManager.saveCurrentSettings();
 
 		// Store current breadcrumbs state before changing it
@@ -206,13 +208,22 @@ class ChromaSkinExtension {
 		const { data: colorCustomizations, theme } = generateWorkbenchTheme(themeConfig);
 		const tokenColorCustomizations = getTokenColorCustomizations(themeConfig);
 
+		const currentColorCustomizations = this.userSettingsManager.getCurrentColorSettings();
+		const currentTextMateRules = (currentColorCustomizations.tokenColorCustomizations as any)?.textMateRules || [];
+
 		// update configurations
 		vscode.workspace
 			.getConfiguration("workbench")
 			.update("colorCustomizations", colorCustomizations, vscode.ConfigurationTarget.Global);
-		vscode.workspace
-			.getConfiguration("editor")
-			.update("tokenColorCustomizations", tokenColorCustomizations, vscode.ConfigurationTarget.Global);
+		vscode.workspace.getConfiguration("editor").update(
+			"tokenColorCustomizations",
+			{
+				...(currentColorCustomizations.tokenColorCustomizations || {}),
+				...tokenColorCustomizations,
+				textMateRules: [...currentTextMateRules, ...tokenColorCustomizations.textMateRules],
+			},
+			vscode.ConfigurationTarget.Global
+		);
 		// Hide breadcrumbs
 		vscode.workspace.getConfiguration("breadcrumbs").update("enabled", false, vscode.ConfigurationTarget.Global);
 
@@ -240,9 +251,7 @@ class ChromaSkinExtension {
 
 	private resetColorTheme() {
 		// Restore initial user settings
-		this.userSettingsManager.restoreInitialSettings();
-		// vscode.workspace.getConfiguration("workbench").update("colorCustomizations", {}, vscode.ConfigurationTarget.Global);
-		// vscode.workspace.getConfiguration("editor").update("tokenColorCustomizations", {}, vscode.ConfigurationTarget.Global);
+		this.userSettingsManager.restorePreviousSettings();
 
 		// Restore breadcrumbs to previous state if it was previously stored
 		if (this.previousBreadcrumbsState !== undefined) {
